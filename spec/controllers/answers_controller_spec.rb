@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
+  let(:answer) { create :answer }
+
   describe "GET #show" do
-    let(:answer) { create :answer }
     before { get :show, params: { id: answer } }
 
     it 'assigns the requested answer to @answer' do
@@ -15,7 +16,6 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'GET #new' do
-    let(:answer) { create :answer }
     before { get :new, params: { :question_id => answer.question_id } }
 
     it 'assigns a new answer to @answer' do
