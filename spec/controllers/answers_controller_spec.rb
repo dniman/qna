@@ -13,4 +13,17 @@ RSpec.describe AnswersController, type: :controller do
       expect(response).to render_template(:show)
     end
   end
+
+  describe 'GET #new' do
+    let(:answer) { create :answer }
+    before { get :new, params: { :question_id => answer.question_id } }
+
+    it 'assigns a new answer to @answer' do
+      expect(assigns(:answer)).to be_a_new(Answer)
+    end
+
+    it 'renders new view' do
+      expect(response).to render_template(:new)
+    end
+  end
 end
