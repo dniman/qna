@@ -86,7 +86,7 @@ RSpec.describe QuestionsController, type: :controller do
   
   describe 'PATCH #update' do
     before { login(user) }
-
+    
     context 'with valid attributes' do
       it 'assigns the requested question to @question' do
         patch :update, params: { id: question, question: attributes_for(:question) } 
@@ -111,9 +111,10 @@ RSpec.describe QuestionsController, type: :controller do
       before { patch :update, params: { id: question, question: attributes_for(:question, :invalid) } }
 
       it 'does not change question' do
+        title = question.title
         question.reload
 
-        expect(question.title).to eq('MyString')
+        expect(question.title).to eq(title)
         expect(question.body).to eq('MyText')
       end
 
