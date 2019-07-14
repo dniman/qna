@@ -1,4 +1,13 @@
 h1= @question.title
 p= @question.body
 
+h2 Answers
+table
+  tr
+    th Body
+  tr
+  - @question.answers.each do |a|
+    tr
+      td.body = a.body
+
 = render 'answers/form'
