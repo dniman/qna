@@ -5,14 +5,16 @@ feature 'User can view a question and it\'s answers', %q{
   I'd like to be able to view a question and it's answers on a question page
 } do
 
-  given(:question) do 
-    create(:question) do |q|
-      create_list(:answer, 2, question: q)
+  given(:user) do 
+    create(:user) do |u|
+      create(:question, user: u) do |q|
+        create_list(:answer, 2, question: q, user: u)
+      end
     end
   end
+  given(:question) { user.questions.first }
 
   scenario 'Authentication user can view a question and it\'s answers' do
-    user = create(:user)
     sign_in(user)
 
     visit question_path(question)
