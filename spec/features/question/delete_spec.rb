@@ -32,4 +32,10 @@ feature 'User can delete his question', %q{
     end
   end
 
+  scenario 'Unauthenticated user try delete the question' do
+    visit questions_path
+
+    expect(page).not_to have_content 'Delete'
+  end
+
 end

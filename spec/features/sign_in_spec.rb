@@ -12,6 +12,7 @@ feature 'User can sign in', %q{
     sign_in(user)
 
     expect(page).to have_content 'Signed in successfully.'
+    expect(page).to have_content 'Sign out'
   end
 
   scenario 'Unregistered user tries to sign in' do
