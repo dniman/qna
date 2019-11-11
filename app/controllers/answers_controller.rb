@@ -31,16 +31,16 @@ class AnswersController < ApplicationController
       format.js {}
       format.html { redirect_to question_path(@question) }
     end
-    #if @answer.update(answer_params)
-    #  redirect_to @answer
-    #else
-    #  render :edit
-    #end
   end
 
   def destroy
     @answer.destroy
-    redirect_to question_path(@answer.question), notice: 'Your answer successfully deleted.'
+    @question = @answer.question
+    
+    respond_to do |format|
+      format.js {}
+      format.html { redirect_to question_path(@question) }
+    end
   end
 
   private

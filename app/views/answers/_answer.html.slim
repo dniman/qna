@@ -1,4 +1,4 @@
-tr
+tr class="delete-answer-#{answer.id}" 
   td.body = answer.body
   - if answer.persisted? && answer.user == current_user
     td = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id } 
@@ -8,6 +8,6 @@ tr
        = f.text_area :body
        = f.submit 'Save your answer'
     
-    td = link_to 'Delete', answer_path(answer.id), method: :delete, data: { confirm: 'Are you sure?' }
+    td = link_to 'Delete', answer_path(answer.id), method: :delete, remote: true, data: { confirm: 'Are you sure?' }
 
     td class="answer-#{ answer.id }-errors"
