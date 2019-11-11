@@ -6,10 +6,5 @@ table.answers
   tr
     th Body
     th Actions
-  - @question.answers.each do |a|
-    tr
-      td.body = a.body
-      - if a.persisted? && a.user == current_user
-        td = link_to 'Delete', answer_path(a.id), method: :delete, data: { confirm: 'Are you sure?' }
-
-= render 'answers/form'
+  = render @question.answers
+= render 'answers/form' 

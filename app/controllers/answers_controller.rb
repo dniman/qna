@@ -15,20 +15,27 @@ class AnswersController < ApplicationController
 
   def create
     @answer = @question.answers.new(answer_params).tap { |a| a.user = current_user }
+    @answer.save
     
-    if @answer.save
-      redirect_to question_path(@question), notice: 'Your answer was successfully created.'
-    else
-      render 'questions/show'
+    respond_to do |format|
+      format.js {}
+      format.html { redirect_to question_path(@question) }
     end
   end
 
   def update
-    if @answer.update(answer_params)
-      redirect_to @answer
-    else
-      render :edit
+    @answer.update(answer_params)
+    @question = @answer.question
+
+    respond_to do |format|
+      format.js {}
+      format.html { redirect_to question_path(@question) }
     end
+    #if @answer.update(answer_params)
+    #  redirect_to @answer
+    #else
+    #  render :edit
+    #end
   end
 
   def destroy
