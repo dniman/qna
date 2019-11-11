@@ -17,8 +17,10 @@ feature 'User can write an answer on a question page', %q{
     fill_in 'Body', with: 'content answer'
     click_on 'Post your answer'
 
-    expect(page).to have_content 'Your answer was successfully created.'
-    expect(page).to have_content 'content answer'
+    expect(current_path).to eq question_path(question)
+    within '.answers' do
+      expect(page).to have_content /content answer/
+    end
   end
 
   scenario 'Unauthenticated user can\'t write the answer' do

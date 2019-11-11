@@ -17,9 +17,9 @@ class AnswersController < ApplicationController
     @answer = @question.answers.new(answer_params).tap { |a| a.user = current_user }
     
     if @answer.save
-      redirect_to answer_path(@answer), notice: 'Your answer was successfully created.'
+      redirect_to question_path(@question), notice: 'Your answer was successfully created.'
     else
-      render :new
+      render 'questions/show'
     end
   end
 
