@@ -21,7 +21,7 @@ feature 'User can write an answer on a question page', %q{
     expect(page).to have_content 'content answer'
   end
 
-  scenario 'Unathenticated user can\'t write the answer' do
+  scenario 'Unauthenticated user can\'t write the answer' do
     visit question_path(question)
 
     expect(page).not_to have_button 'Post your answer'
