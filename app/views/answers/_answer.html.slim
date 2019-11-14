@@ -1,13 +1,23 @@
-tr class="delete-answer-#{answer.id}" 
+tr class="row-answer-#{answer.id} #{answer.is_best == 1 ? 'best-answer' : ''}" 
   td.body = answer.body
-  - if answer.persisted? && answer.user == current_user
-    td = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id } 
+  - if answer.persisted? 
+    - if answer.user == current_user
+      td = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id } 
 
-    td = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
-       = f.label :body
-       = f.text_area :body
-       = f.submit 'Save your answer'
+      td = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
+         = f.label :body
+         = f.text_area :body
+         = f.submit 'Save your answer'
     
-    td = link_to 'Delete', answer_path(answer.id), method: :delete, remote: true, data: { confirm: 'Are you sure?' }
+      td = link_to 'Delete', answer_path(answer.id), method: :delete, remote: true, data: { confirm: 'Are you sure?' }
+    - else
+      td
+      td
+      td
+    - if answer.is_best == 1 
+        td = 'Best answer' 
+    - else 
+      - if answer.question.user == current_user
+          td = link_to 'Mark as the best answer', mark_as_the_best_answer_path(answer.id), method: :patch, remote: true
 
     td class="answer-#{ answer.id }-errors"

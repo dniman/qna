@@ -1,7 +1,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!, except: [:show]
   before_action :find_question, only: %w[new create]
-  before_action :set_answer, only: %w[show edit update destroy]
+  before_action :set_answer, only: %w[show edit update destroy mark_as_the_best]
 
   def show
   end
@@ -37,6 +37,16 @@ class AnswersController < ApplicationController
     @answer.destroy
     @question = @answer.question
     
+    respond_to do |format|
+      format.js {}
+      format.html { redirect_to question_path(@question) }
+    end
+  end
+
+  def mark_as_the_best
+    @answer.mark_as_the_best
+    @question = @answer.question
+
     respond_to do |format|
       format.js {}
       format.html { redirect_to question_path(@question) }

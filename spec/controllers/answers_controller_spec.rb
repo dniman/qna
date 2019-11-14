@@ -135,4 +135,21 @@ RSpec.describe AnswersController, type: :controller do
       expect(response).to render_template(:destroy) 
     end
   end
+
+  describe 'PATCH #mark_as_the_best' do
+    before { login(user) }
+
+    it 'changes answer attribute' do
+      patch :mark_as_the_best, params: { id: answer, format: :js } 
+      answer.reload
+      
+      expect(answer.is_best).to eq(1)
+    end
+
+    it 'renders update view' do
+      patch :mark_as_the_best, params: { id: answer, format: :js } 
+      expect(response).to render_template(:mark_as_the_best)
+    end
+  end
+
 end

@@ -16,13 +16,16 @@ feature 'User can edit his question', %q{
   end
 
   describe 'Authenticated user' do
-    scenario 'edits his question' do
-      sign_in user
+    scenario 'edits his question', js: true do
+      sign_in(user)
       visit questions_path
-
+      
       within '.questions' do
-        expect(page).to have_link 'Edit'
-      end
+        click_on 'Edit'
+      end   
+      
+      expect(page).to have_content question.title
+      expect(page).to have_content question.body
     end
 
     scenario 'tries to edit other user\'s question' do
