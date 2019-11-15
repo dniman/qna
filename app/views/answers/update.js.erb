@@ -1,4 +1,4 @@
-<% if !@answer.errors.present? %>
+<% if @answer.errors.blank? %>
   $('.answers').html('<%= j render @question.answers %>');
 <% else %>
     $('.answer-<%= @answer.id %>-errors').html("<%= render 'shared/errors', resource: @answer %>");
