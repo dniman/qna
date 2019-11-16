@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 2019_11_14_111758) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
-    t.integer "is_best", default: 0, null: false
+    t.boolean "is_best", default: false, null: false
     t.index ["question_id"], name: "index_answers_on_question_id"
     t.index ["user_id"], name: "index_answers_on_user_id"
   end

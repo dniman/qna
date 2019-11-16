@@ -14,6 +14,10 @@ feature 'User can delete his answer', %q{
       sign_in user
       visit question_path(question)
 
+      within '.answers' do
+        expect(page).to have_content answer.body
+      end
+
       page.accept_confirm do
         click_link 'Delete'
       end

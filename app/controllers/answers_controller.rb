@@ -44,7 +44,7 @@ class AnswersController < ApplicationController
   end
 
   def mark_as_the_best
-    @answer.mark_as_the_best
+    @answer.mark_as_the_best!
     @question = @answer.question
 
     respond_to do |format|

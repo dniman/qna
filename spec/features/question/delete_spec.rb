@@ -6,16 +6,11 @@ feature 'User can delete his question', %q{
 } do
   
   describe 'Authenticated user' do
-    given(:author) do
-      create(:user) do |u|
-        create(:question, user: u)
-      end
-    end
-
-    given(:user) { create(:user) }
+    given!(:users) { create_list(:user, 2) }
+    given!(:question) { create(:question, user: users[0]) }
 
     scenario 'as an author can delete the question' do
-      sign_in(author)
+      sign_in(users[0])
       
       visit questions_path
       click_on 'Delete'
@@ -24,18 +19,18 @@ feature 'User can delete his question', %q{
     end
 
     scenario 'as not an author can\'t delete the question' do
-      sign_in(user)
+      sign_in(users[1])
       
       visit questions_path
       
-      expect(page).not_to have_content 'Delete'
+      expect(page).not_to have_link 'Delete'
     end
   end
 
   scenario 'Unauthenticated user try delete the question' do
     visit questions_path
 
-    expect(page).not_to have_content 'Delete'
+    expect(page).not_to have_link 'Delete'
   end
 
 end

@@ -24,12 +24,13 @@ feature 'User can edit his answer', %q{
       click_on 'Edit'
       
       within '.answers' do
+        expect(page).to have_selector('textarea', id: 'answer_body', exact_text: answer.body)
+
         fill_in 'Body', with: 'edited answer'
         click_on 'Save your answer'
         
-        expect(page).not_to have_content answer.body
         expect(page).to have_content 'edited answer'
-        expect(page).not_to have_selector 'textarea'
+        expect(page).not_to have_selector('textarea', id: 'answer_body', exact_text: answer.body)
       end
     end
 
@@ -53,7 +54,7 @@ feature 'User can edit his answer', %q{
       visit question_path(question)
 
       within '.answers' do
-        expect(page).not_to have_button 'Edit'
+        expect(page).not_to have_link 'Edit'
       end
     end
   end

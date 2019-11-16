@@ -5,4 +5,13 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :questions, dependent: :destroy
+  has_many :answers, dependent: :destroy
+
+  def user_question?(question)
+    questions.include?(question)
+  end
+
+  def user_answer?(answer)
+    answers.include?(answer) 
+  end
 end
