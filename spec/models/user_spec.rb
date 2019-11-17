@@ -7,30 +7,19 @@ RSpec.describe User, type: :model do
   it { should validate_presence_of :password }
 
 
-  let(:user) { create(:user) }
-  let(:other_user) { create(:user) }
-  let(:question) { create(:question, user: user) }
-  
-  describe '#user_question?' do
+  describe '#is_author?' do
+    let(:users) { create_list(:user, 2) }
+    let(:question) { create(:question, user: users[0]) }
+    let(:answer) { create(:answer, question: question, user: users[0]) }
+   
     it "should be true" do
-      expect(user.user_question?(question)).to be_truthy
+      expect(users[0].is_author?(question)).to be
+      expect(users[0].is_author?(answer)).to be
     end
 
     it "should be false" do
-      expect(other_user.user_question?(question)).to be_falsy
-    end
-  end
-
-  describe '#user_answer?' do
-    let(:answer) { create(:answer, user: user, question: question) }
-
-    it "should be true" do
-      expect(user.user_answer?(answer)).to be_truthy
-    end
-
-    it "should be false" do
-      other_answer = create(:answer, user: other_user, question: question)
-      expect(user.user_answer?(other_user)).to be_falsy
+      expect(users[1].is_author?(question)).not_to be
+      expect(users[1].is_author?(answer)).not_to be
     end
   end
 end

@@ -7,11 +7,7 @@ class User < ApplicationRecord
   has_many :questions, dependent: :destroy
   has_many :answers, dependent: :destroy
 
-  def user_question?(question)
-    questions.include?(question)
-  end
-
-  def user_answer?(answer)
-    answers.include?(answer) 
+  def is_author?(resource)
+    resource.user == self 
   end
 end

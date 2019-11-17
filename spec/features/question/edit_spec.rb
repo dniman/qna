@@ -20,12 +20,20 @@ feature 'User can edit his question', %q{
       sign_in(users[0])
       visit questions_path
       
+      click_on 'Edit'
+
       within '.questions' do
-        click_on 'Edit'
+        expect(page).to have_selector("input[value='#{question.title}']")
+        expect(page).to have_selector('textarea', id: 'question_body', exact_text: question.body)
+
+        fill_in 'Title', with: 'edited title'
+        fill_in 'Body', with: 'edited answer'
+        click_on 'Save your question'
+        
+        expect(page).to have_content 'edited title'
+        expect(page).not_to have_selector("input[value='#{question.title}']")
+        expect(page).not_to have_selector('textarea', id: 'question_body', exact_text: question.body)
       end   
-      
-      expect(page).to have_selector("input[value='#{question.title}']")
-      expect(page).to have_selector('textarea', id: 'question_body', exact_text: question.body)
     end
 
     scenario 'tries to edit other user\'s question' do

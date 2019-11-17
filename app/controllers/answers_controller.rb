@@ -1,22 +1,12 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!, except: [:show]
-  before_action :find_question, only: %w[new create]
-  before_action :set_answer, only: %w[show edit update destroy mark_as_the_best]
-
-  def show
-  end
-
-  def new
-    @answer = @question.answers.new.tap { |a| a.user = current_user }
-  end
-
-  def edit
-  end
+  before_action :find_question, only: %w[create]
+  before_action :set_answer, only: %w[update destroy]
 
   def create
     @answer = @question.answers.new(answer_params).tap { |a| a.user = current_user }
     @answer.save
-    
+
     respond_to do |format|
       format.js {}
       format.html { redirect_to question_path(@question) }
@@ -24,6 +14,8 @@ class AnswersController < ApplicationController
   end
 
   def update
+    return unless @answer
+
     @answer.update(answer_params)
     @question = @answer.question
 
@@ -34,6 +26,8 @@ class AnswersController < ApplicationController
   end
 
   def destroy
+    return unless @answer
+
     @answer.destroy
     @question = @answer.question
     
@@ -44,6 +38,10 @@ class AnswersController < ApplicationController
   end
 
   def mark_as_the_best
+    @answer = Answer.find(params[:id])
+
+    return unless current_user.is_author?(@answer.question)
+    
     @answer.mark_as_the_best!
     @question = @answer.question
 
@@ -60,7 +58,8 @@ class AnswersController < ApplicationController
   end
 
   def set_answer
-    @answer = Answer.find(params[:id])
+    answer = Answer.find(params[:id])
+    @answer = answer if current_user.is_author?(answer)
   end
 
   def answer_params

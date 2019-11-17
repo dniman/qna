@@ -3,8 +3,6 @@ p= @question.body
 
 h2 Answers
 table.answers
-  tr
-    th Body
-    th Actions
+  = render 'answers/table_header'
   = render @question.answers
 = render 'answers/form' 

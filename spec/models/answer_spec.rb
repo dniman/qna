@@ -9,20 +9,21 @@ RSpec.describe Answer, type: :model do
   describe '#mark_as_the_best!' do
     let(:user) { create(:user) }
     let(:question) { create(:question, user: user) }
-    let(:answer) { create(:answer, user: user, question: question) }
+    let(:answers) { create_list(:answer, 2, user: user, question: question) }
     
     it "changes is_best to true" do
-      answer.mark_as_the_best!
+      answers[0].mark_as_the_best!
       
-      expect(answer.is_best?).to be(true)
+      expect(answers[0].is_best?).to be
     end
 
     it "changes other's is_best to false" do
-      answer.mark_as_the_best!
-      other_answer = Answer.create(user: user, question: question, body: 'body 2')
-      other_answer.mark_as_the_best!
-      
-      expect(answer.reload.is_best?).to be(false)
+      answers[0].mark_as_the_best!
+      answers[1].mark_as_the_best!
+    
+      answers[0].reload
+
+      expect(answers[0].is_best?).not_to be
     end
 
   end

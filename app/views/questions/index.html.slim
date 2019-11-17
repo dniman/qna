@@ -1,8 +1,7 @@
-p= link_to 'Ask question', new_question_path
-
 h2 Questions
 table.questions
   tr
     th Title
     th Actions
   = render @questions
+= render 'questions/form' 

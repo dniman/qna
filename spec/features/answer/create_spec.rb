@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'User can write an answer on a question page', %q{
+feature 'User can create an answer on a question page', %q{
   In order to answer a question
   As a user
   I'd like to be able to write an answer on a question page
