@@ -18,6 +18,6 @@ tr class="row-answer-#{answer.id} #{answer.is_best? ? 'best-answer' : ''}"
         td = 'Best answer' 
     - else 
       - if current_user&.is_author?(answer.question)
-          td = link_to 'Mark as the best answer', mark_as_the_best_answer_path(answer), method: :patch, remote: true, data: { turbolinks: false }
+          td = link_to 'Mark as the best answer', mark_as_the_best_answer_path(answer), method: :patch, data: { turbolinks: false }
 
     td class="answer-#{ answer.id }-errors"
