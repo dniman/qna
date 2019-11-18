@@ -148,7 +148,7 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       describe 'PATCH #mark_as_the_best' do
-        it 'changes answer attribute' do
+        it 'not changes answer attribute' do
           patch :mark_as_the_best, params: { id: answer, format: :js } 
           answer.reload
           
