@@ -3,12 +3,12 @@ class Answer < ApplicationRecord
   belongs_to :user
  
   validates :body, presence: true
-  validates :question_id, uniqueness: { scope: :is_best }, if: :is_best?
+  validates :question_id, uniqueness: { scope: :best_answer }, if: :best_answer?
 
-  def mark_as_the_best!
+  def mark_as_the_best_answer!
     transaction do
-      self.question.answers.update_all(is_best: false)
-      self.update!(is_best: true)
+      self.question.answers.update_all(best_answer: false)
+      self.update!(best_answer: true)
     end
   end
 end

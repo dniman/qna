@@ -40,9 +40,9 @@ class AnswersController < ApplicationController
   def mark_as_the_best
     @answer = Answer.find(params[:id])
 
-    return unless current_user.is_author?(@answer.question)
+    return unless current_user.author_of?(@answer.question)
     
-    @answer.mark_as_the_best!
+    @answer.mark_as_the_best_answer!
     @question = @answer.question
 
     respond_to do |format|
@@ -59,7 +59,7 @@ class AnswersController < ApplicationController
 
   def set_answer
     answer = Answer.find(params[:id])
-    @answer = answer if current_user.is_author?(answer)
+    @answer = answer if current_user.author_of?(answer)
   end
 
   def answer_params

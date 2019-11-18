@@ -47,7 +47,7 @@ class QuestionsController < ApplicationController
 
   def set_question
     question = Question.find(params[:id])
-    @question = question if current_user.is_author?(question)
+    @question = question if current_user.author_of?(question)
   end
 
   def question_params

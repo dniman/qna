@@ -1,7 +1,7 @@
-tr class="row-answer-#{answer.id} #{answer.is_best? ? 'best-answer' : ''}" 
+tr class="row-answer-#{answer.id} #{answer.best_answer? ? 'best-answer' : ''}" 
   td.body = answer.body
   - if answer.persisted? 
-    - if current_user&.is_author?(answer)
+    - if current_user&.author_of?(answer)
       td = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id } 
 
       td = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
@@ -14,10 +14,10 @@ tr class="row-answer-#{answer.id} #{answer.is_best? ? 'best-answer' : ''}"
       td
       td
       td
-    - if answer.is_best? 
+    - if answer.best_answer? 
         td = 'Best answer' 
     - else 
-      - if current_user&.is_author?(answer.question)
+      - if current_user&.author_of?(answer.question)
           td = link_to 'Mark as the best answer', mark_as_the_best_answer_path(answer), method: :patch, data: { turbolinks: false }
 
     td class="answer-#{ answer.id }-errors"

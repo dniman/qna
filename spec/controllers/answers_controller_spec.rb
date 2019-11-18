@@ -87,7 +87,7 @@ RSpec.describe AnswersController, type: :controller do
           patch :mark_as_the_best, params: { id: answer, format: :js } 
           answer.reload
           
-          expect(answer.is_best).to eq(1)
+          expect(answer).to be_best_answer 
         end
 
         it 'renders update view' do
@@ -152,7 +152,7 @@ RSpec.describe AnswersController, type: :controller do
           patch :mark_as_the_best, params: { id: answer, format: :js } 
           answer.reload
           
-          expect(answer.is_best).to eq(0)
+          expect(answer).not_to be_best_answer
         end
 
         it 'renders update view' do

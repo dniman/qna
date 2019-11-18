@@ -6,24 +6,24 @@ RSpec.describe Answer, type: :model do
 
   it { should validate_presence_of :body }
 
-  describe '#mark_as_the_best!' do
+  describe '#mark_as_the_best_answer!' do
     let(:user) { create(:user) }
     let(:question) { create(:question, user: user) }
     let(:answers) { create_list(:answer, 2, user: user, question: question) }
     
-    it "changes is_best to true" do
-      answers[0].mark_as_the_best!
+    it "true" do
+      answers[0].mark_as_the_best_answer!
       
-      expect(answers[0].is_best?).to be
+      expect(answers[0]).to be_best_answer 
     end
 
-    it "changes other's is_best to false" do
-      answers[0].mark_as_the_best!
-      answers[1].mark_as_the_best!
+    it "false" do
+      answers[0].mark_as_the_best_answer!
+      answers[1].mark_as_the_best_answer!
     
       answers[0].reload
 
-      expect(answers[0].is_best?).not_to be
+      expect(answers[0]).not_to be_best_answer
     end
 
   end

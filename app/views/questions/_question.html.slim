@@ -1,6 +1,6 @@
 tr class="row-question-#{ question.id }"
   td.title = link_to question.title, question_path(question)
-  - if current_user&.is_author?(question)
+  - if current_user&.author_of?(question)
       td = link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }  
       
       td = form_with model: question, class: 'hidden', html: { id: "edit-question-#{question.id}" } do |f|
