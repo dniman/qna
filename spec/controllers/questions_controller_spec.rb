@@ -111,18 +111,13 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'when user not authenticated' do
-      context 'with valid attributes' do
-        it '401' do
-          patch :update, params: { id: questions[0], question: attributes_for(:question), format: :js } 
-          expect(response).to have_http_status(401)
-        end
+      it '401' do
+        patch :update, params: { id: questions[0], question: attributes_for(:question), format: :js } 
+        expect(response).to have_http_status(401)
       end
-
-      context 'with invalid attributes' do
-        it '401' do
-          patch :update, params: { id: questions[0], question: attributes_for(:question, :invalid), format: :js } 
-          expect(response).to have_http_status(401)
-        end
+        
+      it 'does not save the question' do
+        expect { post :create, params: { question: attributes_for(:question) }, format: :js }.to_not change(Question, :count)
       end
     end
   end
@@ -172,57 +167,38 @@ RSpec.describe QuestionsController, type: :controller do
       context 'and user is not an author' do
         before { sign_in(users[1]) }
 
-        context 'with valid attributes' do
-          it 'assigns the requested question to @question' do
-            patch :update, params: { id: questions[0], question: attributes_for(:question), format: :js } 
-            expect(assigns(:question)).to eq(questions[0])
-          end
-
-          it 'not changes question attributes' do
-            patch :update, params: { id: questions[0], question: { title: 'new title', body: 'new body' }, format: :js } 
-            questions[0].reload
-
-            expect(questions[0].title).not_to eq('new title')
-            expect(questions[0].body).not_to eq('new body')
-          end
-
-          it 'renders update view' do
-            patch :update, params: { id: questions[0], question: attributes_for(:question), format: :js } 
-            expect(response).to render_template(:update)
-          end
+        it 'assigns the requested question to @question' do
+          patch :update, params: { id: questions[0], question: attributes_for(:question), format: :js } 
+          expect(assigns(:question)).to eq(questions[0])
         end
 
-        context 'with invalid attributes' do
-          before { patch :update, params: { id: questions[0], question: attributes_for(:question, :invalid) }, format: :js }
+        it 'not changes question attributes' do
+          patch :update, params: { id: questions[0], question: { title: 'new title', body: 'new body' }, format: :js } 
+          questions[0].reload
 
-          it 'does not change question' do
-            title = questions[0].title
-            questions[0].reload
+          expect(questions[0].title).not_to eq('new title')
+          expect(questions[0].body).not_to eq('new body')
+        end
 
-            expect(questions[0].title).to eq(title)
-            expect(questions[0].body).to eq('MyText')
-          end
-
-          it 'renders update view' do
-            expect(response).to render_template(:update)
-          end
+        it 'renders update view' do
+          patch :update, params: { id: questions[0], question: attributes_for(:question), format: :js } 
+          expect(response).to render_template(:update)
         end
       end
     end
 
     context 'when user not authenticated' do
-      context 'with valid attributes' do
-        it '401' do
-          patch :update, params: { id: questions[0], question: attributes_for(:question), format: :js } 
-          expect(response).to have_http_status(401)
-        end
+      it '401' do
+        patch :update, params: { id: questions[0], question: attributes_for(:question), format: :js } 
+        expect(response).to have_http_status(401)
       end
 
-      context 'with invalid attributes' do
-        it '401' do
-          patch :update, params: { id: questions[0], question: attributes_for(:question, :invalid), format: :js } 
-          expect(response).to have_http_status(401)
-        end
+      it 'does not changes question attributes' do
+        patch :update, params: { id: questions[0], question: { title: 'new title', body: 'new body' }, format: :js } 
+        questions[0].reload
+
+        expect(questions[0].title).not_to eq('new title')
+        expect(questions[0].body).not_to eq('new body')
       end
     end
   end
@@ -260,6 +236,10 @@ RSpec.describe QuestionsController, type: :controller do
       it '401' do
         delete :destroy, params: { id: questions[0] }, format: :js 
         expect(response).to have_http_status(401)
+      end
+      
+      it 'does not delete the question' do
+        expect { delete :destroy, params: { id: questions[0] }, format: :js }.to_not change(Question, :count)
       end
     end
   end
