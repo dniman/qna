@@ -5,12 +5,11 @@ RSpec.describe QuestionsController, type: :controller do
   let!(:questions) { create_list(:question, 3, user: users[0]) }
   let!(:question) { questions[0] }
 
-
-  context "Authenticated user" do
-    describe 'GET #index' do
+  describe 'GET #index' do
+    context 'when user authenticated' do
       before { sign_in(users[0]) }
       before { get :index }
-        
+      
       it 'populates an array of all questions' do
         expect(assigns(:questions)).to match_array(questions)
       end
@@ -18,13 +17,74 @@ RSpec.describe QuestionsController, type: :controller do
       it 'assigns new question to @question' do
         expect(assigns(:question)).to be_a_new(Question)
       end
+
+      it 'renders index view' do
+        expect(response).to render_template :index
+      end
+    end
+    
+    context "when user not authenticated" do
+      before { get :index }
+        
+      it 'populates an array of all questions' do
+        expect(assigns(:questions)).to match_array(questions)
+      end
+
+      it 'not assigns new question to @question' do
+        expect(assigns(:question)).not_to be_a_new(Question)
+      end
         
       it 'renders index view' do
         expect(response).to render_template :index
       end
     end
- 
-    describe 'POST #create' do
+  end
+
+      
+  describe 'GET #show' do
+    context 'when user authenticated' do
+      context 'and user is author' do
+        before { sign_in(users[0]) }
+        before { get :show, params: { id: questions[0] } }
+
+        it 'assigns the requested question to @question' do
+          expect(assigns(:question)).to eq(questions[0])
+        end
+
+        it 'renders show view' do
+          expect(response).to render_template(:show)
+        end
+      end
+
+      context 'and user is not an author' do
+        before { sign_in(users[1]) }
+        before { get :show, params: { id: questions[0] } }
+
+        it 'assigns the requested question to @question' do
+          expect(assigns(:question)).to eq(questions[0])
+        end
+
+        it 'renders show view' do
+          expect(response).to render_template(:show)
+        end
+      end
+    end
+
+    context 'when user not authenticated' do
+      before { get :show, params: { id: questions[0] } }
+
+      it 'assigns the requested question to @question' do
+        expect(assigns(:question)).to eq(questions[0])
+      end
+
+      it 'renders show view' do
+        expect(response).to render_template(:show)
+      end
+    end
+  end
+
+  describe 'POST #create' do
+    context 'when user authenticated' do
       before { sign_in(users[0]) }
 
       context 'with valid attributes' do
@@ -50,24 +110,29 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
 
-    context 'as an author' do
-      before { sign_in(users[0]) }
-      
-      describe 'GET #show' do
-        before { get :show, params: { id: questions[0] } }
-
-        it 'assigns the requested question to @question' do
-          expect(assigns(:question)).to eq(questions[0])
-        end
-
-        it 'renders show view' do
-          expect(response).to render_template(:show)
+    context 'when user not authenticated' do
+      context 'with valid attributes' do
+        it '401' do
+          patch :update, params: { id: questions[0], question: attributes_for(:question), format: :js } 
+          expect(response).to have_http_status(401)
         end
       end
 
-      describe 'PATCH #update' do
+      context 'with invalid attributes' do
+        it '401' do
+          patch :update, params: { id: questions[0], question: attributes_for(:question, :invalid), format: :js } 
+          expect(response).to have_http_status(401)
+        end
+      end
+    end
+  end
+
+  describe 'PATCH #update' do
+    context 'when user authenticated' do 
+      context 'and user is author' do
+        before { sign_in(users[0]) }
+
         context 'with valid attributes' do
-          
           it 'assigns the requested question to @question' do
             patch :update, params: { id: questions[0], question: attributes_for(:question) }, format: :js  
             expect(assigns(:question)).to eq(questions[0])
@@ -104,36 +169,10 @@ RSpec.describe QuestionsController, type: :controller do
         end
       end
 
-      describe 'DELETE #destroy' do
-        it 'deletes the question' do
-          expect { delete :destroy, params: { id: questions[0] }, format: :js }.to change(Question, :count).by(-1)
-        end
+      context 'and user is not an author' do
+        before { sign_in(users[1]) }
 
-        it 'renders destroy view' do
-          delete :destroy, params: { id: questions[0] }, format: :js
-          expect(response).to render_template(:destroy)
-        end
-      end
-    end
-
-    context 'as not an author' do
-      before { sign_in(users[1]) }
-
-      describe 'GET #show' do
-        before { get :show, params: { id: questions[0] } }
-
-        it 'assigns the requested question to @question' do
-          expect(assigns(:question)).to eq(questions[0])
-        end
-
-        it 'renders show view' do
-          expect(response).to render_template(:show)
-        end
-      end
-
-      describe 'PATCH #update' do
         context 'with valid attributes' do
-          
           it 'assigns the requested question to @question' do
             patch :update, params: { id: questions[0], question: attributes_for(:question), format: :js } 
             expect(assigns(:question)).to eq(questions[0])
@@ -169,10 +208,32 @@ RSpec.describe QuestionsController, type: :controller do
           end
         end
       end
+    end
 
-      describe 'DELETE #destroy' do
+    context 'when user not authenticated' do
+      context 'with valid attributes' do
+        it '401' do
+          patch :update, params: { id: questions[0], question: attributes_for(:question), format: :js } 
+          expect(response).to have_http_status(401)
+        end
+      end
+
+      context 'with invalid attributes' do
+        it '401' do
+          patch :update, params: { id: questions[0], question: attributes_for(:question, :invalid), format: :js } 
+          expect(response).to have_http_status(401)
+        end
+      end
+    end
+  end
+  
+  describe 'DELETE #destroy' do
+    context 'when user authenticated' do
+      context 'and user is author' do
+        before { sign_in(users[0]) }
+
         it 'deletes the question' do
-          expect { delete :destroy, params: { id: questions[0] }, format: :js }.to_not change(Question, :count)
+          expect { delete :destroy, params: { id: questions[0] }, format: :js }.to change(Question, :count).by(-1)
         end
 
         it 'renders destroy view' do
@@ -181,72 +242,25 @@ RSpec.describe QuestionsController, type: :controller do
         end
       end
 
-    end
-  end  
-
-  context "Unauthenticated user" do
-    describe 'GET #index' do
-      before { get :index }
+      context 'and user is not and author' do
+        before { sign_in(users[1]) }
         
-      it 'populates an array of all questions' do
-        expect(assigns(:questions)).to match_array(questions)
-      end
-
-      it 'not assigns new question to @question' do
-        expect(assigns(:question)).not_to be_a_new(Question)
-      end
-        
-      it 'renders index view' do
-        expect(response).to render_template :index
-      end
-    end
-    
-    describe 'GET #show' do
-      before { get :show, params: { id: questions[0] } }
-
-      it 'assigns the requested question to @question' do
-        expect(assigns(:question)).to eq(questions[0])
-      end
-
-      it 'renders show view' do
-        expect(response).to render_template(:show)
-      end
-    end
-
-    describe 'POST #create' do
-      context 'with valid attributes' do
-        it '401' do
-          patch :update, params: { id: questions[0], question: attributes_for(:question), format: :js } 
-          expect(response).to have_http_status(401)
+        it 'not deletes the question' do
+          expect { delete :destroy, params: { id: questions[0] }, format: :js }.to_not change(Question, :count)
         end
-      end
 
-      context 'with invalid attributes' do
-        it '401' do
-          patch :update, params: { id: questions[0], question: attributes_for(:question, :invalid), format: :js } 
-          expect(response).to have_http_status(401)
+        it 'renders destroy view' do
+          delete :destroy, params: { id: questions[0] }, format: :js
+          expect(response).to render_template(:destroy)
         end
       end
     end
 
-    describe 'PATCH #update' do
-      context 'with valid attributes' do
-        it '401' do
-          patch :update, params: { id: questions[0], question: attributes_for(:question), format: :js } 
-          expect(response).to have_http_status(401)
-        end
-      end
-
-      context 'with invalid attributes' do
-        it '401' do
-          patch :update, params: { id: questions[0], question: attributes_for(:question, :invalid), format: :js } 
-          expect(response).to have_http_status(401)
-        end
+    context 'when user is not authenticated' do
+      it '401' do
+        delete :destroy, params: { id: questions[0] }, format: :js 
+        expect(response).to have_http_status(401)
       end
     end
-
-  end  
-
-
-  
+  end
 end
