@@ -1,53 +1,41 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!, except: [:show]
   before_action :find_question, only: %w[create]
-  before_action :set_answer, only: %w[update destroy]
+  before_action :set_answer, only: %w[update destroy mark_as_the_best]
 
   def create
     @answer = @question.answers.new(answer_params).tap { |a| a.user = current_user }
     @answer.save
 
     respond_to do |format|
-      format.js {}
-      format.html { redirect_to question_path(@question) }
+      format.js
     end
   end
 
   def update
-    return unless @answer
-
-    @answer.update(answer_params)
+    @answer.update(answer_params) if current_user.author_of?(@answer)
     @question = @answer.question
 
     respond_to do |format|
-      format.js {}
-      format.html { redirect_to question_path(@question) }
+      format.js
     end
   end
 
   def destroy
-    return unless @answer
-
-    @answer.destroy
+    @answer.destroy if current_user.author_of?(@answer)
     @question = @answer.question
     
     respond_to do |format|
-      format.js {}
-      format.html { redirect_to question_path(@question) }
+      format.js
     end
   end
 
   def mark_as_the_best
-    @answer = Answer.find(params[:id])
-
-    return unless current_user.author_of?(@answer.question)
-    
-    @answer.mark_as_the_best_answer!
     @question = @answer.question
-
+    @answer.mark_as_the_best_answer! if current_user.author_of?(@question)
+    
     respond_to do |format|
-      format.js {}
-      format.html { redirect_to question_path(@question) }
+      format.js 
     end
   end
 
@@ -58,8 +46,7 @@ class AnswersController < ApplicationController
   end
 
   def set_answer
-    answer = Answer.find(params[:id])
-    @answer = answer if current_user.author_of?(answer)
+    @answer = Answer.find(params[:id])
   end
 
   def answer_params

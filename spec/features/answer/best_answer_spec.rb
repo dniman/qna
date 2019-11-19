@@ -17,7 +17,7 @@ feature 'User can mark the best answer', %q{
   end
 
   describe 'Authenticated user' do
-    scenario 'can mark the best answer to his question' do
+    scenario 'can mark the best answer to his question', js: true do
       sign_in(user)
       visit question_path(question)
 
@@ -29,7 +29,7 @@ feature 'User can mark the best answer', %q{
       end
     end
 
-    scenario 'can change the best answer to his question' do
+    scenario 'can change the best answer to his question', js: true do
       new_answer = create(:answer, question: question, user: user) 
       sign_in(user)
       visit question_path(question)
@@ -50,7 +50,7 @@ feature 'User can mark the best answer', %q{
       end
     end
 
-    scenario 'tries to mark the best answer to other user\'s question' do
+    scenario 'tries to mark the best answer to other user\'s question', js: true do
       new_user = create(:user)
       new_answer = create(:answer, question: question, user: new_user)
       sign_in(new_user)

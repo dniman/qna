@@ -1,7 +1,6 @@
 tr class="row-answer-#{answer.id} #{answer.best_answer? ? 'best-answer' : ''}" 
   td.body = answer.body
-  - if answer.persisted? 
-    - if current_user&.author_of?(answer)
+  - if current_user&.author_of?(answer)
       td = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id } 
 
       td = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
@@ -10,14 +9,15 @@ tr class="row-answer-#{answer.id} #{answer.best_answer? ? 'best-answer' : ''}"
          = f.submit 'Save your answer'
     
       td = link_to 'Delete', answer_path(answer), method: :delete, remote: true, data: { confirm: 'Are you sure?' }
-    - else
+  - else
       td
       td
       td
-    - if answer.best_answer? 
-        td = 'Best answer' 
-    - else 
+  - if answer.best_answer? 
+      td = 'Best answer' 
+  - else 
       - if current_user&.author_of?(answer.question)
-          td = link_to 'Mark as the best answer', mark_as_the_best_answer_path(answer), method: :patch, data: { turbolinks: false }
+          td = link_to 'Mark as the best answer', mark_as_the_best_answer_path(answer), method: :patch, remote: true
+  
+  td class="answer-#{ answer.id }-errors"
 
-    td class="answer-#{ answer.id }-errors"

@@ -16,38 +16,30 @@ class QuestionsController < ApplicationController
     @question = current_user.questions.create(question_params)
     
     respond_to do |format|
-      format.js {}
-      format.html { redirect_to questions_path }
+      format.js
     end
   end
 
   def update
-    return unless @question
-
-    @question.update(question_params)
-    
+    @question.update(question_params) if current_user.author_of?(@question)
+   
     respond_to do |format|
-      format.js {}
-      format.html { redirect_to questions_path }
+      format.js
     end
   end
 
   def destroy
-    return unless @question
-
-    @question.destroy
-
+    @question.destroy if current_user.author_of?(@question)
+      
     respond_to do |format|
-      format.js {}
-      format.html { redirect_to questions_path }
+      format.js
     end
   end
 
   private
 
   def set_question
-    question = Question.find(params[:id])
-    @question = question if current_user.author_of?(question)
+    @question = Question.find(params[:id])
   end
 
   def question_params

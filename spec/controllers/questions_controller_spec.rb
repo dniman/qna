@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let(:users) { create_list(:user, 2) }
-  let(:questions) { create_list(:question, 3, user: users[0]) }
-  let(:question) { questions[0] }
+  let!(:users) { create_list(:user, 2) }
+  let!(:questions) { create_list(:question, 3, user: users[0]) }
+  let!(:question) { questions[0] }
 
 
   context "Authenticated user" do
@@ -69,12 +69,12 @@ RSpec.describe QuestionsController, type: :controller do
         context 'with valid attributes' do
           
           it 'assigns the requested question to @question' do
-            patch :update, params: { id: questions[0], question: attributes_for(:question), format: :js } 
+            patch :update, params: { id: questions[0], question: attributes_for(:question) }, format: :js  
             expect(assigns(:question)).to eq(questions[0])
           end
 
           it 'changes question attributes' do
-            patch :update, params: { id: questions[0], question: { title: 'new title', body: 'new body', format: :js } } 
+            patch :update, params: { id: questions[0], question: { title: 'new title', body: 'new body' }, format: :js } 
             questions[0].reload
 
             expect(questions[0].title).to eq('new title')
@@ -82,7 +82,7 @@ RSpec.describe QuestionsController, type: :controller do
           end
 
           it 'renders update view' do
-            patch :update, params: { id: questions[0], question: attributes_for(:question), format: :js } 
+            patch :update, params: { id: questions[0], question: attributes_for(:question) }, format: :js 
             expect(response).to render_template(:update)
           end
         end
@@ -106,7 +106,6 @@ RSpec.describe QuestionsController, type: :controller do
 
       describe 'DELETE #destroy' do
         it 'deletes the question' do
-          questions[0]
           expect { delete :destroy, params: { id: questions[0] }, format: :js }.to change(Question, :count).by(-1)
         end
 
@@ -135,9 +134,9 @@ RSpec.describe QuestionsController, type: :controller do
       describe 'PATCH #update' do
         context 'with valid attributes' do
           
-          it 'not assigns the requested question to @question' do
+          it 'assigns the requested question to @question' do
             patch :update, params: { id: questions[0], question: attributes_for(:question), format: :js } 
-            expect(assigns(:question)).not_to eq(questions[0])
+            expect(assigns(:question)).to eq(questions[0])
           end
 
           it 'not changes question attributes' do
@@ -173,8 +172,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       describe 'DELETE #destroy' do
         it 'deletes the question' do
-          questions[0]
-          expect { delete :destroy, params: { id: questions[0] }, format: :js }.not_to change(Question, :count)
+          expect { delete :destroy, params: { id: questions[0] }, format: :js }.to_not change(Question, :count)
         end
 
         it 'renders destroy view' do

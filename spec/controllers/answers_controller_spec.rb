@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let(:users) { create_list(:user, 2) }
-  let(:question) { create(:question, user: users[0]) }
-  let(:answer) { create(:answer, question: question, user: users[0]) } 
+  let!(:users) { create_list(:user, 2) }
+  let!(:question) { create(:question, user: users[0]) }
+  let!(:answer) { create(:answer, question: question, user: users[0]) } 
 
   context "Authenticated user" do
     describe 'POST #create' do
@@ -72,7 +72,6 @@ RSpec.describe AnswersController, type: :controller do
 
       describe 'DELETE #destroy' do
         it 'deletes the answer' do
-          answer
           expect { delete :destroy, params: { id: answer }, format: :js }.to change(Answer, :count).by(-1)
         end
 
@@ -84,14 +83,14 @@ RSpec.describe AnswersController, type: :controller do
 
       describe 'PATCH #mark_as_the_best' do
         it 'changes answer attribute' do
-          patch :mark_as_the_best, params: { id: answer, format: :js } 
+          patch :mark_as_the_best, params: { id: answer }, format: :js 
           answer.reload
           
           expect(answer).to be_best_answer 
         end
 
         it 'renders update view' do
-          patch :mark_as_the_best, params: { id: answer, format: :js } 
+          patch :mark_as_the_best, params: { id: answer }, format: :js  
           expect(response).to render_template(:mark_as_the_best)
         end
       end
@@ -102,16 +101,16 @@ RSpec.describe AnswersController, type: :controller do
       
       describe 'PATCH #update' do
         context 'with valid attributes' do
-          it 'not assigns the requested answer to @answer' do
+          it 'assigns the requested answer to @answer' do
             patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
-            expect(assigns(:answer)).not_to eq(answer)
+            expect(assigns(:answer)).to eq(answer)
           end
 
           it 'not changes answer attributes' do
             patch :update, params: { id: answer, answer: { body: 'new body' }, format: :js } 
             answer.reload
 
-            expect(answer.body).to eq('MyText')
+            expect(answer.body).not_to eq('new body')
           end
 
           it 'not renders update view' do
@@ -137,7 +136,6 @@ RSpec.describe AnswersController, type: :controller do
 
       describe 'DELETE #destroy' do
         it 'not deletes the answer' do
-          answer
           expect { delete :destroy, params: { id: answer }, format: :js }.not_to change(Answer, :count)
         end
 
@@ -149,14 +147,14 @@ RSpec.describe AnswersController, type: :controller do
 
       describe 'PATCH #mark_as_the_best' do
         it 'not changes answer attribute' do
-          patch :mark_as_the_best, params: { id: answer, format: :js } 
+          patch :mark_as_the_best, params: { id: answer }, format: :js  
           answer.reload
           
           expect(answer).not_to be_best_answer
         end
 
         it 'renders update view' do
-          patch :mark_as_the_best, params: { id: answer, format: :js } 
+          patch :mark_as_the_best, params: { id: answer }, format: :js 
           expect(response).to render_template(:mark_as_the_best)
         end
       end
