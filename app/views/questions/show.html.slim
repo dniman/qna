@@ -4,5 +4,5 @@ p= @question.body
 h2 Answers
 table.answers
   = render 'answers/table_header'
-  = render @question.answers.includes(:user)
+  = render @question.answers
 = render 'answers/form' 

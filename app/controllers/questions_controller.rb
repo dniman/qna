@@ -3,7 +3,7 @@ class QuestionsController < ApplicationController
   before_action :set_question, only: [:update, :destroy]
 
   def index
-    @questions = Question.all.includes(:user)
+    @questions = Question.all
     @question = current_user.questions.new if user_signed_in?
   end
 
