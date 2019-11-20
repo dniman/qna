@@ -1,39 +1,42 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!, except: [:show]
-  before_action :find_question, only: %w[new create]
-  before_action :set_answer, only: %w[show edit update destroy]
-
-  def show
-  end
-
-  def new
-    @answer = @question.answers.new.tap { |a| a.user = current_user }
-  end
-
-  def edit
-  end
+  before_action :find_question, only: %w[create]
+  before_action :set_answer, only: %w[update destroy mark_as_the_best]
 
   def create
     @answer = @question.answers.new(answer_params).tap { |a| a.user = current_user }
-    
-    if @answer.save
-      redirect_to answer_path(@answer), notice: 'Your answer was successfully created.'
-    else
-      render :new
+    @answer.save
+
+    respond_to do |format|
+      format.js
     end
   end
 
   def update
-    if @answer.update(answer_params)
-      redirect_to @answer
-    else
-      render :edit
+    @answer.update(answer_params) if current_user.author_of?(@answer)
+    @question = @answer.question
+
+    respond_to do |format|
+      format.js
     end
   end
 
   def destroy
-    @answer.destroy
-    redirect_to question_path(@answer.question), notice: 'Your answer successfully deleted.'
+    @answer.destroy if current_user.author_of?(@answer)
+    @question = @answer.question
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def mark_as_the_best
+    @question = @answer.question
+    @answer.mark_as_the_best_answer! if current_user.author_of?(@question)
+    
+    respond_to do |format|
+      format.js 
+    end
   end
 
   private

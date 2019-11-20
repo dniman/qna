@@ -2,15 +2,7 @@ h1= @question.title
 p= @question.body
 
 h2 Answers
-table
-  tr
-    th Body
-    th Actions
-  tr
-  - @question.answers.each do |a|
-    tr
-      td.body = a.body
-      - if a.persisted? && a.user == current_user
-        td = link_to 'Delete', answer_path(a.id), method: :delete, data: { confirm: 'Are you sure?' }
-
-= render 'answers/form'
+table.answers
+  = render 'answers/table_header'
+  = render @question.answers
+= render 'answers/form' 

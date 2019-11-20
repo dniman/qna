@@ -5,40 +5,41 @@ feature 'User can delete his answer', %q{
   I'd like to be able to delete my answers
 } do
   
-  given(:author) do
-    create(:user) do |u|
-      create(:question, user: u) do |q|
-        create(:answer, question: q, user: u)
+  given!(:users) { create_list(:user, 2) }
+  given!(:question) { create(:question, user: users[0]) }
+  given!(:answer) { create(:answer, question: question, user: users[0]) }
+
+  describe 'Authenticated user' do
+    scenario 'can delete his answer', js: true do
+      sign_in(users[0])
+      visit question_path(question)
+
+      within '.answers' do
+        expect(page).to have_content answer.body
+      end
+
+      page.accept_confirm do
+        click_link 'Delete'
+      end
+      
+      within '.answers' do
+        expect(page).not_to have_content answer.body
+      end
+    end
+
+    scenario 'can\'t delete other user\'s answer' do
+      sign_in(users[1]) 
+      visit question_path(question)
+
+      within '.answers' do
+        expect(page).not_to have_link 'Delete'
       end
     end
   end
 
-  given(:question) { author.questions.first }
-
-  describe 'Authenticated user' do
-    given(:user) { create(:user) }
-
-    scenario 'as an author can delete the answer' do
-      sign_in(author)
-      
-      visit question_path(question)
-      click_on 'Delete'
-      
-      expect(page).to have_content 'Your answer successfully deleted.'
-    end
-
-    scenario 'as not an author can\'t delete the answer' do
-      sign_in(user)
-      
-      visit question_path(question)
-      
-      expect(page).not_to have_content 'Delete'
-    end
-  end
-
-  scenario 'Unathenticated user try delete the answer' do
+  scenario 'Unauthenticated user can\'t delete an answer' do
     visit question_path(question)
 
-    expect(page).not_to have_content 'Delete'
+    expect(page).not_to have_link 'Delete'
   end
 end
