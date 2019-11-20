@@ -10,9 +10,10 @@ RSpec.describe Answer, type: :model do
   context 'methods' do
     let(:user) { create(:user) }
     let(:question) { create(:question) }
-    let(:answers) { create_list(:answer, 2, question: question) }
     
     describe '#mark_as_the_best_answer!' do
+      let(:answers) { create_list(:answer, 2, question: question) }
+      
       it "true" do
         answers.first.mark_as_the_best_answer!
         
@@ -30,11 +31,13 @@ RSpec.describe Answer, type: :model do
     end
     
     describe 'default order' do
+      let(:answers) { create_list(:answer, 3, question: question) }
+
       it "should display the best answer first" do
         answers.last.mark_as_the_best_answer!
         question.reload
 
-        expect(question.answers).to eq([answers.last, answers.first])
+        expect(question.answers).to eq([answers.last, answers.first, answers[1]])
       end
     end
   end
