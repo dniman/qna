@@ -1,13 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let!(:users) { create_list(:user, 2) }
-  let!(:question) { create(:question, user: users[0]) }
-  let!(:answer) { create(:answer, question: question, user: users[0]) } 
+  let!(:user) { create(:user) }
+  let!(:question) { create(:question) }
+  let!(:answer) { create(:answer, question: question) } 
 
   describe 'POST #create' do
+
     context 'when user is authenticated' do
-      before { login(users[0]) }
+      before { login(user) }
 
       context 'with valid attributes' do
         it 'saves a new answer to the database' do
@@ -48,7 +49,7 @@ RSpec.describe AnswersController, type: :controller do
     
     context 'when user is authenticated' do
       context 'and user is an author' do
-        before { login(users[0]) }
+        before { login(answer.user) }
 
         context 'with valid attributes' do
           it 'assigns the requested answer to @answer' do
@@ -84,7 +85,7 @@ RSpec.describe AnswersController, type: :controller do
         end
 
         context 'and user is not an author' do
-          before { login(users[1]) }
+          before { login(user) }
 
           it 'assigns the requested answer to @answer' do
             patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
@@ -95,7 +96,7 @@ RSpec.describe AnswersController, type: :controller do
             patch :update, params: { id: answer, answer: { body: 'new body' }, format: :js } 
             answer.reload
 
-            expect(answer.body).not_to eq('new body')
+            expect(answer.body).to eq('MyText')
           end
 
           it 'not renders update view' do
@@ -124,7 +125,7 @@ RSpec.describe AnswersController, type: :controller do
   describe 'DELETE #destroy' do
     context 'when user is authenticated' do
       context 'and user is author' do
-        before { login(users[0]) }
+        before { login(answer.user) }
         
         it 'deletes the answer' do
           expect { delete :destroy, params: { id: answer }, format: :js }.to change(Answer, :count).by(-1)
@@ -137,7 +138,7 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       context 'and user is not an author' do
-        before { login(users[1]) }
+        before { login(user) }
 
         it 'not deletes the answer' do
           expect { delete :destroy, params: { id: answer }, format: :js }.not_to change(Answer, :count)
@@ -165,7 +166,7 @@ RSpec.describe AnswersController, type: :controller do
   describe 'PATCH #mark_as_the_best' do
     context 'when user is authenticated' do
       context 'and user is author' do
-        before { login(users[0]) }
+        before { login(question.user) }
 
         it 'changes answer attribute' do
           patch :mark_as_the_best, params: { id: answer }, format: :js 
@@ -181,7 +182,7 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       context 'and user is not an author' do
-        before { login(users[1]) }
+        before { login(user) }
         
         it 'not changes answer attribute' do
           patch :mark_as_the_best, params: { id: answer }, format: :js  

@@ -2,8 +2,7 @@ class Answer < ApplicationRecord
   belongs_to :question
   belongs_to :user
 
-  default_scope { order(best_answer: 'desc') }
-  default_scope { joins('join answers as a1 on a1.id = answers.id').order('a1.id asc') }
+  default_scope { order(best_answer: 'desc').order('created_at') }
 
   validates :body, presence: true
   validates :question_id, uniqueness: { scope: :best_answer }, if: :best_answer?

@@ -1,13 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let!(:users) { create_list(:user, 2) }
-  let!(:questions) { create_list(:question, 3, user: users[0]) }
-  let!(:question) { questions[0] }
 
   describe 'GET #index' do
+    let(:user) { create(:user) }
+    let(:questions) { create_list(:question, 3) }
+    
     context 'when user authenticated' do
-      before { sign_in(users[0]) }
+      before { sign_in(user) }
       before { get :index }
       
       it 'populates an array of all questions' do
@@ -42,13 +42,16 @@ RSpec.describe QuestionsController, type: :controller do
 
       
   describe 'GET #show' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+
     context 'when user authenticated' do
       context 'and user is author' do
-        before { sign_in(users[0]) }
-        before { get :show, params: { id: questions[0] } }
+        before { sign_in(question.user) }
+        before { get :show, params: { id: question } }
 
         it 'assigns the requested question to @question' do
-          expect(assigns(:question)).to eq(questions[0])
+          expect(assigns(:question)).to eq(question)
         end
 
         it 'renders show view' do
@@ -57,11 +60,11 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       context 'and user is not an author' do
-        before { sign_in(users[1]) }
-        before { get :show, params: { id: questions[0] } }
+        before { sign_in(user) }
+        before { get :show, params: { id: question } }
 
         it 'assigns the requested question to @question' do
-          expect(assigns(:question)).to eq(questions[0])
+          expect(assigns(:question)).to eq(question)
         end
 
         it 'renders show view' do
@@ -71,10 +74,10 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'when user not authenticated' do
-      before { get :show, params: { id: questions[0] } }
+      before { get :show, params: { id: question } }
 
       it 'assigns the requested question to @question' do
-        expect(assigns(:question)).to eq(questions[0])
+        expect(assigns(:question)).to eq(question)
       end
 
       it 'renders show view' do
@@ -84,8 +87,11 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'POST #create' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+
     context 'when user authenticated' do
-      before { sign_in(users[0]) }
+      before { sign_in(user) }
 
       context 'with valid attributes' do
         it 'saves a new question to the database' do
@@ -112,7 +118,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'when user not authenticated' do
       it '401' do
-        patch :update, params: { id: questions[0], question: attributes_for(:question), format: :js } 
+        patch :update, params: { id: question, question: attributes_for(:question), format: :js } 
         expect(response).to have_http_status(401)
       end
         
@@ -123,39 +129,44 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'PATCH #update' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+
     context 'when user authenticated' do 
       context 'and user is author' do
-        before { sign_in(users[0]) }
+        before { sign_in(question.user) }
 
         context 'with valid attributes' do
           it 'assigns the requested question to @question' do
-            patch :update, params: { id: questions[0], question: attributes_for(:question) }, format: :js  
-            expect(assigns(:question)).to eq(questions[0])
+            patch :update, params: { id: question, question: attributes_for(:question) }, format: :js  
+            expect(assigns(:question)).to eq(question)
           end
 
           it 'changes question attributes' do
-            patch :update, params: { id: questions[0], question: { title: 'new title', body: 'new body' }, format: :js } 
-            questions[0].reload
+            patch :update, params: { id: question, question: { title: 'new title', body: 'new body' }, format: :js } 
+            question.reload
 
-            expect(questions[0].title).to eq('new title')
-            expect(questions[0].body).to eq('new body')
+            expect(question.title).to eq('new title')
+            expect(question.body).to eq('new body')
           end
 
           it 'renders update view' do
-            patch :update, params: { id: questions[0], question: attributes_for(:question) }, format: :js 
+            patch :update, params: { id: question, question: attributes_for(:question) }, format: :js 
             expect(response).to render_template(:update)
           end
         end
 
         context 'with invalid attributes' do
-          before { patch :update, params: { id: questions[0], question: attributes_for(:question, :invalid), format: :js } }
+          before { patch :update, params: { id: question, question: attributes_for(:question, :invalid), format: :js } }
 
           it 'does not change question' do
-            title = questions[0].title
-            questions[0].reload
+            body = question.body
+            title = question.title
 
-            expect(questions[0].title).to eq(title)
-            expect(questions[0].body).to eq('MyText')
+            question.reload
+
+            expect(question.title).to eq(title)
+            expect(question.body).to eq(body)
           end
 
           it 'renders update view' do
@@ -165,23 +176,27 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       context 'and user is not an author' do
-        before { sign_in(users[1]) }
+        before { sign_in(user) }
 
         it 'assigns the requested question to @question' do
-          patch :update, params: { id: questions[0], question: attributes_for(:question), format: :js } 
-          expect(assigns(:question)).to eq(questions[0])
+          patch :update, params: { id: question, question: attributes_for(:question), format: :js } 
+          expect(assigns(:question)).to eq(question)
         end
 
         it 'not changes question attributes' do
-          patch :update, params: { id: questions[0], question: { title: 'new title', body: 'new body' }, format: :js } 
-          questions[0].reload
+          patch :update, params: { id: question, question: { title: 'new title', body: 'new body' }, format: :js } 
+          
+          body = question.body
+          title = question.title
+          
+          question.reload
 
-          expect(questions[0].title).not_to eq('new title')
-          expect(questions[0].body).not_to eq('new body')
+          expect(question.title).to eq(title)
+          expect(question.body).to eq(body)
         end
 
         it 'renders update view' do
-          patch :update, params: { id: questions[0], question: attributes_for(:question), format: :js } 
+          patch :update, params: { id: question, question: attributes_for(:question), format: :js } 
           expect(response).to render_template(:update)
         end
       end
@@ -189,44 +204,51 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'when user not authenticated' do
       it '401' do
-        patch :update, params: { id: questions[0], question: attributes_for(:question), format: :js } 
+        patch :update, params: { id: question, question: attributes_for(:question), format: :js } 
         expect(response).to have_http_status(401)
       end
 
       it 'does not changes question attributes' do
-        patch :update, params: { id: questions[0], question: { title: 'new title', body: 'new body' }, format: :js } 
-        questions[0].reload
+        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' }, format: :js } 
+        
+        body = question.body
+        title = question.title
+        
+        question.reload
 
-        expect(questions[0].title).not_to eq('new title')
-        expect(questions[0].body).not_to eq('new body')
+        expect(question.title).to eq(title)
+        expect(question.body).to eq(body)
       end
     end
   end
   
   describe 'DELETE #destroy' do
+    let!(:user) { create(:user) }
+    let!(:question) { create(:question) }
+
     context 'when user authenticated' do
       context 'and user is author' do
-        before { sign_in(users[0]) }
+        before { sign_in(question.user) }
 
         it 'deletes the question' do
-          expect { delete :destroy, params: { id: questions[0] }, format: :js }.to change(Question, :count).by(-1)
+          expect { delete :destroy, params: { id: question }, format: :js }.to change(Question, :count).by(-1)
         end
 
         it 'renders destroy view' do
-          delete :destroy, params: { id: questions[0] }, format: :js
+          delete :destroy, params: { id: question }, format: :js
           expect(response).to render_template(:destroy)
         end
       end
 
       context 'and user is not and author' do
-        before { sign_in(users[1]) }
+        before { sign_in(user) }
         
         it 'not deletes the question' do
-          expect { delete :destroy, params: { id: questions[0] }, format: :js }.to_not change(Question, :count)
+          expect { delete :destroy, params: { id: question }, format: :js }.to_not change(Question, :count)
         end
 
         it 'renders destroy view' do
-          delete :destroy, params: { id: questions[0] }, format: :js
+          delete :destroy, params: { id: question }, format: :js
           expect(response).to render_template(:destroy)
         end
       end
@@ -234,12 +256,12 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'when user is not authenticated' do
       it '401' do
-        delete :destroy, params: { id: questions[0] }, format: :js 
+        delete :destroy, params: { id: question }, format: :js 
         expect(response).to have_http_status(401)
       end
       
       it 'does not delete the question' do
-        expect { delete :destroy, params: { id: questions[0] }, format: :js }.to_not change(Question, :count)
+        expect { delete :destroy, params: { id: question }, format: :js }.to_not change(Question, :count)
       end
     end
   end
