@@ -16,7 +16,7 @@ tr class="row-answer-#{answer.id} #{answer.best_answer? ? 'best-answer' : ''}"
   - if answer.best_answer? 
       td = 'Best answer' 
   - else 
-      - if current_user&.author_of?(answer.question)
+      - if current_user&.author_of?(answer.question) && answer.persisted?
           td = link_to 'Mark as the best answer', mark_as_the_best_answer_path(answer), method: :patch, remote: true
   
   td class="answer-#{ answer.id }-errors"
