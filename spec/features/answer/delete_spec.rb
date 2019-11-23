@@ -5,21 +5,21 @@ feature 'User can delete his answer', %q{
   I'd like to be able to delete my answers
 } do
   
-  given!(:users) { create_list(:user, 2) }
-  given!(:question) { create(:question, user: users[0]) }
-  given!(:answer) { create(:answer, question: question, user: users[0]) }
+  given!(:user) { create(:user) }
+  given!(:question) { create(:question) }
+  given!(:answer) { create(:answer, question: question) }
 
   describe 'Authenticated user' do
     scenario 'can delete his answer', js: true do
-      sign_in(users[0])
+      sign_in(answer.user)
       visit question_path(question)
 
-      within '.answers' do
+      within ".row-answer-#{answer.id}" do
         expect(page).to have_content answer.body
-      end
-
-      page.accept_confirm do
-        click_link 'Delete'
+      
+        page.accept_confirm do
+          click_link 'Delete'
+        end
       end
       
       within '.answers' do
@@ -28,7 +28,7 @@ feature 'User can delete his answer', %q{
     end
 
     scenario 'can\'t delete other user\'s answer' do
-      sign_in(users[1]) 
+      sign_in(user) 
       visit question_path(question)
 
       within '.answers' do
@@ -40,6 +40,8 @@ feature 'User can delete his answer', %q{
   scenario 'Unauthenticated user can\'t delete an answer' do
     visit question_path(question)
 
-    expect(page).not_to have_link 'Delete'
+    within '.answers' do
+      expect(page).not_to have_link 'Delete'
+    end
   end
 end

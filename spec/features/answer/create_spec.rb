@@ -10,11 +10,12 @@ feature 'User can create an answer on a question page', %q{
   given(:question) { create(:question) }
 
   describe 'Authenticated user' do
-    scenario 'can write the answer', js: true do
+    before do 
       sign_in(user)
-
       visit question_path(question)
-      
+    end 
+
+    scenario 'can write the answer', js: true do
       fill_in 'Body', with: 'content answer'
       click_on 'Post your answer'
 
@@ -25,19 +26,44 @@ feature 'User can create an answer on a question page', %q{
     end
 
     scenario 'create answer with errors', js: true do
-      sign_in(user)
-
-      visit question_path(question)
       click_on 'Post your answer'
       
       expect(page).to have_content "Body can't be blank"
     end
+    
+    context 'create answer with' do
+      scenario 'one file attached', js: true do
+        fill_in 'Body', with: 'content answer'
+        attach_file 'File', "#{Rails.root}/spec/rails_helper.rb"        
+        click_on 'Post your answer'
+
+        within '.answers' do
+          click_on 'Show'
+        end
+          
+        expect(page).to have_link 'rails_helper.rb'
+      end
+      
+      scenario 'many files attached', js: true do
+        fill_in 'Body', with: 'content answer'
+        attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+        click_on 'Post your answer'
+
+        within '.answers' do
+          click_on 'Show'
+        end
+        
+        expect(page).to have_link 'rails_helper.rb'
+        expect(page).to have_link 'spec_helper.rb'
+      end
+    end
   end
 
-  scenario 'Unauthenticated user can\'t write the answer' do
-    visit question_path(question)
+  context 'Unauthenticated user' do
+    scenario 'can\'t to post the answer' do
+      visit question_path(question)
 
-    expect(page).not_to have_button 'Post your answer'
+      expect(page).not_to have_button 'Post your answer'
+    end
   end
-
 end

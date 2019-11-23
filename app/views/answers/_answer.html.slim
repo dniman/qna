@@ -1,15 +1,21 @@
 tr class="row-answer-#{answer.id} #{answer.best_answer? ? 'best-answer' : ''}" 
   td.body = answer.body
   - if current_user&.author_of?(answer)
+      td = link_to 'Show', answer_path(answer) if answer.persisted?
       td = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id } 
 
       td = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
          = f.label :body
          = f.text_area :body
+         
+         = f.label :files
+         = f.file_field :files, multiple: true
+         
          = f.submit 'Save your answer'
     
       td = link_to 'Delete', answer_path(answer), method: :delete, remote: true, data: { confirm: 'Are you sure?' }
   - else
+      td = link_to 'Show', answer_path(answer) if answer.persisted?
       td
       td
       td

@@ -1,10 +1,14 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, except: [:show]
+  before_action :authenticate_user!, except: %w[show]
   before_action :find_question, only: %w[create]
-  before_action :set_answer, only: %w[update destroy mark_as_the_best]
+  before_action :set_answer, only: %w[show update destroy mark_as_the_best]
+
+  def show
+  end
 
   def create
-    @answer = @question.answers.new(answer_params).tap { |a| a.user = current_user }
+    @answer = current_user.answers.new(answer_params)
+    @answer.question = @question
     @answer.save
 
     respond_to do |format|
@@ -39,6 +43,16 @@ class AnswersController < ApplicationController
     end
   end
 
+  def destroy_file_attachment
+    file = ActiveStorage::Blob.find_signed(params[:id])
+    @attachment = ActiveStorage::Attachment.find(file.id)
+    @attachment.purge if current_user.author_of?(@attachment.record)
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+  
   private
 
   def find_question
@@ -50,6 +64,6 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body, files: [])
   end
 end

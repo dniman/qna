@@ -13,7 +13,7 @@ feature 'Display the best answer first in the list of answers', %q{
 
   scenario 'Unauthenticated user can see the best answer first' do
     visit question_path(question)
-    item = find('.answers tr:nth-of-type(2) td:nth-of-type(5)').text
+    item = find('.answers tr:nth-of-type(2) td:nth-of-type(6)').text
       
     expect(item).to eq('Best answer')
   end
@@ -21,7 +21,7 @@ feature 'Display the best answer first in the list of answers', %q{
   scenario 'Authenticated user can see the best answer first' do
     sign_in(user)
     visit question_path(question)
-    item = find('.answers tr:nth-of-type(2) td:nth-of-type(5)').text
+    item = find('.answers tr:nth-of-type(2) td:nth-of-type(6)').text
       
     expect(item).to eq('Best answer')
   end
