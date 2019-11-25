@@ -1,0 +1,6 @@
+tr class="row-file-#{ file.id }"
+  td = link_to file.filename, url_for(file)
+  - if current_user&.author_of?(file.record)
+      td = link_to 'Delete', file_path(file.signed_id), method: :delete, remote: true, data: { confirm: 'Are you sure?' }
+  - else
+      td

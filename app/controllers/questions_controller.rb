@@ -35,16 +35,6 @@ class QuestionsController < ApplicationController
     end
   end
 
-  def destroy_file_attachment
-    file = ActiveStorage::Blob.find_signed(params[:id])
-    @attachment = ActiveStorage::Attachment.find(file.id)
-    @attachment.purge if current_user.author_of?(@attachment.record)
-    
-    respond_to do |format|
-      format.js
-    end
-  end
-
   private
 
   def set_question

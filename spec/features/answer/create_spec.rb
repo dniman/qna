@@ -32,29 +32,15 @@ feature 'User can create an answer on a question page', %q{
     end
     
     context 'create answer with' do
-      scenario 'one file attached', js: true do
-        fill_in 'Body', with: 'content answer'
-        attach_file 'File', "#{Rails.root}/spec/rails_helper.rb"        
-        click_on 'Post your answer'
-
-        within '.answers' do
-          click_on 'Show'
-        end
-          
-        expect(page).to have_link 'rails_helper.rb'
-      end
-      
-      scenario 'many files attached', js: true do
+      scenario 'one or many files attached', js: true do
         fill_in 'Body', with: 'content answer'
         attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
         click_on 'Post your answer'
 
-        within '.answers' do
-          click_on 'Show'
+        within "[class^=row-answer]" do
+          expect(page).to have_link 'rails_helper.rb'
+          expect(page).to have_link 'spec_helper.rb'
         end
-        
-        expect(page).to have_link 'rails_helper.rb'
-        expect(page).to have_link 'spec_helper.rb'
       end
     end
   end

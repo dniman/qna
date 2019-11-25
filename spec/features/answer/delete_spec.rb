@@ -16,9 +16,11 @@ feature 'User can delete his answer', %q{
 
       within ".row-answer-#{answer.id}" do
         expect(page).to have_content answer.body
-      
-        page.accept_confirm do
-          click_link 'Delete'
+     
+        within "td:nth-of-type(4)" do
+          page.accept_confirm do
+            click_link 'Delete'
+          end
         end
       end
       

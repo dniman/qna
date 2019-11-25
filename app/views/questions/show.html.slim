@@ -4,15 +4,14 @@ p= @question.body
 - if @question.files.attached?
   table.files
     - @question.files.each do |file|
-      tr class="row-file-#{ file.id }"
-        td = link_to file.filename, url_for(file)
-        - if user_signed_in? && current_user.author_of?(@question)
-            td = link_to 'Delete', destroy_file_attachment_question_path(file.signed_id), method: :delete, remote: true, data: { confirm: 'Are you sure?' }
-        - else
-            td
+      = render 'files/file', file: file
 
 h2 Answers
 table.answers
   = render 'answers/table_header'
-  = render @question.answers
+  
+  - @question.answers.each do |answer|
+    - if answer.persisted?
+      = render answer
+
 = render 'answers/form' 

@@ -32,20 +32,7 @@ feature 'User can create question', %q{
     end
 
     context 'asks a question with' do
-      scenario 'one file attached', js: true do
-        fill_in 'Title', with: 'Test question'
-        fill_in 'Body', with: 'text text text'
-        attach_file 'File', "#{Rails.root}/spec/rails_helper.rb"        
-        click_on 'Ask'
-
-        within '.questions' do
-          click_on 'Test question'
-        end
-        
-        expect(page).to have_link 'rails_helper.rb'
-      end
-      
-      scenario 'many files attached', js: true do
+      scenario 'one or many files attached', js: true do
         fill_in 'Title', with: 'Test question'
         fill_in 'Body', with: 'text text text'
         attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]

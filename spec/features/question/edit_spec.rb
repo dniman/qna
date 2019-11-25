@@ -46,23 +46,7 @@ feature 'User can edit his question', %q{
     end
     
     context 'when edit his question' do
-      scenario 'can attach on file', js: true do
-        sign_in(question.user)
-        visit questions_path
-      
-        within ".row-question-#{question.id}" do
-          click_on 'Edit'
-        
-          attach_file 'File', "#{Rails.root}/spec/rails_helper.rb"        
-          click_on 'Save your question'
-
-          click_on question.title
-        end
-        
-        expect(page).to have_link 'rails_helper.rb'
-      end
-      
-      scenario 'can attach many files', js: true do
+      scenario 'can attach one or many files', js: true do
         sign_in(question.user)
         visit questions_path
       
@@ -71,9 +55,10 @@ feature 'User can edit his question', %q{
           attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
           click_on 'Save your question'
 
+          sleep(1)
           click_on question.title 
         end
-        
+
         expect(page).to have_link 'rails_helper.rb'
         expect(page).to have_link 'spec_helper.rb'
       end

@@ -5,49 +5,6 @@ RSpec.describe AnswersController, type: :controller do
   let!(:question) { create(:question) }
   let!(:answer) { create(:answer, question: question) } 
 
-  describe 'GET #show' do
-
-    context 'when user authenticated' do
-      context 'and user is author' do
-        before { sign_in(answer.user) }
-        before { get :show, params: { id: answer } }
-
-        it 'assigns the requested answer to @answer' do
-          expect(assigns(:answer)).to eq(answer)
-        end
-
-        it 'renders show view' do
-          expect(response).to render_template(:show)
-        end
-      end
-
-      context 'and user is not an author' do
-        before { sign_in(user) }
-        before { get :show, params: { id: answer } }
-
-        it 'assigns the requested answer to @answer' do
-          expect(assigns(:answer)).to eq(answer)
-        end
-
-        it 'renders show view' do
-          expect(response).to render_template(:show)
-        end
-      end
-    end
-
-    context 'when user not authenticated' do
-      before { get :show, params: { id: answer } }
-
-      it 'assigns the requested answer to @answer' do
-        expect(assigns(:answer)).to eq(answer)
-      end
-
-      it 'renders show view' do
-        expect(response).to render_template(:show)
-      end
-    end
-  end
-
   describe 'POST #create' do
 
     context 'when user is authenticated' do
@@ -256,62 +213,4 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
-  describe 'DELETE #destroy_file_attachment' do
-    context 'when user authenticated' do
-      context 'and user is author' do
-        before { sign_in(answer.user) }
-        
-        it 'assigns the requested file to @attachment' do
-          file = answer.files.first
-          delete :destroy_file_attachment, params: { id: file.signed_id }, format: :js  
-          expect(assigns(:attachment)).to eq(file)
-        end
-
-        it 'deletes the answer attachment' do
-          expect { delete :destroy_file_attachment, params: { id: answer.files.first.signed_id }, format: :js }.to change(ActiveStorage::Attachment, :count).by(-1)
-        end
-
-        it 'renders destroy_file_attachment view' do
-          delete :destroy_file_attachment, params: { id: answer.files.first.signed_id }, format: :js
-          expect(response).to render_template(:destroy_file_attachment)
-        end
-      end
-
-      context 'and user is not and author' do
-        before { sign_in(user) }
-        
-        it 'assigns the requested file to @attachment' do
-          file = answer.files.first
-          delete :destroy_file_attachment, params: { id: file.signed_id }, format: :js  
-          expect(assigns(:attachment)).to eq(file)
-        end
-        
-        it 'not deletes the answer attachment' do
-          expect { delete :destroy_file_attachment, params: { id: answer.files.first.signed_id }, format: :js }.not_to change(ActiveStorage::Attachment, :count)
-        end
-
-        it 'renders destroy_file_attachment view' do
-          delete :destroy_file_attachment, params: { id: answer.files.first.signed_id }, format: :js
-          expect(response).to render_template(:destroy_file_attachment)
-        end
-      end
-    end
-
-    context 'when user is not authenticated' do
-      it 'not assigns the requested file to @attachment' do
-        file = answer.files.first
-        delete :destroy_file_attachment, params: { id: file.signed_id }, format: :js  
-        expect(assigns(:attachment)).to_not eq(file)
-      end
-
-      it '401' do
-        delete :destroy_file_attachment, params: { id: answer.files.first.signed_id }, format: :js 
-        expect(response).to have_http_status(401)
-      end
-      
-      it 'does not delete the answer attachment' do
-        expect { delete :destroy_file_attachment, params: { id: answer.files.first.signed_id }, format: :js }.not_to change(ActiveStorage::Attachment, :count)
-      end
-    end
-  end
 end
