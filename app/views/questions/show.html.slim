@@ -10,7 +10,7 @@ h2 Answers
 table.answers
   = render 'answers/table_header'
   
-  - @question.answers.each do |answer|
+  - @question.answers.with_attached_files.each do |answer|
     - if answer.persisted?
       = render answer
 

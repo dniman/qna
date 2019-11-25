@@ -9,8 +9,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :answer_files, only: [:destroy]
-  resources :question_files, only: [:destroy]
   resources :files, only: [:destroy]
 
   root to: "questions#index"
