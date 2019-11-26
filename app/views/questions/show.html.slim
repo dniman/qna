@@ -1,17 +1,12 @@
 h1= @question.title
 p= @question.body
 
-- if @question.files.attached?
-  table.files
-    - @question.files.each do |file|
-      = render 'files/file', file: file
+= render 'files'
 
 h2 Answers
 table.answers
   = render 'answers/table_header'
   
-  - @question.answers.with_attached_files.each do |answer|
-    - if answer.persisted?
-      = render answer
+  = render @question.answers.with_attached_files
 
 = render 'answers/form' 

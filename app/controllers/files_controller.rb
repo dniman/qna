@@ -3,17 +3,18 @@ class FilesController < ApplicationController
   before_action :find_attachment, only: %w[ destroy ]
 
   def destroy
-    @attachment.purge if current_user.author_of?(@attachment.record)
-    
-    respond_to do |format|
-      format.js
+    if current_user.author_of?(@attachment.record)
+      if @attachment.blob.attachments.count > 1
+        @attachment.purge
+      else
+        @attachment.purge_later
+      end
     end
   end
 
   private
 
   def find_attachment
-    file = ActiveStorage::Blob.find_signed(params[:id])
-    @attachment = ActiveStorage::Attachment.where(blob: file).first
+    @attachment = ActiveStorage::Attachment.find(params[:id])
   end
 end

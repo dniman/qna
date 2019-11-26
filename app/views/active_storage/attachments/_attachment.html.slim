@@ -1,0 +1,6 @@
+tr class="row-file-#{ attachment.id }"
+  td = link_to attachment.filename, url_for(attachment)
+  - if current_user&.author_of?(attachment.record)
+      td = link_to 'Delete', file_path(attachment.id), method: :delete, remote: true, data: { confirm: 'Are you sure?' }
+  - else
+      td

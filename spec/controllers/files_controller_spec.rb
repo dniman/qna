@@ -12,12 +12,12 @@ RSpec.describe FilesController, type: :controller do
 
       it 'assigns the requested file to @attachment' do
         file = question.files.first
-        delete :destroy, params: { id: file.signed_id }, format: :js  
+        delete :destroy, params: { id: file.id }, format: :js  
         expect(assigns(:attachment)).to eq(file)
       end
 
       it 'renders destroy view' do
-        delete :destroy, params: { id: question.files.first.signed_id }, format: :js
+        delete :destroy, params: { id: question.files.first.id }, format: :js
         expect(response).to render_template(:destroy)
       end
       
@@ -26,12 +26,7 @@ RSpec.describe FilesController, type: :controller do
           before { sign_in(question.user) }
           
           it 'deletes the question attachment' do
-            count = question.files.size
-            
-            delete :destroy, params: { id: question.files.first.signed_id }, format: :js  
-            question.reload 
-
-            expect(question.files.size).to eq(count - 1)
+            expect { delete :destroy, params: { id: question.files.first.id }, format: :js }.to change { question.files.count }.from(2).to(1)
           end
         end
         
@@ -39,12 +34,7 @@ RSpec.describe FilesController, type: :controller do
           before { sign_in(answer.user) }
 
           it 'deletes the question attachment' do
-            count = answer.files.size
-            
-            delete :destroy, params: { id: answer.files.first.signed_id }, format: :js  
-            answer.reload
-            
-            expect(answer.files.size).to eq(count - 1)
+            expect { delete :destroy, params: { id: answer.files.first.id }, format: :js }.to change { answer.files.count }.from(2).to(1)
           end
         end
       end
@@ -54,23 +44,13 @@ RSpec.describe FilesController, type: :controller do
         
         context 'when record is question' do
           it 'not deletes the question attachment' do
-            count = question.files.size
-            
-            delete :destroy, params: { id: question.files.first.signed_id }, format: :js  
-            question.reload 
-
-            expect(question.files.size).to eq(count)
+            expect { delete :destroy, params: { id: question.files.first.id }, format: :js }.not_to change { question.files.count }
           end
         end
         
         context 'when record is answer' do
           it 'not deletes the question attachment' do
-            count = answer.files.size
-            
-            delete :destroy, params: { id: answer.files.first.signed_id }, format: :js  
-            answer.reload
-            
-            expect(answer.files.size).to eq(count)
+            expect { delete :destroy, params: { id: answer.files.first.id }, format: :js }.not_to change { answer.files.count }
           end
         end
       end 
@@ -79,22 +59,17 @@ RSpec.describe FilesController, type: :controller do
     context 'when user is not authenticated' do
       it 'not assigns the requested file to @attachment' do
         file = answer.files.first
-        delete :destroy, params: { id: file.signed_id }, format: :js  
+        delete :destroy, params: { id: file.id }, format: :js  
         expect(assigns(:attachment)).to_not eq(file)
       end
 
       it '401' do
-        delete :destroy, params: { id: answer.files.first.signed_id }, format: :js 
+        delete :destroy, params: { id: answer.files.first.id }, format: :js 
         expect(response).to have_http_status(401)
       end
       
       it 'does not delete the answer attachment' do
-        count = answer.files.size
-            
-        delete :destroy, params: { id: answer.files.first.signed_id }, format: :js  
-        answer.reload
-            
-        expect(answer.files.size).to eq(count)
+        expect { delete :destroy, params: { id: answer.files.first.id }, format: :js }.not_to change { answer.files.count }
       end
     end
   end
