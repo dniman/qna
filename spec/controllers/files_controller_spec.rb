@@ -26,7 +26,7 @@ RSpec.describe FilesController, type: :controller do
           before { sign_in(question.user) }
           
           it 'deletes the question attachment' do
-            expect { delete :destroy, params: { id: question.files.first.id }, format: :js }.to change { question.files.count }.from(2).to(1)
+            expect { delete :destroy, params: { id: question.files.first.id }, format: :js }.to change { question.files.count }.by(-1)
           end
         end
         
@@ -34,7 +34,7 @@ RSpec.describe FilesController, type: :controller do
           before { sign_in(answer.user) }
 
           it 'deletes the question attachment' do
-            expect { delete :destroy, params: { id: answer.files.first.id }, format: :js }.to change { answer.files.count }.from(2).to(1)
+            expect { delete :destroy, params: { id: answer.files.first.id }, format: :js }.to change { answer.files.count }.by(-1)
           end
         end
       end
@@ -42,6 +42,11 @@ RSpec.describe FilesController, type: :controller do
       context 'and user is not and author of @attachment record' do
         before { sign_in(user) }
         
+        it 'renders destroy vies' do
+          delete :destroy, params: { id: question.files.first.id }, format: :js 
+          expect(response).to render_template(:destroy)
+        end
+
         context 'when record is question' do
           it 'not deletes the question attachment' do
             expect { delete :destroy, params: { id: question.files.first.id }, format: :js }.not_to change { question.files.count }
