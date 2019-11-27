@@ -54,6 +54,10 @@ RSpec.describe QuestionsController, type: :controller do
           expect(assigns(:question)).to eq(question)
         end
 
+        it 'assigns new answer to @answer' do
+          expect(assigns(:answer)).to be_a_new(Answer)
+        end
+
         it 'renders show view' do
           expect(response).to render_template(:show)
         end
@@ -118,7 +122,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'when user not authenticated' do
       it '401' do
-        patch :update, params: { id: question, question: attributes_for(:question), format: :js } 
+        patch :update, params: { id: question, question: attributes_for(:question) }, format: :js  
         expect(response).to have_http_status(401)
       end
         
@@ -157,7 +161,7 @@ RSpec.describe QuestionsController, type: :controller do
         end
 
         context 'with invalid attributes' do
-          before { patch :update, params: { id: question, question: attributes_for(:question, :invalid), format: :js } }
+          before { patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js }
 
           it 'does not change question' do
             body = question.body
@@ -204,7 +208,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'when user not authenticated' do
       it '401' do
-        patch :update, params: { id: question, question: attributes_for(:question), format: :js } 
+        patch :update, params: { id: question, question: attributes_for(:question) }, format: :js  
         expect(response).to have_http_status(401)
       end
 
@@ -265,4 +269,5 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
+  
 end

@@ -1,10 +1,11 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, except: [:show]
+  before_action :authenticate_user!
   before_action :find_question, only: %w[create]
   before_action :set_answer, only: %w[update destroy mark_as_the_best]
 
   def create
-    @answer = @question.answers.new(answer_params).tap { |a| a.user = current_user }
+    @answer = current_user.answers.new(answer_params)
+    @answer.question = @question
     @answer.save
 
     respond_to do |format|
@@ -42,14 +43,14 @@ class AnswersController < ApplicationController
   private
 
   def find_question
-    @question = Question.find(params[:question_id])
+    @question = Question.with_attached_files.find(params[:question_id])
   end
 
   def set_answer
-    @answer = Answer.find(params[:id])
+    @answer = Answer.with_attached_files.find(params[:id])
   end
 
   def answer_params
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body, files: [])
   end
 end

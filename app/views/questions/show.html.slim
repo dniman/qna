@@ -1,8 +1,12 @@
 h1= @question.title
 p= @question.body
 
+= render 'files'
+
 h2 Answers
 table.answers
   = render 'answers/table_header'
-  = render @question.answers
+  
+  = render @question.answers.with_attached_files
+
 = render 'answers/form' 
