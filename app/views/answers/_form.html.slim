@@ -1,11 +1,16 @@
 .answer-errors
   = render 'shared/errors', resource: @answer
 - if user_signed_in?
-  = form_with model: [@question, @answer], class: 'new-answer' do |f|
-    = f.label :body
-    = f.text_area :body
+  = form_for [@question, @answer], class: 'new-answer', remote: true do |f|
+    p
+      = f.label :body
+      = f.text_area :body
+    p
+      = f.label :files
+      = f.file_field :files, multiple: true, direct_upload: true
 
-    = f.label :files
-    = f.file_field :files, multiple: true, direct_upload: true
+    .links
+      = link_to_add_association 'add link', f, :links
 
-    = f.submit 'Post your answer'
+    p
+      = f.submit 'Post your answer'

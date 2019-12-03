@@ -4,7 +4,11 @@ class QuestionsController < ApplicationController
 
   def index
     @questions = Question.all
-    @question = current_user.questions.new if user_signed_in?
+
+    if user_signed_in?
+      @question = current_user.questions.new
+      @question.links.build
+    end
   end
 
   def show
@@ -42,6 +46,7 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [])
+    params.require(:question).permit(:title, :body, 
+                                     files: [], links_attributes: [:name, :url])
   end
 end

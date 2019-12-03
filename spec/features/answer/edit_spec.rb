@@ -73,7 +73,34 @@ feature 'User can edit his answer', %q{
             expect(page).to have_link 'spec_helper.rb'
           end
         end
+      end  
+      
+      scenario 'can add one or many links', js: true do
+        sign_in(answer.user)
+        visit question_path(question)
+
+        links = build_list(:link, 2, linkable: answer) 
         
+        within ".row-answer-#{answer.id}" do
+          click_on 'Edit'
+          click_on 'add link' 
+          click_on 'add link'
+          
+          all("input[name$='[name]']").each_with_index do |input, index|
+            input.set(links[index].name)
+          end
+
+          all("input[name$='[url]']").each_with_index do |input, index|
+            input.set(links[index].url)
+          end
+
+          click_on 'Save your answer'
+
+          within '.answer-links' do
+            expect(page).to have_link links.first.name, href: links.first.url
+            expect(page).to have_link links.last.name, href: links.last.url
+          end
+        end
       end
     end
   end

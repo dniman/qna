@@ -33,7 +33,7 @@ RSpec.describe FilesController, type: :controller do
         context 'when record is answer' do
           before { sign_in(answer.user) }
 
-          it 'deletes the question attachment' do
+          it 'deletes the answer attachment' do
             expect { delete :destroy, params: { id: answer.files.first.id }, format: :js }.to change { answer.files.count }.by(-1)
           end
         end

@@ -17,6 +17,10 @@ RSpec.describe QuestionsController, type: :controller do
       it 'assigns new question to @question' do
         expect(assigns(:question)).to be_a_new(Question)
       end
+      
+      it 'adds new link instance to @question.links' do
+        expect(assigns(:question).links.first).to be_a_new(Link)
+      end
 
       it 'renders index view' do
         expect(response).to render_template :index
