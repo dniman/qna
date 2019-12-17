@@ -4,18 +4,20 @@ tr class="row-question-#{ question.id }"
       td = link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }  
       
       td = form_for question, html: { id: "edit-question-#{question.id}", class: 'hidden' }, remote: true do |f|
-        = f.label :title
-        = f.text_field :title
-        
-        = f.label :body
-        = f.text_area :body
-       
-        = f.label :files
-        = f.file_field :files, multiple: true, direct_upload: true
+        p
+          = f.label :title
+          = f.text_field :title
+        p 
+          = f.label :body
+          = f.text_area :body
+        p 
+          = f.label :files
+          = f.file_field :files, multiple: true, direct_upload: true
        
         .links
           = link_to_add_association 'add link', f, :links
         
-        = f.submit 'Save your question'
+        p 
+          = f.submit 'Save your question'
       
       td = link_to 'Delete', question_path(question), method: :delete, remote: true, data: { confirm: 'Are you sure?' }

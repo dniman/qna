@@ -11,11 +11,21 @@
       p 
         = f.label :files
         = f.file_field :files, multiple: true, direct_upload: true
-
-      p Links:
-      p
+      
+      .link-fields  
         = f.fields_for :links do |link| 
           .links
             = link_to_add_association 'add link', f, :links
       
+      .bounty
+        /= f.fields_for :bounty do |bounty_fields| 
+        = link_to_add_association 'create bounty', f, :bounty
+
+            /p
+            /  = bounty_fields.label :name, 'Bounty name' 
+            /  = bounty_fields.text_field :name 
+            /p
+            /  = bounty_fields.label :image
+            /  = bounty_fields.file_field :image, direct_upload: true
+
       = f.submit 'Ask'

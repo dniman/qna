@@ -7,7 +7,7 @@ feature 'User can mark the best answer', %q{
 } do
 
   given!(:user) { create(:user) }
-  given!(:question) { create(:question, user: user) }
+  given!(:question) { create(:question, :with_bounty, user: user) }
   given!(:answer) { create(:answer, question: question, user: user) }
 
   scenario 'Unauthenticated user can\'t mark the best answer' do

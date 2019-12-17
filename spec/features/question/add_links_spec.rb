@@ -15,9 +15,11 @@ feature 'User can add links to question', %q{
     
     fill_in 'Title', with: 'Test question'
     fill_in 'Body', with: 'text text text'
-
-    click_on 'add link'
-    click_on 'add link'
+    
+    within '.link-fields' do
+      click_on 'add link'
+      click_on 'add link'
+    end
   end
 
   context 'Authenticated user adds links when asks question' do
@@ -25,14 +27,16 @@ feature 'User can add links to question', %q{
       scenario 'when links is gist' do
         gists = build_list(:link, 2, linkable: question, url: "https://gist.github.com/#{SecureRandom.uuid.split('-').join('')}")
 
-        all("input[name$='[name]']").each_with_index do |input, index|
-          input.set(gists[index].name)
+        within '.link-fields' do
+          all("input[name$='[name]']").each_with_index do |input, index|
+            input.set(gists[index].name)
+          end
+
+          all("input[name$='[url]']").each_with_index do |input, index|
+            input.set(gists[index].url)
+          end
         end
 
-        all("input[name$='[url]']").each_with_index do |input, index|
-          input.set(gists[index].url)
-        end
-        
         click_on 'Ask'
 
         click_on 'Test question'
@@ -46,14 +50,16 @@ feature 'User can add links to question', %q{
       scenario 'when links is not gist' do
         links = build_list(:link, 2, linkable: question)
 
-        all("input[name$='[name]']").each_with_index do |input, index|
-          input.set(links[index].name)
+        within '.link-fields' do
+          all("input[name$='[name]']").each_with_index do |input, index|
+            input.set(links[index].name)
+          end
+
+          all("input[name$='[url]']").each_with_index do |input, index|
+            input.set(links[index].url)
+          end
         end
 
-        all("input[name$='[url]']").each_with_index do |input, index|
-          input.set(links[index].url)
-        end
-        
         click_on 'Ask'
 
         click_on 'Test question'
@@ -70,8 +76,10 @@ feature 'User can add links to question', %q{
       scenario 'when url is empty' do
         links = build_list(:link, 2, linkable: question)
 
-        all("input[name$='[name]']").each_with_index do |input, index|
-          input.set(links[index].name)
+        within '.link-fields' do
+          all("input[name$='[name]']").each_with_index do |input, index|
+            input.set(links[index].name)
+          end
         end
 
         click_on 'Ask'
@@ -82,8 +90,10 @@ feature 'User can add links to question', %q{
       scenario 'when url is invalid' do
         links = build_list(:link, 2, linkable: question)
 
-        all("input[name$='[name]']").each_with_index do |input, index|
-          input.set(links[index].name)
+        within '.link-fields' do
+          all("input[name$='[name]']").each_with_index do |input, index|
+            input.set(links[index].name)
+          end
         end
 
         click_on 'Ask'
@@ -94,8 +104,10 @@ feature 'User can add links to question', %q{
       scenario 'when link name is empty' do
         links = build_list(:link, 2, linkable: question, name: '')
         
-        all("input[name$='[url]']").each_with_index do |input, index|
-          input.set(links[index].url)
+        within '.link-fields' do
+          all("input[name$='[url]']").each_with_index do |input, index|
+            input.set(links[index].url)
+          end
         end
 
         click_on 'Ask'

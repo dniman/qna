@@ -15,7 +15,7 @@ RSpec.describe Answer, type: :model do
   
   context 'methods' do
     let(:user) { create(:user) }
-    let(:question) { create(:question) }
+    let(:question) { create(:question, :with_bounty) }
     
     describe '#mark_as_the_best_answer!' do
       let(:answers) { create_list(:answer, 2, question: question) }
@@ -26,6 +26,12 @@ RSpec.describe Answer, type: :model do
         expect(answers.first).to be_best_answer 
       end
 
+      it 'should add bounty to user bounties collection' do
+        answers.first.mark_as_the_best_answer!
+
+        expect(answers.first.user.bounties).to include(answers.first.question.bounty)
+      end
+
       it "false" do
         answers.first.mark_as_the_best_answer!
         answers.last.mark_as_the_best_answer!
@@ -33,6 +39,15 @@ RSpec.describe Answer, type: :model do
         answers.first.reload
 
         expect(answers.first).not_to be_best_answer
+      end
+      
+      it 'should remove bounty from user bounties collection' do
+        answers.first.mark_as_the_best_answer!
+        answers.last.mark_as_the_best_answer!
+        
+        answers.first.reload
+
+        expect(answers.first.user.bounties).not_to include(answers.first.question.bounty)
       end
     end
     

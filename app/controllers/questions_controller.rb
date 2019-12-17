@@ -8,6 +8,7 @@ class QuestionsController < ApplicationController
     if user_signed_in?
       @question = current_user.questions.new
       @question.links.build
+      @question.build_bounty
     end
   end
 
@@ -46,7 +47,8 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body, 
-                                     files: [], links_attributes: [:name, :url])
+    params.require(:question).permit(:title, :body, files: [], 
+                                     links_attributes: [:name, :url],
+                                     bounty_attributes: [:name, :image])
   end
 end

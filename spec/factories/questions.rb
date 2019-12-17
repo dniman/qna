@@ -9,6 +9,12 @@ FactoryBot.define do
     title
     body { "MyText" }
     user
+   
+    trait :with_bounty do
+      after(:build) do |question|
+        question.bounty = FactoryBot.build(:bounty)
+      end
+    end
 
     trait :invalid do
       title { nil }

@@ -25,8 +25,11 @@ feature 'User can delete links added to question', %q{
         click_on 'delete link'
       end
       
-      expect(page).not_to have_selector(:css, "input[name$='[name]']")
-      expect(page).not_to have_selector(:css, "input[name$='[url]']")
+      within '.link-fields' do
+        expect(page).not_to have_selector(:css, "input[name$='[name]']")
+        expect(page).not_to have_selector(:css, "input[name$='[url]']")
+      end
+      
       expect(page).not_to have_link('delete link')
     end
     

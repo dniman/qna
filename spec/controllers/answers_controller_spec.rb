@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
   let!(:user) { create(:user) }
-  let!(:question) { create(:question) }
+  let!(:question) { create(:question, :with_bounty) }
   let!(:answer) { create(:answer, question: question) } 
 
   describe 'POST #create' do
@@ -179,6 +179,10 @@ RSpec.describe AnswersController, type: :controller do
           patch :mark_as_the_best, params: { id: answer }, format: :js  
           expect(response).to render_template(:mark_as_the_best)
         end
+        
+        it 'adds bounty to user' do
+          expect { patch :mark_as_the_best, params: { id: answer }, format: :js }.to change(answer.user.bounties, :count).by(1)
+        end
       end
 
       context 'and user is not an author' do
@@ -194,6 +198,10 @@ RSpec.describe AnswersController, type: :controller do
         it 'renders update view' do
           patch :mark_as_the_best, params: { id: answer }, format: :js 
           expect(response).to render_template(:mark_as_the_best)
+        end
+
+        it 'not add bounty to user' do
+
         end
       end
     end
