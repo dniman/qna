@@ -15,17 +15,9 @@
       .link-fields  
         = f.fields_for :links do |link| 
           .links
-            = link_to_add_association 'add link', f, :links
+            = link_to_add_association 'add link', f, :links, partial: 'links/link_fields'
       
       .bounty
-        /= f.fields_for :bounty do |bounty_fields| 
         = link_to_add_association 'create bounty', f, :bounty
-
-            /p
-            /  = bounty_fields.label :name, 'Bounty name' 
-            /  = bounty_fields.text_field :name 
-            /p
-            /  = bounty_fields.label :image
-            /  = bounty_fields.file_field :image, direct_upload: true
 
       = f.submit 'Ask'

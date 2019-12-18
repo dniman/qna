@@ -10,5 +10,9 @@ FactoryBot.define do
   factory :link do
     name 
     url 
+
+    trait :with_gist_url do
+      url { 'https://gist.github.com/' }
+    end
   end
 end

@@ -201,7 +201,7 @@ RSpec.describe AnswersController, type: :controller do
         end
 
         it 'not add bounty to user' do
-
+          expect { patch :mark_as_the_best, params: { id: answer }, format: :js }.to_not change(answer.user.bounties, :count)
         end
       end
     end

@@ -28,7 +28,7 @@ tr class="row-answer-#{answer.id} #{answer.best_answer? ? 'best-answer' : ''}" v
           = f.label :files
           = f.file_field :files, multiple: true, direct_upload: true
         p
-          = link_to_add_association 'add link', f, :links
+          = link_to_add_association 'add link', f, :links, partial: 'links/link_fields'
         p 
           = f.submit 'Save your answer'
     

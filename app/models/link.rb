@@ -3,4 +3,8 @@ class Link < ApplicationRecord
 
   validates :name, :url, presence: true
   validates_format_of :url, with: URI.regexp(['http', 'https'])
+
+  def gist_url?
+    self.url.match?(/gist.github.com/)
+  end
 end

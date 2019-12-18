@@ -10,7 +10,7 @@
       = f.file_field :files, multiple: true, direct_upload: true
 
     .links
-      = link_to_add_association 'add link', f, :links
+      = link_to_add_association 'add link', f, :links, partial: 'links/link_fields'
 
     p
       = f.submit 'Post your answer'

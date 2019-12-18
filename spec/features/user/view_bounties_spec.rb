@@ -6,22 +6,47 @@ feature 'User can view his bounties', %q{
 } do
 
   given!(:user) { create(:user) }
-  given!(:questions) { create_list(:question, 2, user: user) } 
-  given!(:bounties) { [ create(:bounty, :with_image, user: user, question: questions.first),
-                       create(:bounty, :with_image, user: user, question: questions.last) ] }
-  
-  scenario 'Authenticated user can see his bounties', js: true do
-    sign_in(user)
 
-    visit questions_path
+  context 'Authenticated user' do
+    scenario 'see his bounties', js: true do
+      questions = create_list(:question, 2, user: user)
+      bounties = [ create(:bounty, :with_image, user: questions.first.user, question: questions.first),
+                   create(:bounty, :with_image, user: questions.last.user, question: questions.last)
+      ]
 
-    expect(page).to have_content("My bounties") 
+      sign_in(user)
 
-    click_on 'My bounties'
+      visit questions_path
 
-    expect(page).to have_content(/MyBounty/).twice 
-    expect(page).to have_content(/MyString \d/).twice 
-    expect(page).to have_css("img[src*='bounty.png']").twice
+      expect(page).to have_content("My bounties") 
+
+      click_on 'My bounties'
+
+      expect(page).to have_content(/MyBounty/).twice 
+      expect(page).to have_content(/MyString \d/).twice 
+      expect(page).to have_css("img[src*='bounty.png']").twice
+    end
+
+    scenario 'do not see other\'s bounties', js: true do
+      questions = [ create(:question, user: user),
+                    create(:question) 
+      ]
+      
+      bounties = [ create(:bounty, :with_image, user: questions.first.user, question: questions.first),
+                   create(:bounty, :with_image, user: questions.last.user, question: questions.last)
+      ]
+      
+      sign_in(user)
+
+      visit questions_path
+
+      expect(page).to have_content("My bounties") 
+
+      click_on 'My bounties'
+
+      expect(page).to have_content(/MyBounty/).once 
+      expect(page).to have_content(/MyString \d/).once 
+      expect(page).to have_css("img[src*='bounty.png']").once
+    end
   end
-
 end
