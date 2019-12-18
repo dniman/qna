@@ -19,7 +19,7 @@ feature 'User can edit his question', %q{
     scenario 'edits his question', js: true do
       sign_in(question.user)
       visit questions_path
-      
+
       click_on 'Edit'
 
       within ".row-question-#{question.id}" do
@@ -46,10 +46,12 @@ feature 'User can edit his question', %q{
     end
     
     context 'when edit his question' do
-      scenario 'can attach one or many files', js: true do
+      before do
         sign_in(question.user)
         visit questions_path
-      
+      end
+
+      scenario 'can attach one or many files', js: true do
         within ".row-question-#{question.id}" do
           click_on 'Edit'
           attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
@@ -57,9 +59,38 @@ feature 'User can edit his question', %q{
 
           click_on question.title 
         end
+        
+        within ".files" do
+          expect(page).to have_link 'rails_helper.rb'
+          expect(page).to have_link 'spec_helper.rb'
+        end
+      end
+      
+      scenario 'can add one or many links', js: true do
+        links = build_list(:link, 2, linkable: question)
+        
+        within ".row-question-#{question.id}" do
+          click_on 'Edit'
+          click_on 'add link' 
+          click_on 'add link'
+          
+          all("input[name$='[name]']").each_with_index do |input, index|
+            input.set(links[index].name)
+          end
 
-        expect(page).to have_link 'rails_helper.rb'
-        expect(page).to have_link 'spec_helper.rb'
+          all("input[name$='[url]']").each_with_index do |input, index|
+            input.set(links[index].url)
+          end
+
+          click_on 'Save your question'
+
+          click_on question.title 
+        end
+
+        within '.question-links' do
+          expect(page).to have_link links.first.name, href: links.first.url
+          expect(page).to have_link links.last.name, href: links.last.url
+        end
       end
     end
   end

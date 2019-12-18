@@ -13,15 +13,12 @@ feature 'User can delete his question', %q{
       sign_in(question.user)
       visit questions_path
 
-
       within ".row-question-#{question.id}" do
-        
         expect(page).to have_content question.title
         
         page.accept_confirm do
           click_link 'Delete'
         end
-      
       end
       
       within '.questions' do

@@ -6,19 +6,31 @@ tr class="row-answer-#{answer.id} #{answer.best_answer? ? 'best-answer' : ''}" v
           .body = answer.body
           - if answer.files.attached?
               table.files
+                thead
+                  tr
+                    th style='text-align: left' Files
                 = render answer.files
+          - if answer.links.exists?
+              table.answer-links
+                thead
+                  tr
+                    th style='text-align: left' Links
+                = render answer.links 
 
   - if current_user&.author_of?(answer)
       td = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id } 
 
-      td = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
-         = f.label :body
-         = f.text_area :body
-         
-         = f.label :files
-         = f.file_field :files, multiple: true, direct_upload: true
-         
-         = f.submit 'Save your answer'
+      td = form_for answer, html: { id: "edit-answer-#{answer.id}", class: 'hidden' }, remote: true do |f|
+        p
+          = f.label :body
+          = f.text_area :body
+        p 
+          = f.label :files
+          = f.file_field :files, multiple: true, direct_upload: true
+        p
+          = link_to_add_association 'add link', f, :links, partial: 'links/link_fields'
+        p 
+          = f.submit 'Save your answer'
     
       td = link_to 'Delete', answer_path(answer), method: :delete, remote: true, data: { confirm: 'Are you sure?' }
   - else

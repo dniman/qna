@@ -17,6 +17,14 @@ RSpec.describe QuestionsController, type: :controller do
       it 'assigns new question to @question' do
         expect(assigns(:question)).to be_a_new(Question)
       end
+      
+      it 'adds new link instance to @question.links' do
+        expect(assigns(:question).links.first).to be_a_new(Link)
+      end
+      
+      it 'adds new bounty instance to @question.bounty' do
+        expect(assigns(:question).bounty).to be_a_new(Bounty)
+      end
 
       it 'renders index view' do
         expect(response).to render_template :index
@@ -92,7 +100,7 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'POST #create' do
     let(:user) { create(:user) }
-    let(:question) { create(:question) }
+    let(:question) { build(:question) }
 
     context 'when user authenticated' do
       before { sign_in(user) }
@@ -122,7 +130,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'when user not authenticated' do
       it '401' do
-        patch :update, params: { id: question, question: attributes_for(:question) }, format: :js  
+        patch :create, params: { question: attributes_for(:question) }, format: :js  
         expect(response).to have_http_status(401)
       end
         

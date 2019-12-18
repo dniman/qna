@@ -1,0 +1,9 @@
+.bounty-fields
+  p
+    = f.label :name, 'Bounty name'
+    = f.text_field :name
+  p  
+    = f.label :image
+    = f.file_field :image, direct_upload: true
+
+  = link_to_remove_association "delete bounty", f

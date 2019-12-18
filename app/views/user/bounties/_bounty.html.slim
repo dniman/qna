@@ -1,0 +1,8 @@
+tr class="row-bounty-#{bounty.id}"
+  td = bounty.question.title
+  td = bounty.name
+  /td = image_tag rails_blob_path(bounty.image, only_path: true)
+  - if bounty.image.attached?
+     td = image_tag url_for bounty.image
+  - else
+      td
