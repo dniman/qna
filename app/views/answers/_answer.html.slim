@@ -43,5 +43,26 @@ tr class="row-answer-#{answer.id} #{answer.best_answer? ? 'best-answer' : ''}" v
     - if current_user&.author_of?(answer.question)
         td = link_to 'Mark as the best answer', mark_as_the_best_answer_path(answer), method: :patch, remote: true
 
+  - unless current_user&.author_of?(answer)
+    - if current_user
+        td
+          = link_to 'Vote yes', vote_yes_answer_path(answer), style: 'padding: 5px', 
+                                                                  class: "positive-vote #{ current_user.voted_for?(answer) ? 'hidden' : '' }", 
+                                                                  method: :patch, 
+                                                                  remote: true, 
+                                                                  data: { answer_id: answer.id }
+          = link_to 'Vote no', vote_no_answer_path(answer), style: 'padding: 5px', 
+                                                                 class: "negative-vote #{ current_user.voted_for?(answer) ? 'hidden' : '' }", 
+                                                                 method: :patch, 
+                                                                 remote: true, 
+                                                                 data: { answer_id: answer.id }
+          = link_to 'Cancel vote', cancel_vote_answer_path(answer), style: 'padding: 5px', 
+                                                                     class: "cancel-vote #{ current_user.voted_for?(answer) ? '' : 'hidden' }", 
+                                                                     method: :patch, 
+                                                                     remote: true, 
+                                                                     data: { answer_id: answer.id }
+
+  td.vote-rating data-answer-id="#{answer.id}"  = vote_rating(answer)
+
   td class="answer-#{ answer.id }-errors"
 

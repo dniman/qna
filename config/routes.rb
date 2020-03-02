@@ -5,9 +5,17 @@ Rails.application.routes.draw do
       resources :bounties, only: [:index, :show]
     end
   end
+  
+  concern :votable do
+    member do
+      patch :vote_yes
+      patch :vote_no
+      patch :cancel_vote
+    end
+  end
 
-  resources :questions, except: [:new, :edit] do
-    resources :answers, except: [:new, :edit], shallow: true do
+  resources :questions, except: [:new, :edit], concerns: [:votable] do
+    resources :answers, except: [:new, :edit], shallow: true, concerns: [:votable] do
       member do
         patch :mark_as_the_best
       end

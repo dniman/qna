@@ -21,3 +21,23 @@ tr class="row-question-#{ question.id }"
           = f.submit 'Save your question'
       
       td = link_to 'Delete', question_path(question), method: :delete, remote: true, data: { confirm: 'Are you sure?' }
+      
+  - else
+      - if current_user
+        td
+          = link_to 'Vote yes', vote_yes_question_path(question), style: 'padding: 5px', 
+                                                                  class: "positive-vote #{ current_user.voted_for?(question) ? 'hidden' : '' }", 
+                                                                  method: :patch, 
+                                                                  remote: true, 
+                                                                  data: { question_id: question.id }
+          = link_to 'Vote no', vote_no_question_path(question), style: 'padding: 5px', 
+                                                                 class: "negative-vote #{ current_user.voted_for?(question) ? 'hidden' : '' }", 
+                                                                 method: :patch, 
+                                                                 remote: true, 
+                                                                 data: { question_id: question.id }
+          = link_to 'Cancel vote', cancel_vote_question_path(question), style: 'padding: 5px', 
+                                                                     class: "cancel-vote #{ current_user.voted_for?(question) ? '' : 'hidden' }", 
+                                                                     method: :patch, 
+                                                                     remote: true, 
+                                                                     data: { question_id: question.id }
+  td.vote-rating data-question-id="#{question.id}"  = vote_rating(question)

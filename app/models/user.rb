@@ -7,8 +7,32 @@ class User < ApplicationRecord
   has_many :questions, dependent: :destroy
   has_many :answers, dependent: :destroy
   has_many :bounties
+  has_many :votes, dependent: :destroy
 
   def author_of?(resource)
     resource.user_id == self.id
+  end
+
+  def voted_for?(resource)
+    votes.exists?(votable: resource)
+  end
+  
+  def vote_yes!(resource)
+    transaction do
+      self.votes.create(votable: resource, yes: true)
+    end
+  end
+  
+  def vote_no!(resource)
+    transaction do
+      self.votes.create(votable: resource)
+    end
+  end
+  
+  def cancel_vote!(resource)
+    transaction do
+      vote = self.votes.where(votable: resource)
+      self.votes.delete(vote)
+    end
   end
 end
