@@ -29,15 +29,15 @@ tr class="row-question-#{ question.id }"
                                                                   class: "positive-vote #{ current_user.voted_for?(question) ? 'hidden' : '' }", 
                                                                   method: :patch, 
                                                                   remote: true, 
-                                                                  data: { question_id: question.id }
+                                                                  data: { votable_id: question.id }
           = link_to 'Vote no', vote_no_question_path(question), style: 'padding: 5px', 
                                                                  class: "negative-vote #{ current_user.voted_for?(question) ? 'hidden' : '' }", 
                                                                  method: :patch, 
                                                                  remote: true, 
-                                                                 data: { question_id: question.id }
+                                                                 data: { votable_id: question.id }
           = link_to 'Cancel vote', cancel_vote_question_path(question), style: 'padding: 5px', 
                                                                      class: "cancel-vote #{ current_user.voted_for?(question) ? '' : 'hidden' }", 
                                                                      method: :patch, 
                                                                      remote: true, 
-                                                                     data: { question_id: question.id }
-  td.vote-rating data-question-id="#{question.id}"  = vote_rating(question)
+                                                                     data: { votable_id: question.id }
+  td.vote-rating data-votable-id="#{question.id}"  = question.rating

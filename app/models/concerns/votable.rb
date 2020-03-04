@@ -3,8 +3,9 @@ module Votable
 
   included do
     has_many :votes, dependent: :destroy, as: :votable
-    
-    scope :positive_votes, -> { votes.where("yes > ?", 0) }
-    scope :negative_votes, -> { votes.where("yes = ?", 0) }
+  end
+  
+  def rating
+    votes.inject(0){ |sum, rec| sum += (rec['yes'] && 1 || -1) ; sum }
   end
 end

@@ -9,7 +9,7 @@ module Voted
     current_user.vote_yes!(@voted) unless current_user.author_of?(@voted)
     
     respond_to do |format|
-      format.json
+      format.json { render json: { rating: @voted.rating } }
     end
   end
 
@@ -17,7 +17,7 @@ module Voted
     current_user.vote_no!(@voted) unless current_user.author_of?(@voted)
 
     respond_to do |format|
-      format.json
+      format.json { render json: { rating: @voted.rating } }
     end
   end
 
@@ -25,7 +25,7 @@ module Voted
     current_user.cancel_vote!(@voted) unless current_user.author_of?(@voted)
 
     respond_to do |format|
-      format.json
+      format.json { render json: {rating: @voted.rating } }
     end
   end
   

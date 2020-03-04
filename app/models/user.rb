@@ -18,21 +18,15 @@ class User < ApplicationRecord
   end
   
   def vote_yes!(resource)
-    transaction do
-      self.votes.create(votable: resource, yes: true)
-    end
+    self.votes.create!(votable: resource, yes: true)
   end
   
   def vote_no!(resource)
-    transaction do
-      self.votes.create(votable: resource)
-    end
+    self.votes.create!(votable: resource)
   end
   
   def cancel_vote!(resource)
-    transaction do
-      vote = self.votes.where(votable: resource)
-      self.votes.delete(vote)
-    end
+    vote = self.votes.where(votable: resource)
+    self.votes.delete(vote)
   end
 end
