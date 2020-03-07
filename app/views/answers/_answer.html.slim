@@ -62,7 +62,7 @@ tr class="row-answer-#{answer.id} #{answer.best_answer? ? 'best-answer' : ''}" v
                                                                      remote: true, 
                                                                      data: { votable_id: answer.id }
 
-  td.vote-rating data-votable-id="#{answer.id}"  = answer.rating
+  td.vote-rating data-votable-id=answer.id  = answer.rating
 
   td class="answer-#{ answer.id }-errors"
 

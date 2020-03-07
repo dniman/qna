@@ -18,11 +18,11 @@ class User < ApplicationRecord
   end
   
   def vote_yes!(resource)
-    self.votes.create!(votable: resource, yes: true)
+    self.votes.create!(votable: resource, yes: 1)
   end
   
   def vote_no!(resource)
-    self.votes.create!(votable: resource)
+    self.votes.create!(votable: resource, yes: -1)
   end
   
   def cancel_vote!(resource)

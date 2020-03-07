@@ -40,4 +40,4 @@ tr class="row-question-#{ question.id }"
                                                                      method: :patch, 
                                                                      remote: true, 
                                                                      data: { votable_id: question.id }
-  td.vote-rating data-votable-id="#{question.id}"  = question.rating
+  td.vote-rating data-votable-id=question.id  = question.rating

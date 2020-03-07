@@ -6,6 +6,6 @@ module Votable
   end
   
   def rating
-    votes.inject(0){ |sum, rec| sum += (rec['yes'] && 1 || -1) ; sum }
+    votes.sum('yes')
   end
 end

@@ -6,51 +6,92 @@ feature 'User can view a vote rating of the question', %q{
 } do
 
   given(:users) { create_list(:user, 2) }
-  given(:question) { create(:question) }
+  given(:questions) { create_list(:question, 2) }
 
   before(:each) do
     users.each do |user|
-      user.votes.create(votable: question)
+      user.votes.create(votable: questions.first, yes: 1)
+      user.votes.create(votable: questions.last, yes: -1)
     end
   end
 
   describe 'Authenticated user' do    
-    scenario 'as an author can view the vote rating of the question' do
-      sign_in(question.user)
-      visit questions_path
-      
-      within ".questions" do
-        within ".row-question-#{question.id}" do
-          within ".vote-rating" do
-            expect(page).to have_content(/(\d+)|(-\d+)/)
-          end
-        end 
+    describe 'as an author' do
+      before do
+        sign_in(questions.first.user)
+        visit questions_path
+      end
+
+      scenario 'can view the vote rating of the question to eq 2' do
+        within ".questions" do
+          within ".row-question-#{questions.first.id}" do
+            within ".vote-rating" do
+              expect(page).to have_content(2)
+            end
+          end 
+        end
+      end
+
+      scenario 'can view the vote rating of the question to eq -2' do
+        within ".questions" do
+          within ".row-question-#{questions.last.id}" do
+            within ".vote-rating" do
+              expect(page).to have_content(-2)
+            end
+          end 
+        end
       end
     end
-    
-    scenario 'as not author can view the vote rating of the question' do
-      sign_in(users.first)
-      visit questions_path
+   
+    describe 'as not an author' do
+      before do 
+        sign_in(users.first)
+        visit questions_path
+      end
+
+      scenario 'can view the vote rating of the question to eq 2' do
+        within ".questions" do
+          within ".row-question-#{questions.first.id}" do
+            within ".vote-rating" do
+              expect(page).to have_content(2)
+            end
+          end 
+        end
+      end
       
-      within ".questions" do
-        within ".row-question-#{question.id}" do
-          within ".vote-rating" do
-            expect(page).to have_content(/(\d+)|(-\d+)/)
-          end
-        end 
+      scenario 'can view the vote rating of the question to eq -2' do
+        within ".questions" do
+          within ".row-question-#{questions.last.id}" do
+            within ".vote-rating" do
+              expect(page).to have_content(-2)
+            end
+          end 
+        end
       end
     end
   end
 
-  scenario 'Unauthenticated user can view the vote rating of the question' do
-    visit questions_path
+  describe 'Unauthenticated user' do
+    before { visit questions_path }
     
-    within ".questions" do
-      within ".row-question-#{question.id}" do
-        within ".vote-rating" do
-          expect(page).to have_content(/(\d+)|(-\d+)/)
-        end
-      end 
+    scenario 'can view the vote rating of the question to eq 2' do
+      within ".questions" do
+        within ".row-question-#{questions.first.id}" do
+          within ".vote-rating" do
+            expect(page).to have_content(2)
+          end
+        end 
+      end
+    end
+
+    scenario 'can view the vote rating of the question to eq -2' do
+      within ".questions" do
+        within ".row-question-#{questions.last.id}" do
+          within ".vote-rating" do
+            expect(page).to have_content(-2)
+          end
+        end 
+      end
     end
   end
 end

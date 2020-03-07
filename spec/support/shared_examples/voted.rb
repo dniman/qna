@@ -47,7 +47,6 @@ RSpec.shared_examples 'voted' do
 
   describe 'PATCH #vote_no' do
     let!(:user) { create(:user) }
-    #let!(:subject) { create(described_class.to_s.downcase[(.*)_(.*),0].singularize.to_sym) }
     let!(:subject) { create(controller.controller_name.classify.downcase.to_sym) }
 
     context 'when user is authenticated' do
