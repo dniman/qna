@@ -221,4 +221,5 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
+  include_examples 'voted'
 end

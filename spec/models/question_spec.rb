@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Question, type: :model do
+  include_examples 'linkable'
+  include_examples 'votable'
+
   it { should belong_to(:user) }
   it { should have_many(:answers).dependent(:destroy) }
   it { should have_one(:bounty).dependent(:destroy) }
@@ -13,6 +16,4 @@ RSpec.describe Question, type: :model do
   it 'has one or many attached files' do
     expect(subject.files).to be_an_instance_of(ActiveStorage::Attached::Many)
   end
-
-  include_examples 'linkable'
 end

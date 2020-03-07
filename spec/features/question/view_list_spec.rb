@@ -7,19 +7,19 @@ feature 'User can view a list of questions', %q{
 } do
 
   given!(:users) { create_list(:user, 2) }
-  given!(:questions) { create_list(:question, 2, user: users[0]) }
+  given!(:questions) { create_list(:question, 2, user: users.first) }
 
   describe 'Authenticated user' do
     scenario 'as an author can view a list of questions' do
-      sign_in(users[0])
+      sign_in(users.first)
 
       visit questions_path
 
       expect(page).to have_content(/MyString \d/).twice 
     end
 
-    scenario 'as not the author can view a list of question' do
-      sign_in(users[1])
+    scenario 'as not the author can view a list of questions' do
+      sign_in(users.last)
 
       visit questions_path
       expect(page).to have_content(/MyString \d/).twice

@@ -4,6 +4,6 @@ $(document).on('turbolinks:load', function(){
     $(this).hide();
     var answerId = $(this).data('answerId');
     $('form#edit-answer-' + answerId).removeClass('hidden');
-  }) 
+  });
 });
 
