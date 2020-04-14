@@ -1,0 +1,35 @@
+tr class="row-answer-#{@answer.id} #{ JST["templates/answer/best_answer"](@answer.best_answer) }" valiagn="top"
+  td 
+    table
+      tr
+        td
+          .body = @answer.body
+          == JST["templates/answer/files"](@attachments)
+          == JST["templates/answer/links"](@links)
+  - if @answer.user_id == gon.user_id
+      td 
+        a.edit-answer-link href="#" data-answer-id="#{@answer.id}" Edit
+      td 
+        == JST["templates/answer/form"](@answer)
+
+      td 
+        a data-confirm="Are you sure?" data-remote="true" rel="nofollow" data-method="delete" href="/answers/#{@answer.id}" Delete
+  - else
+      td
+      td
+      td
+
+  - if @answer.best_answer 
+      td Best answer 
+  - else 
+    - if @answer.user_id == gon.question_user_id
+        td
+          a data-remote="true" rel="nofollow" data-method="patch" href="/answers/#{@answer.id}/mark_as_the_best" Mark as the best answer
+  - unless @answer.user_id == gon.user_id
+      - if gon.user_id 
+        td
+          a style="padding: 5px" class="positive-vote" data-votable-id="#{@answer.id}" data-remote="true" rel="nofollow" data-method="patch" href="/answers/#{@answer.id}/vote_yes" Vote yes
+          a style="padding: 5px" class="negative-vote" data-votable-id="#{@answer.id}" data-remote="true" rel="nofollow" data-method="patch" href="/answers/#{@answer.id}/vote_no" Vote no
+          a style="padding: 5px" class="cancel-vote hidden" data-votable-id="#{@answer.id}" data-remote="true" rel="nofollow" data-method="patch" href="/answers/#{@answer.id}/cancel_vote" Cancel vote
+
+  td.vote-rating data-votable-id=#{@answer.id} 0 

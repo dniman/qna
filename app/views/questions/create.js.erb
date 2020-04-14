@@ -1,5 +1,0 @@
-$('.question-errors').html("<%= render 'shared/errors', resource: @question %>");
-<% if @question.persisted? %>
-  $('.questions').append('<%= j render @question %>');
-  $('.new-question #question_body').val('');
-<% end %>

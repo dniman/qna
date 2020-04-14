@@ -3,6 +3,8 @@ class QuestionsController < ApplicationController
 
   before_action :authenticate_user!, except: %w[index show]
   before_action :set_question, only: %w[show update destroy]
+  before_action :gon_user
+  after_action :publish_question, only: %w[create]
 
   def index
     @questions = Question.all
@@ -20,9 +22,11 @@ class QuestionsController < ApplicationController
 
   def create
     @question = current_user.questions.create(question_params)
-    
-    respond_to do |format|
-      format.js
+
+    if @question.save
+      render json: @question
+    else
+      render json: { errors: @question.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -44,13 +48,24 @@ class QuestionsController < ApplicationController
 
   private
 
-  def set_question
-    @question = Question.with_attached_files.find(params[:id])
-  end
+    def set_question
+      @question = Question.with_attached_files.find(params[:id])
+      gon.question_id = @question.id
+    end
 
-  def question_params
-    params.require(:question).permit(:title, :body, files: [], 
+    def question_params
+      params.require(:question).permit(:title, :body, files: [], 
                                      links_attributes: [:name, :url],
                                      bounty_attributes: [:name, :image])
-  end
+    end
+
+    def publish_question
+      return if @question.errors.any?
+
+      ActionCable.server.broadcast 'questions', @question
+    end
+
+    def gon_user
+      gon.user_id = current_user&.id 
+    end
 end

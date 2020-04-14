@@ -24,6 +24,34 @@ feature 'User can create an answer on a question page', %q{
         expect(page).to have_content /content answer/
       end
     end
+    
+    context 'multiple sessions' do
+      scenario "answer appears on another user's question page", js: true do
+        Capybara.using_session('user') do
+          sign_in(user)
+          visit question_path(question)
+        end
+
+        Capybara.using_session('guest') do
+          visit question_path(question)
+        end
+       
+        Capybara.using_session('user') do
+          fill_in 'Body', with: 'test answer'
+          click_on 'Post your answer'
+
+          within '.answers' do
+            expect(page).to have_content 'test answer'
+          end
+        end
+
+        Capybara.using_session('guest') do
+          within '.answers' do
+            expect(page).to have_content 'test answer'
+          end
+        end
+      end
+    end
 
     scenario 'create answer with errors', js: true do
       click_on 'Post your answer'

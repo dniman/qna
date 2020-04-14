@@ -1,23 +1,23 @@
 .question-errors
   = render 'shared/errors', resource: @question
-  - if user_signed_in?
-    = form_for @question, class: 'new-question', remote: true do |f|
-      p
-        = f.label :title
-        = f.text_field :title
-      p
-        = f.label :body
-        = f.text_area :body
-      p 
-        = f.label :files
-        = f.file_field :files, multiple: true, direct_upload: true
-      
-      .link-fields  
-        = f.fields_for :links do |link| 
-          .links
-            = link_to_add_association 'add link', f, :links, partial: 'links/link_fields'
-      
-      .bounty
-        = link_to_add_association 'create bounty', f, :bounty
+- if user_signed_in?
+  = form_for @question, class: 'new-question', remote: true do |f|
+    p
+      = f.label :title
+      = f.text_field :title
+    p
+      = f.label :body
+      = f.text_area :body
+    p 
+      = f.label :files
+      = f.file_field :files, multiple: true, direct_upload: true
+    
+    .link-fields  
+      = f.fields_for :links do |link| 
+        .links
+          = link_to_add_association 'add link', f, :links, partial: 'links/link_fields'
+    
+    .bounty
+      = link_to_add_association 'create bounty', f, :bounty
 
-      = f.submit 'Ask'
+    = f.submit 'Ask'

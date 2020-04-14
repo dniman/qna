@@ -7,8 +7,8 @@ tr class="row-link-#{link.id}"
             - if current_user&.author_of?(link.linkable)
                 td = link_to 'Delete', link_path(link), method: :delete, remote: true, data: { confirm: 'Are you sure?' }
           tr
-            td style='display:block' 
-              script src='#{link.url}.js'
+            td class='gist-content-#{link.id}' style='display:block' 
+              script(id="#{link.id}" src="#{link.url}.js")
   - else
       td = link_to link.name, link.url
       - if current_user&.author_of?(link.linkable)

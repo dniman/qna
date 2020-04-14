@@ -1,0 +1,7 @@
+- if @.length > 0
+    table.files
+      thead
+        tr
+          th style='text-align: left' Files
+      - for attachment in @
+          == JST["templates/attachments/attachment"](attachment)

@@ -1,0 +1,35 @@
+tr class="row-question-#{@id}"
+  td.title 
+    a href="/questions/#{@id}" #{@title}
+  - if @user_id == gon.user_id
+      td
+        a.edit-question-link href="#" data-question-id="#{@id}" Edit
+      td 
+        form.hidden id="edit-question-#{@id}" enctype="multipart/form-data" action="/questions/#{@id}" data-remote="true" accepts-charset="UTF-8"                  method="post"
+          input name="utf8" type="hidden" value="✓"
+          input type="hidden" name="_method" value="patch"
+          p
+            label for="question_title" Title
+            input id="question_title" type="text" value="#{@title}" name="question[title]"
+          p
+            label for="question_body" Body
+            textarea id="question_body" name="question[body]" #{@body}
+          p 
+            lable for="question_files" Files
+            input id="question_files" multiple="multiple" data-direct-upload-url="/rails/active_storage/direct_uploads" type="file" name="question[files][]" 
+          .links
+            a class="add_fields" data-association="link" data-associations="links" data-association-insertion-template="<div class='nested-fields'><p><label for='question_links_attributes_new_links_name'>Link name</label><input type='text' name='question[links_attributes][new_links][name]' id='question_links_attributes_new_links_name' /></p><p><label for='question_links_attributes_new_links_url'>Url</label><input type='text' name='question[links_attributes][new_links][url]' id='question_links_attributes_new_links_url' /></p><input value='false' type='hidden' name='question[links_attributes][new_links][_destroy]' id='question_links_attributes_new_links__destroy' /><a class='remove_fields dynamic' href='#'>delete link</a></div>" href="#" add link
+          p
+            input type="submit" name="commit" value="Save your question" data-disable-with="Save your question"
+
+      td 
+        a data-confirm="Are you sure?" data-remote="true" rel="nofollow" data-method="delete" href="/questions/#{@id}" Delete
+
+  - else
+      - if gon.user_id 
+        td
+          a style="padding: 5px" class="positive-vote" data-votable-id="#{@id}" data-remote="true" rel="nofollow" data-method="patch" href="/questions/#{@id}/vote_yes" Vote yes
+          a style="padding: 5px" class="negative-vote" data-votable-id="#{@id}" data-remote="true" rel="nofollow" data-method="patch" href="/questions/#{@id}/vote_no" Vote no
+          a style="padding: 5px" class="cancel-vote hidden" data-votable-id="#{@id}" data-remote="true" rel="nofollow" data-method="patch" href="/questions/#{@id}/cancel_vote" Cancel vote
+  
+  td.vote-rating data-votable-id=#{@id} 0

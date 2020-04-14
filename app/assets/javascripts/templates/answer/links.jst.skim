@@ -1,0 +1,7 @@
+- if @.length > 0
+    table.answer-links
+      thead
+        tr
+          th style='text-align: left' Links
+        - for link in @
+            == JST["templates/links/link"](link)

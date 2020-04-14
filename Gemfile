@@ -17,6 +17,8 @@ gem 'devise'
 gem 'jquery-rails'
 gem 'aws-sdk-s3'
 gem 'cocoon'
+gem 'skim'
+gem 'gon'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -39,6 +41,7 @@ group :test do
   gem 'rails-controller-testing'
   gem 'launchy'
   gem 'rspec-instafail', require: false
+  gem 'action-cable-testing'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

@@ -1,17 +1,22 @@
 class AnswersController < ApplicationController
+  include Rails.application.routes.url_helpers
   include Voted
 
   before_action :authenticate_user!
   before_action :find_question, only: %w[create]
   before_action :set_answer, only: %w[update destroy mark_as_the_best]
+  before_action :gon_user
+  after_action :publish_answer, only: %w[create]
 
   def create
     @answer = current_user.answers.new(answer_params)
     @answer.question = @question
     @answer.save
 
-    respond_to do |format|
-      format.js
+    if @answer.save
+      render json: @answer
+    else
+      render json: { errors: @answer.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -44,15 +49,28 @@ class AnswersController < ApplicationController
 
   private
 
-  def find_question
-    @question = Question.with_attached_files.find(params[:question_id])
-  end
+    def find_question
+      @question = Question.with_attached_files.find(params[:question_id])
+    end
 
-  def set_answer
-    @answer = Answer.with_attached_files.find(params[:id])
-  end
+    def set_answer
+      @answer = Answer.with_attached_files.find(params[:id])
+      gon.answer_id = @answer.id
+    end
 
-  def answer_params
-    params.require(:answer).permit(:body, files: [], links_attributes: [:name, :url])
-  end
+    def answer_params
+      params.require(:answer).permit(:body, files: [], links_attributes: [:name, :url])
+    end
+    
+    def publish_answer
+      return if @answer.errors.any?
+
+      ActionCable.server.broadcast 'answers', { answer: @answer, 
+                                                attachments: @answer.files.attachments.inject([]) { |arr, a| arr << { id: a.id, url: rails_blob_url(a), filename: a.blob.filename, user_id: a.record.user_id } },
+                                                links: @answer.links } 
+    end
+
+    def gon_user
+      gon.user_id = current_user&.id 
+    end
 end
