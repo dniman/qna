@@ -13,9 +13,13 @@ feature 'User can vote for the answer', %q{
   scenario 'Unauthenticated user can\'t vote for the answer' do
     visit question_path(question)
 
-    within ".answers" do
-      expect(page).not_to have_link 'Vote yes'
-      expect(page).not_to have_link 'Vote no'
+    within ".question-answers" do
+      within ".vote-actions-#{ answers.first.id }" do
+        expect(page).to have_css('.button-disabled').twice
+        expect(page).to have_no_css("form[action='/answers/#{answers.first.id}/vote_yes']")
+        expect(page).to have_no_css("form[action='/answers/#{answers.first.id}/vote_no']")
+        expect(page).to have_no_css("form[action='/answers/#{answers.first.id}/cancel_vote']")
+      end
     end
   end
   
@@ -27,61 +31,102 @@ feature 'User can vote for the answer', %q{
     
     context 'as not an author of answer' do
       scenario 'can vote for the liked answer' do
-        within ".answers" do
-          within ".row-answer-#{answers.first.id}" do
-            expect(page).to have_link('Vote yes')
+        within ".question-answers" do
+          within ".vote-actions-#{answers.first.id}" do
+            within "form[action='/answers/#{answers.first.id}/vote_yes']" do
+              expect(page).to have_css('.button.button-unset')
+            end
 
-            click_on 'Vote yes'
+            within ".vote-rating" do
+              expect(page).to have_content('0')
+            end
+            
+            within "form[action='/answers/#{answers.first.id}/vote_no']" do
+              expect(page).to have_css('.button.button-unset')
+            end
 
-            expect(page).to have_link('Cancel vote')
+            within "form[action='/answers/#{answers.first.id}/vote_yes']" do
+              find('.button.button-unset').click
+            end
+          end 
 
+          within ".vote-actions-#{answers.first.id}" do
+            expect(page).to have_css("form[action='/answers/#{answers.first.id}/cancel_vote']")
+            
             within ".vote-rating" do
               expect(page).to have_content('1')
             end
+            
+            expect(page).to have_css('.button-disabled')
           end 
         end
       end
       
       scenario 'can vote for the unliked answer' do
-        within ".answers" do
-          within ".row-answer-#{answers.first.id}" do
-            expect(page).to have_link('Vote no')
-            
-            click_on 'Vote no'
+        within ".question-answers" do
+          within ".vote-actions-#{answers.first.id}" do
+            within "form[action='/answers/#{answers.first.id}/vote_yes']" do
+              expect(page).to have_css('.button.button-unset')
+            end
 
-            expect(page).to have_link('Cancel vote')
+            within ".vote-rating" do
+              expect(page).to have_content('0')
+            end
+            
+            within "form[action='/answers/#{answers.first.id}/vote_no']" do
+              expect(page).to have_css('.button.button-unset')
+            end
+
+            within "form[action='/answers/#{answers.first.id}/vote_no']" do
+              find('.button.button-unset').click
+            end
+          end 
+
+          within ".vote-actions-#{answers.first.id}" do
+            expect(page).to have_css('.button-disabled')
             
             within ".vote-rating" do
               expect(page).to have_content('-1')
             end
-          end
+            
+            expect(page).to have_css("form[action='/answers/#{answers.first.id}/cancel_vote']")
+          end 
         end
       end
 
       scenario 'can cancel the voted answer' do
-        within ".answers" do
-          within ".row-answer-#{answers.first.id}" do
-            click_on 'Vote yes'
-            click_on 'Cancel vote'
+        within ".question-answers" do
+          within ".vote-actions-#{answers.first.id}" do
+            within "form[action='/answers/#{answers.first.id}/vote_no']" do
+              find('.button.button-unset').click
+            end
+            
+            within "form[action='/answers/#{answers.first.id}/cancel_vote']" do
+              find('.button.button-set').click
+            end
+          end 
 
-            expect(page).to have_link('Vote yes')
-            expect(page).to have_link('Vote no')
+          within ".vote-actions-#{answers.first.id}" do
+            expect(page).to have_css('.button.button-unset').twice
             
             within ".vote-rating" do
               expect(page).to have_content('0')
             end
-          end
+            
+            expect(page).to have_css("form[action='/answers/#{answers.first.id}/vote_yes']")
+            expect(page).to have_css("form[action='/answers/#{answers.first.id}/vote_no']")
+          end 
         end
       end
     end
 
     context 'as an author of answer' do
       scenario 'can\'t vote for his answer' do
-        within ".answers" do
-          within ".row-answer-#{answers.last.id}" do
-            expect(page).not_to have_link('Vote yes')
-            expect(page).not_to have_link('Vote no')
-          end 
+        within ".vote-actions-#{ answers.last.id }" do
+          expect(page).to have_css('.button-disabled').twice
+          expect(page).to have_no_css("form[action='/answers/#{answers.last.id}/vote_yes']")
+          expect(page).to have_no_css("form[action='/answers/#{answers.last.id}/vote_no']")
+          expect(page).to have_no_css("form[action='/answers/#{answers.last.id}/cancel_vote']")
         end
       end
     end

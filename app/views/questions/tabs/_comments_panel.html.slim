@@ -1,0 +1,9 @@
+.tabs-panel#panel4 aria-labelledby='panel4'
+  .question-comments
+    .grid-x
+      .cell
+        ul.comments-list.vertical.menu.align-left
+          - if @question.comments.exists?
+              = render @question.comments 
+    hr
+    = render 'comments/form', resource: @question

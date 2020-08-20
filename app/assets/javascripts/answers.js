@@ -1,9 +1,9 @@
 $(document).on('turbolinks:load', function(){
-  $('.answers').on('click', '.edit-answer-link', function(e){
+  $('.question-answers').on('click', '.edit-answer-link', function(e){
     e.preventDefault();
     $(this).hide();
     var answerId = $(this).data('answerId');
-    $('form#edit-answer-' + answerId).removeClass('hidden');
+    $('div#edit-answer-' + answerId).removeClass('hidden');
   });
 
   $('form.new_answer').on('ajax:error', function(e){
@@ -16,8 +16,15 @@ $(document).on('turbolinks:load', function(){
       this.perform('follow');
     },
     received(data) {
-     $('.answers').append(JST["templates/answer"](data));
-     $('.new_answer #answer_body').val('');
+      var item = JST["templates/answer"](data);
+      var rowAnswers = $("div[class^=row-answer-]");
+      
+      if ($.inArray(item, rowAnswers) == -1)
+        $(item).insertBefore($('.answer-errors')); 
+      
+      $(document).foundation();
+      
+      $('.new_answer #answer_body').val('');
     }
   })
 });

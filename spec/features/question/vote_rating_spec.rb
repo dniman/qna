@@ -24,7 +24,7 @@ feature 'User can view a vote rating of the question', %q{
 
       scenario 'can view the vote rating of the question to eq 2' do
         within ".questions" do
-          within ".row-question-#{questions.first.id}" do
+          within ".question-row-#{questions.first.id}" do
             within ".vote-rating" do
               expect(page).to have_content(2)
             end
@@ -34,7 +34,7 @@ feature 'User can view a vote rating of the question', %q{
 
       scenario 'can view the vote rating of the question to eq -2' do
         within ".questions" do
-          within ".row-question-#{questions.last.id}" do
+          within ".question-row-#{questions.last.id}" do
             within ".vote-rating" do
               expect(page).to have_content(-2)
             end
@@ -51,7 +51,7 @@ feature 'User can view a vote rating of the question', %q{
 
       scenario 'can view the vote rating of the question to eq 2' do
         within ".questions" do
-          within ".row-question-#{questions.first.id}" do
+          within ".question-row-#{questions.first.id}" do
             within ".vote-rating" do
               expect(page).to have_content(2)
             end
@@ -61,7 +61,7 @@ feature 'User can view a vote rating of the question', %q{
       
       scenario 'can view the vote rating of the question to eq -2' do
         within ".questions" do
-          within ".row-question-#{questions.last.id}" do
+          within ".question-row-#{questions.last.id}" do
             within ".vote-rating" do
               expect(page).to have_content(-2)
             end
@@ -76,7 +76,7 @@ feature 'User can view a vote rating of the question', %q{
     
     scenario 'can view the vote rating of the question to eq 2' do
       within ".questions" do
-        within ".row-question-#{questions.first.id}" do
+        within ".question-row-#{questions.first.id}" do
           within ".vote-rating" do
             expect(page).to have_content(2)
           end
@@ -86,7 +86,7 @@ feature 'User can view a vote rating of the question', %q{
 
     scenario 'can view the vote rating of the question to eq -2' do
       within ".questions" do
-        within ".row-question-#{questions.last.id}" do
+        within ".question-row-#{questions.last.id}" do
           within ".vote-rating" do
             expect(page).to have_content(-2)
           end

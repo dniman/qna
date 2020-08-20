@@ -1,43 +1,15 @@
-tr class="row-question-#{ question.id }"
-  td.title = link_to question.title, question_path(question)
-  - if current_user&.author_of?(question)
-      td = link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }  
-      
-      td = form_for question, html: { id: "edit-question-#{question.id}", class: 'hidden' }, remote: true do |f|
-        p
-          = f.label :title
-          = f.text_field :title
-        p 
-          = f.label :body
-          = f.text_area :body
-        p 
-          = f.label :files
-          = f.file_field :files, multiple: true, direct_upload: true
-       
-        .links
-          = link_to_add_association 'add link', f, :links, partial: 'links/link_fields'
-        
-        p 
-          = f.submit 'Save your question'
-      
-      td = link_to 'Delete', question_path(question), method: :delete, remote: true, data: { confirm: 'Are you sure?' }
-      
-  - else
-      - if current_user
-        td
-          = link_to 'Vote yes', vote_yes_question_path(question), style: 'padding: 5px', 
-                                                                  class: "positive-vote #{ current_user.voted_for?(question) ? 'hidden' : '' }", 
-                                                                  method: :patch, 
-                                                                  remote: true, 
-                                                                  data: { votable_id: question.id }
-          = link_to 'Vote no', vote_no_question_path(question), style: 'padding: 5px', 
-                                                                 class: "negative-vote #{ current_user.voted_for?(question) ? 'hidden' : '' }", 
-                                                                 method: :patch, 
-                                                                 remote: true, 
-                                                                 data: { votable_id: question.id }
-          = link_to 'Cancel vote', cancel_vote_question_path(question), style: 'padding: 5px', 
-                                                                     class: "cancel-vote #{ current_user.voted_for?(question) ? '' : 'hidden' }", 
-                                                                     method: :patch, 
-                                                                     remote: true, 
-                                                                     data: { votable_id: question.id }
-  td.vote-rating data-votable-id=question.id  = question.rating
+div class="question-row-#{ question.id }-errors grid-x grid-margin-x large-up-2 meduim-up-2 small-up-2"
+div class="question-row-#{ question.id } grid-x grid-margin-x large-up-2 meduim-up-2 small-up-2"
+  .cell.shrink
+    = render 'actions', question: question, current_user: current_user
+  .cell.auto
+    .grid-y
+      .cell
+        = link_to question.title, question_path(question)
+      .cell
+        .grid-y
+          .cell
+            p
+              = question.body
+            = render 'edit_form', question: question
+hr

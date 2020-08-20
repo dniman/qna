@@ -1,0 +1,32 @@
+== JST["templates/shared/votes"]({ votable: @answer, votable_root_path: 'answers', rating: 0 })
+ul class="menu vertical align-center best-answer-action-#{ @answer.id }"
+  - if gon.user_id == @question.user_id
+      - if @answer.best_answer
+          li
+            div class="button button-unset button-disabled" style="margin:0;padding:0;"
+              svg aria-hidden="true" class="svg-icon iconStar" height="20" viewBox="0 0 18 18" width="20"
+                path d="M9 12.65l-5.29 3.63 1.82-6.15L.44 6.22l6.42-.17L9 0l2.14 6.05 6.42.17-5.1 3.9 1.83 6.16L9 12.65z"
+      - else 
+          li
+            form class="button_to" method="post" action="/answers/#{ @answer.id }/mark_as_the_best" data-remote="true"
+              input type="hidden" name="_method" value="patch"
+                button class="button button-unset" style="margin:0;padding:0;" type="submit"
+                  svg aria-hidden="true" class="svg-icon iconStar" height="20" viewBox="0 0 18 18" width="20"
+                    path d="M9 12.65l-5.29 3.63 1.82-6.15L.44 6.22l6.42-.17L9 0l2.14 6.05 6.42.17-5.1 3.9 1.83 6.16L9 12.65z"
+                input type="hidden" name="authenticity_token" value="#{ Rails.csrfToken() }"
+  - else
+      - if @answer.best_answer
+          li
+            div class="button button-unset button-disabled" style="margin:0;padding:0;"
+              svg aria-hidden="true" class="svg-icon iconStar" height="20" viewBox="0 0 18 18" width="20"
+                path d="M9 12.65l-5.29 3.63 1.82-6.15L.44 6.22l6.42-.17L9 0l2.14 6.05 6.42.17-5.1 3.9 1.83 6.16L9 12.65z"
+      - else 
+          li
+            div class="button button-unset button-disabled" style="margin:0;padding:0;"
+              svg aria-hidden="true" class="svg-icon iconStar" height="20" viewBox="0 0 18 18" width="20"
+                path d="M9 12.65l-5.29 3.63 1.82-6.15L.44 6.22l6.42-.17L9 0l2.14 6.05 6.42.17-5.1 3.9 1.83 6.16L9 12.65z"
+  - if gon.user_id == @answer.user_id
+      li
+        a href="#" class='edit-answer-link' data-answer-id="#{ @answer.id }" Edit
+      li
+        a href="/answers/#{@answer.id}" data-method='delete' rel='nofollow' data-remote='true' data-confirm='Are you sure?' Delete

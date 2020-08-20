@@ -1,0 +1,9 @@
+.tabs-panel.is-active id="answer-#{ answer.id }-panel1" aria-labelledby="answer-#{ answer.id }-panel1-label"
+  .files
+    - if answer.files.attached?
+        ul.answer-files.vertical.menu.align-left
+          = render answer.files
+    - else
+        .grid-x
+          .cell
+            .text-left = "No files"

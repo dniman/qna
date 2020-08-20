@@ -1,0 +1,5 @@
+.tabs-panel#panel2 aria-labelledby='panel2-label'
+  .question-files
+    - if @question.files.attached?
+        ul.vertical.menu.align-left
+          = render @question.files

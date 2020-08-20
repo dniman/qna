@@ -1,0 +1,10 @@
+.tabs-panel.is-active#panel1 aria-labelledby='panel1'
+  .question-answers
+    = render @question.answers.with_attached_files
+    .grid-x.answer-errors
+      .cell
+        = render 'shared/errors', resource: @answer
+    .grid-x
+      .cell
+        = render 'answers/new_form'
+  

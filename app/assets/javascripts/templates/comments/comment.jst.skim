@@ -1,0 +1,10 @@
+li class="comment-item-#{@id}"
+  .grid-y
+    ul.cell.menu.simple.small-2
+      li.comment-author = @user_email
+      li.time-ago-bullet
+        span aria-hidden="true" •
+      li.time-ago 
+        = @time_in_words
+    .cell.comment-content.small-2
+      div = @body

@@ -1,0 +1,18 @@
+- if user_signed_in?
+    .grid-x.align-left
+      .cell.small-12.callout
+        .grid-y
+          .cell id="new-answer"
+            = form_for [@question, @answer], remote: true do |f|
+              .grid-x
+                .cell 
+                  = f.label :body
+                  = f.text_area :body
+                .cell 
+                  = f.label :files
+                  = f.file_field :files, multiple: true, direct_upload: true
+                .cell
+                  .links
+                    = link_to_add_association 'add link', f, :links, partial: 'links/link_fields'
+                .cell 
+                  = f.submit 'Post your answer', class: 'button primary'

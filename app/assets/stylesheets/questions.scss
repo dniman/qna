@@ -1,3 +1,8 @@
 // Place all the styles related to the Questions controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+div[class^='question-row-'] > .cell:first-child {
+  width: 3em;
+  border-right: 1px solid #e6e6e6;
+}

@@ -1,0 +1,14 @@
+.grid-x
+  .cell.comment-errors
+    = render 'shared/errors', resource: @comment
+- if user_signed_in?
+    .grid-x.align-left
+      .cell.new-comment
+        = form_for [resource, @comment], remote: true do |f|
+          .grid-x
+            .cell 
+              = f.label :body, 'Your Comment'
+              = f.text_area :body
+          .grid-x
+            .cell
+              = f.submit 'Add comment', class: "button primary"

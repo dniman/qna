@@ -1,6 +1,7 @@
 <% if @answer.errors.blank? %>
-  $('.answers').html('<%= j render 'answers/table_header' %><%= j render @question.answers.with_attached_files %>');
+  $('.row-answer-<%= @answer.id %>-errors').replaceWith("")
+  $('.row-answer-<%= @answer.id %>').replaceWith('<%= j render @answer %>');
 <% else %>
-    $('.answer-<%= @answer.id %>-errors').html("<%= render 'shared/errors', resource: @answer %>");
+    $('.row-answer-<%= @answer.id %>-errors').html("<%= render 'shared/errors', resource: @answer %>");
 <% end %>
 

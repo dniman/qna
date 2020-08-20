@@ -25,9 +25,11 @@ feature 'User can create bounty to the question', %q{
         attach_file 'Image', "#{Rails.root}/spec/fixtures/sample_files/bounty.png"
       end
       
-      click_on 'Ask'
+      click_on 'Save your question'
 
-      click_on 'Test question'
+      within '.questions' do
+        click_on 'Test question'
+      end
       
       within '.bounty' do
         expect(page).to have_content 'bounty name'
@@ -42,7 +44,7 @@ feature 'User can create bounty to the question', %q{
         attach_file 'Image', "#{Rails.root}/spec/fixtures/sample_files/bounty.png"
       end
 
-      click_on 'Ask'
+      click_on 'Save your question'
       
       within '.question-errors' do
         expect(page).to have_content 'Bounty name can\'t be blank'

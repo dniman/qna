@@ -1,5 +1,5 @@
 class AnswersController < ApplicationController
-  include Rails.application.routes.url_helpers
+  #include Rails.application.routes.url_helpers
   include Voted
 
   before_action :authenticate_user!
@@ -23,6 +23,7 @@ class AnswersController < ApplicationController
   def update
     @answer.update(answer_params) if current_user.author_of?(@answer)
     @question = @answer.question
+    @comment = Comment.new
 
     respond_to do |format|
       format.js
@@ -41,6 +42,7 @@ class AnswersController < ApplicationController
   def mark_as_the_best
     @question = @answer.question
     @answer.mark_as_the_best_answer! if current_user.author_of?(@question)
+    @comment = Comment.new
     
     respond_to do |format|
       format.js 
@@ -65,9 +67,13 @@ class AnswersController < ApplicationController
     def publish_answer
       return if @answer.errors.any?
 
-      ActionCable.server.broadcast 'answers', { answer: @answer, 
-                                                attachments: @answer.files.attachments.inject([]) { |arr, a| arr << { id: a.id, url: rails_blob_url(a), filename: a.blob.filename, user_id: a.record.user_id } },
-                                                links: @answer.links } 
+      ActionCable.server.broadcast 'answers', { 
+        answer: @answer, 
+        question: @answer.question,
+        attachments: @answer.files.attachments.inject([]) { |arr, a| arr << { id: a.id, url: rails_blob_url(a), filename: a.blob.filename, user_id: a.record.user_id } },
+        links: @answer.links.inject([]) { |arr, l| arr << { id: l.id, name: l.name, url: l.url, linkable_type: l.linkable_type, linkable_id: l.linkable_id, user_id: @answer.user_id} },
+        comment: @answer.comments.new
+      }
     end
 
     def gon_user

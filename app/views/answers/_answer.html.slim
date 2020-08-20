@@ -1,68 +1,22 @@
-tr class="row-answer-#{answer.id} #{answer.best_answer? ? 'best-answer' : ''}" valign="top"
-  td 
-    table
-      tr
-        td
-          .body = answer.body
-          - if answer.files.attached?
-              table.files
-                thead
-                  tr
-                    th style='text-align: left' Files
-                = render answer.files
-          - if answer.links.exists?
-              table.answer-links
-                thead
-                  tr
-                    th style='text-align: left' Links
-                = render answer.links 
-
-  - if current_user&.author_of?(answer)
-      td = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id } 
-
-      td = form_for answer, html: { id: "edit-answer-#{answer.id}", class: 'hidden' }, remote: true do |f|
-        p
-          = f.label :body
-          = f.text_area :body
-        p 
-          = f.label :files
-          = f.file_field :files, multiple: true, direct_upload: true
-        p
-          = link_to_add_association 'add link', f, :links, partial: 'links/link_fields'
-        p 
-          = f.submit 'Save your answer'
-    
-      td = link_to 'Delete', answer_path(answer), method: :delete, remote: true, data: { confirm: 'Are you sure?' }
-  - else
-      td
-      td
-      td
-  - if answer.best_answer? 
-      td = 'Best answer' 
-  - else 
-    - if current_user&.author_of?(answer.question)
-        td = link_to 'Mark as the best answer', mark_as_the_best_answer_path(answer), method: :patch, remote: true
-
-  - unless current_user&.author_of?(answer)
-    - if current_user
-        td
-          = link_to 'Vote yes', vote_yes_answer_path(answer), style: 'padding: 5px', 
-                                                                  class: "positive-vote #{ current_user.voted_for?(answer) ? 'hidden' : '' }", 
-                                                                  method: :patch, 
-                                                                  remote: true, 
-                                                                  data: { votable_id: answer.id }
-          = link_to 'Vote no', vote_no_answer_path(answer), style: 'padding: 5px', 
-                                                                 class: "negative-vote #{ current_user.voted_for?(answer) ? 'hidden' : '' }", 
-                                                                 method: :patch, 
-                                                                 remote: true, 
-                                                                 data: { votable_id: answer.id }
-          = link_to 'Cancel vote', cancel_vote_answer_path(answer), style: 'padding: 5px', 
-                                                                     class: "cancel-vote #{ current_user.voted_for?(answer) ? '' : 'hidden' }", 
-                                                                     method: :patch, 
-                                                                     remote: true, 
-                                                                     data: { votable_id: answer.id }
-
-  td.vote-rating data-votable-id=answer.id  = answer.rating
-
-  td class="answer-#{ answer.id }-errors"
-
+div class="grid-x row-answer-#{ answer.id }-errors"
+div class="grid-x row-answer-#{ answer.id } #{ answer.best_answer? ? 'best-answer' : '' }"
+  .cell.answer-cell
+    .grid-x.grid-padding-x.grid-margin-x
+      .cell.small-1.shrink style="border-right: 1px solid #e6e6e6;padding-left:0;"
+        = render 'answers/actions', answer: answer, current_user: current_user
+      .cell.auto style="padding:0;margin:0"
+        .grid-y
+          .cell style="padding-left:0;"
+            = render 'answers/tab_menu', answer: answer, current_user: current_user
+        .grid-y
+          .cell
+            .grid-x
+              .cell
+                p
+                  = answer.body
+                = render 'answers/edit_form', answer: answer
+          .cell
+            .grid-x.grid-margin-x
+              .cell
+                = render 'answers/tabs', answer: answer, current_user: current_user
+    hr 

@@ -1,5 +1,6 @@
 <% if @question.errors.blank? %>
-    $('.row-question-<%= @question.id %>').replaceWith('<%= j render @question %>');
+  $('.question-row-<%= @question.id %>-errors').replaceWith("");
+  $('.question-row-<%= @question.id %>').replaceWith('<%= j render @question %>');
 <% else %>
-    $('.question-<%= @question.id %>-errors').html("<%= render 'shared/errors', resource: @question %>");
+  $('.question-row-<%= @question.id %>-errors').html("<%= render 'shared/errors', resource: @question %>");
 <% end %>

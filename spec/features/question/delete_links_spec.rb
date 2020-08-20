@@ -7,8 +7,8 @@ feature 'User can delete links added to question', %q{
 
   given(:user) { create(:user) }
   
-  context 'Authenticated user' do
-    scenario 'can delete links when add new question', js: true do
+  context 'Authenticated user', js: true do
+    scenario 'can delete links when add new question' do
       sign_in(user)
       visit questions_path
       
@@ -16,16 +16,16 @@ feature 'User can delete links added to question', %q{
       fill_in 'Body', with: 'text text text'
 
       click_on 'add link'
-     
-      within '.nested-fields' do
-        expect(page).to have_selector(:css, "input[name$='[name]']", visible: true, count: 1)
-        expect(page).to have_selector(:css, "input[name$='[url]']", visible: true, count: 1)
-        expect(page).to have_link('delete link')
+    
+      within '.question-links' do
+        within '.nested-fields' do
+          expect(page).to have_selector(:css, "input[name$='[name]']", visible: true, count: 1)
+          expect(page).to have_selector(:css, "input[name$='[url]']", visible: true, count: 1)
+          expect(page).to have_link('delete link')
 
-        click_on 'delete link'
-      end
+          click_on 'delete link'
+        end
       
-      within '.link-fields' do
         expect(page).not_to have_selector(:css, "input[name$='[name]']")
         expect(page).not_to have_selector(:css, "input[name$='[url]']")
       end
@@ -33,19 +33,21 @@ feature 'User can delete links added to question', %q{
       expect(page).not_to have_link('delete link')
     end
     
-    context 'as an author' do
-      scenario 'deletes links added to question', js: true do
+    context 'as an author', js: true do
+      scenario 'deletes links added to question' do
         question = create(:question, :with_links) 
 
         sign_in(question.user)
         visit question_path(question)
+
+        click_on 'Links'
       
         within '.question-links' do
           link = question.links.first
           
           expect(page).to have_link link.name, href: "#{link.url}"
 
-          within ".row-link-#{link.id}" do
+          within ".link-#{link.id}" do
             page.accept_confirm do
               click_link 'Delete'
             end
@@ -55,18 +57,20 @@ feature 'User can delete links added to question', %q{
         end
       end
 
-      scenario 'delete gists added to question', js: true do
+      scenario 'delete gists added to question' do
         question = create(:question, :with_gists)
 
         sign_in(question.user)
         visit question_path(question)
+
+        click_on 'Links'
         
         within '.question-links' do
           gist = question.links.first
           
           expect(page).to have_selector(:css, "script[src='#{gist.url}.js']", visible: false)
 
-          within ".row-link-#{gist.id}" do
+          within ".link-#{gist.id}" do
             page.accept_confirm do
               click_link 'Delete'
             end
@@ -77,19 +81,21 @@ feature 'User can delete links added to question', %q{
       end
     end
 
-    context 'as not an author' do
-      scenario 'can\'t delete links added to question', js: true do
+    context 'as not an author', js: true do
+      scenario 'can\'t delete links added to question' do
         question = create(:question, :with_links) 
 
         sign_in(user)
         visit question_path(question)
+
+        click_on 'Links'
         
         within '.question-links' do
           link = question.links.first
           
           expect(page).to have_link link.name, href: "#{link.url}"
 
-          within ".row-link-#{link.id}" do
+          within ".link-#{link.id}" do
             expect(page).not_to have_link 'Delete' 
           end
         end

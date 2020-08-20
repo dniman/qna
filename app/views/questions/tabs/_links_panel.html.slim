@@ -1,0 +1,5 @@
+.tabs-panel#panel3 aria-labelledby='panel3-label'
+  .question-links
+    - if @question.links.exists?
+        ul.links.vertical.menu.align-left
+          = render @question.links

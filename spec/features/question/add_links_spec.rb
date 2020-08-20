@@ -16,18 +16,18 @@ feature 'User can add links to question', %q{
     fill_in 'Title', with: 'Test question'
     fill_in 'Body', with: 'text text text'
     
-    within '.link-fields' do
+    within '.question-links' do
       click_on 'add link'
       click_on 'add link'
     end
   end
 
-  context 'Authenticated user adds links when asks question' do
-    context 'with valid attibutes', js: true do
+  context 'Authenticated user adds links when asks question', js: true do
+    context 'with valid attibutes' do
       scenario 'when links is gist' do
         gists = build_list(:link, 2, linkable: question, url: "https://gist.github.com/#{SecureRandom.uuid.split('-').join('')}")
 
-        within '.link-fields' do
+        within '.question-links' do
           all("input[name$='[name]']").each_with_index do |input, index|
             input.set(gists[index].name)
           end
@@ -36,12 +36,16 @@ feature 'User can add links to question', %q{
             input.set(gists[index].url)
           end
         end
+       
+        within '.new_question' do
+          click_button 'Save your question'
+        end
 
-        click_on 'Ask'
-
-        click_on 'Test question'
+        within '.questions' do
+          click_link "Test question"
+        end
         
-        within '.question-links' do
+        within '.question-links', visible: false do
           expect(page).to have_selector(:css, "script[src='#{gists.first.url}.js']", visible: false)
           expect(page).to have_selector(:css, "script[src='#{gists.last.url}.js']", visible: false)
         end
@@ -50,7 +54,7 @@ feature 'User can add links to question', %q{
       scenario 'when links is not gist' do
         links = build_list(:link, 2, linkable: question)
 
-        within '.link-fields' do
+        within '.question-links' do
           all("input[name$='[name]']").each_with_index do |input, index|
             input.set(links[index].name)
           end
@@ -59,30 +63,33 @@ feature 'User can add links to question', %q{
             input.set(links[index].url)
           end
         end
+        
+        within '.new_question' do
+          click_button 'Save your question'
+        end
 
-        click_on 'Ask'
+        within '.questions' do
+          click_link "Test question"
+        end
 
-        click_on 'Test question'
-
-        within '.question-links' do
-          expect(page).to have_link links.first.name, href: links.first.url
-          expect(page).to have_link links.last.name, href: links.last.url
+        within '.question-links', visible: false do
+          expect(page).to have_link(links.first.name, href: links.first.url, visible: false)
+          expect(page).to have_link(links.last.name, href: links.last.url, visible: false)
         end
       end
     end
 
-
-    context 'with invalid attributes', js: true do
+    context 'with invalid attributes' do
       scenario 'when url is empty' do
         links = build_list(:link, 2, linkable: question)
 
-        within '.link-fields' do
+        within '.question-links' do
           all("input[name$='[name]']").each_with_index do |input, index|
             input.set(links[index].name)
           end
         end
 
-        click_on 'Ask'
+        click_button 'Save your question'
 
         expect(page).to have_content "Links url can't be blank"
       end
@@ -90,13 +97,13 @@ feature 'User can add links to question', %q{
       scenario 'when url is invalid' do
         links = build_list(:link, 2, linkable: question)
 
-        within '.link-fields' do
+        within '.question-links' do
           all("input[name$='[name]']").each_with_index do |input, index|
             input.set(links[index].name)
           end
         end
 
-        click_on 'Ask'
+        click_button 'Save your question'
 
         expect(page).to have_content "Links url is invalid"
       end
@@ -104,13 +111,13 @@ feature 'User can add links to question', %q{
       scenario 'when link name is empty' do
         links = build_list(:link, 2, linkable: question, name: '')
         
-        within '.link-fields' do
+        within '.question-links' do
           all("input[name$='[url]']").each_with_index do |input, index|
             input.set(links[index].url)
           end
         end
 
-        click_on 'Ask'
+        click_button 'Save your question'
 
         expect(page).to have_content "Links name can't be blank"
       end

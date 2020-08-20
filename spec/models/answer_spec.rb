@@ -6,6 +6,7 @@ RSpec.describe Answer, type: :model do
   
   include_examples 'linkable'
   include_examples 'votable'
+  include_examples 'commentable'
 
   it { should validate_presence_of :body }
 
@@ -62,5 +63,4 @@ RSpec.describe Answer, type: :model do
       end
     end
   end
-  
 end

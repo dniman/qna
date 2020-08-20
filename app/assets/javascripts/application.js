@@ -10,14 +10,19 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+//= require skim
+//= require action_cable
 //= require rails-ujs
 //= require activestorage
 //= require turbolinks
 //= require jquery3
+//= require foundation
 //= require cocoon
-//= require action_cable
-//= require skim
 //= require_tree .
+
+$(document).on('turbolinks:load', function() {
+    $(function(){ $(document).foundation(); });
+});
 
 var App = App || {};
 App.cable = ActionCable.createConsumer();

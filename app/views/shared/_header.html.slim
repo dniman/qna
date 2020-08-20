@@ -1,7 +1,13 @@
-header
-  ul
-    - if user_signed_in?
-        li= link_to "My bounties", user_bounties_path 
-        li= link_to "Sign out", destroy_user_session_path, method: :delete
-    - else
-        li= link_to "Sign in", new_user_session_path
+.top-bar
+  .top-bar-left
+    ul.menu
+      li.menu-text
+        = link_to 'QNA Project', root_path, class: "project"
+  .top-bar-right
+    ul.menu 
+      - if user_signed_in?
+          li= link_to "My bounties", user_bounties_path 
+          li= link_to "Sign out", destroy_user_session_path, method: :delete
+      - else
+        - if controller_name != 'sessions' && controller_name != 'passwords' && controller_name != 'registrations'
+            li= link_to "Sign in", new_user_session_path

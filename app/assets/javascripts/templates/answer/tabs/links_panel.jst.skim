@@ -1,0 +1,10 @@
+.tabs-panel id="answer-#{ @answer.id }-panel2" aria-labelledby="answer-#{ @answer.id }-panel2-label"
+  .links
+    - if @links.length > 0
+        ul.answer-links.vertical.menu.align-left
+          - for link in @links
+              == JST["templates/links/link"](link)
+    - else
+        .grid-x
+          .cell
+            .text-left = "No links"

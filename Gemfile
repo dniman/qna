@@ -19,6 +19,8 @@ gem 'aws-sdk-s3'
 gem 'cocoon'
 gem 'skim'
 gem 'gon'
+gem 'foundation-rails'
+gem 'autoprefixer-rails'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -34,9 +36,10 @@ group :development do
 end
 
 group :test do
+  gem 'webdrivers', '~> 4.0'
   gem 'capybara', '>= 2.15'
-  gem 'selenium-webdriver'
-  gem 'chromedriver-helper'
+  #gem 'selenium-webdriver'
+  #gem 'chromedriver-helper'
   gem 'shoulda-matchers', '4.0.0.rc1'
   gem 'rails-controller-testing'
   gem 'launchy'

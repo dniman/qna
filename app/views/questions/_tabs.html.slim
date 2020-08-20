@@ -1,0 +1,14 @@
+ul.tabs#question-tabs(data-tabs role='tablist')
+  li.tabs-title.is-active 
+    = link_to 'Answers', '#panel1', 'id': 'panel1-label', 'data-tabs-target': 'panel1'
+  li.tabs-title 
+    = link_to 'Files', '#panel2', 'id': 'panel2-label', 'data-tabs-target': 'panel2'
+  li.tabs-title 
+    = link_to 'Links', '#panel3', 'id': 'panel3-label', 'data-tabs-target': 'panel3'
+  li.tabs-title 
+    = link_to 'Comments', '#panel4', 'id': 'panel4-label', 'data-tabs-target': 'panel4'
+.tabs-content data-tabs-content='question-tabs'
+  = render 'questions/tabs/answers_panel'
+  = render 'questions/tabs/files_panel'
+  = render 'questions/tabs/links_panel'
+  = render 'questions/tabs/comments_panel'

@@ -18,6 +18,7 @@ class QuestionsController < ApplicationController
 
   def show
     @answer = Answer.new
+    @comment = Comment.new
   end
 
   def create
@@ -55,14 +56,14 @@ class QuestionsController < ApplicationController
 
     def question_params
       params.require(:question).permit(:title, :body, files: [], 
-                                     links_attributes: [:name, :url],
-                                     bounty_attributes: [:name, :image])
+                                     links_attributes: [:id, :name, :url, :_destroy],
+                                     bounty_attributes: [:id, :name, :image, :_destroy])
     end
 
     def publish_question
       return if @question.errors.any?
 
-      ActionCable.server.broadcast 'questions', @question
+      ActionCable.server.broadcast 'questions', question: @question
     end
 
     def gon_user

@@ -48,7 +48,6 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
-      
   describe 'GET #show' do
     let(:user) { create(:user) }
     let(:question) { create(:question) }
@@ -64,6 +63,10 @@ RSpec.describe QuestionsController, type: :controller do
 
         it 'assigns new answer to @answer' do
           expect(assigns(:answer)).to be_a_new(Answer)
+        end
+
+        it 'assigns new comment to @comment' do
+          expect(assigns(:comment)).to be_a_new(Comment)
         end
 
         it 'renders show view' do
@@ -121,8 +124,8 @@ RSpec.describe QuestionsController, type: :controller do
 
         it "transmits question" do
           expect { subject }.to have_broadcasted_to("questions").with { |data|
-            expect(data[:title]).to eq(question.title)
-            expect(data[:body]).to eq(question.body)
+            expect(data[:question][:title]).to eq(question.title)
+            expect(data[:question][:body]).to eq(question.body)
           }
         end
       end

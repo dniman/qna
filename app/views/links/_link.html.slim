@@ -1,15 +1,16 @@
-tr class="row-link-#{link.id}"
-  - if link.gist_url?
-      td
-        table
-          tr
-            td = link.name
+li class="link-#{ link.id }"
+  .grid-x
+    - if link.gist_url?
+        .cell
+          .grid-x
+            .cell.small-3.text-left = link.name
             - if current_user&.author_of?(link.linkable)
-                td = link_to 'Delete', link_path(link), method: :delete, remote: true, data: { confirm: 'Are you sure?' }
-          tr
-            td class='gist-content-#{link.id}' style='display:block' 
-              script(id="#{link.id}" src="#{link.url}.js")
-  - else
-      td = link_to link.name, link.url
-      - if current_user&.author_of?(link.linkable)
-          td = link_to 'Delete', link_path(link), method: :delete, remote: true, data: { confirm: 'Are you sure?' }
+                .cell.auto.text-center = link_to 'Delete', link_path(link), method: :delete, remote: true, data: { confirm: 'Are you sure?' }
+          .grid-x
+            .cell
+              div class='gist-content-#{link.id}' style='display:block' 
+                  script src="#{link.url}.js"
+    - else
+        .cell.small-3.text-left = link_to link.name, link.url
+        - if current_user&.author_of?(link.linkable)
+            .cell.auto.text-center = link_to 'Delete', link_path(link), method: :delete, remote: true, data: { confirm: 'Are you sure?' }

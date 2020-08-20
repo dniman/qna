@@ -20,7 +20,7 @@ feature 'User can create an answer on a question page', %q{
       click_on 'Post your answer'
 
       expect(current_path).to eq question_path(question)
-      within '.answers' do
+      within '.question-answers' do
         expect(page).to have_content /content answer/
       end
     end
@@ -40,13 +40,13 @@ feature 'User can create an answer on a question page', %q{
           fill_in 'Body', with: 'test answer'
           click_on 'Post your answer'
 
-          within '.answers' do
+          within '.question-answers' do
             expect(page).to have_content 'test answer'
           end
         end
 
         Capybara.using_session('guest') do
-          within '.answers' do
+          within '.question-answers' do
             expect(page).to have_content 'test answer'
           end
         end
@@ -64,8 +64,8 @@ feature 'User can create an answer on a question page', %q{
         fill_in 'Body', with: 'content answer'
         attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
         click_on 'Post your answer'
-
-        within "[class^=row-answer]" do
+        
+        within ".row-answer-#{question.answers.first.id}" do
           expect(page).to have_link 'rails_helper.rb'
           expect(page).to have_link 'spec_helper.rb'
         end

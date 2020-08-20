@@ -1,0 +1,14 @@
+.grid-x
+  .cell.comment-errors
+- if gon.user_id
+    .grid-x.align-left
+      .cell.new-comment
+        form.new_comment#new_comment action="/answers/#{ @answer.id }/comments" data-remote="true" accepts-charset="UTF-8" method="post"
+          input name="utf8" type="hidden" value="✓"
+          .grid-x
+            .cell 
+              label for="comment_body" Your Comment
+              textarea id="comment_body" name="question[body]" #{ @comment.body }
+          .grid-x
+            .cell
+              input type="submit" name="commit" value="Add comment" class='button primary' data-disable-with="Add comment"

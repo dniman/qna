@@ -1,0 +1,9 @@
+.tabs-panel id="answer-#{ answer.id }-panel3" aria-labelledby="answer-#{ answer.id }-panel3-label"
+  .answer-comments
+    .grid-x
+      .cell
+        ul.comments-list.vertical.menu.align-left
+          - if answer.comments.exists?
+              = render answer.comments 
+    hr
+    = render 'comments/form', resource: answer

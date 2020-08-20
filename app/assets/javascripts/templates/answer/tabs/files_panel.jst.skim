@@ -1,0 +1,10 @@
+.tabs-panel.is-active id="answer-#{ @answer.id }-panel1" aria-labelledby="answer-#{ @answer.id }-panel1-label"
+  .files
+    - if @attachments.length > 0
+        ul.answer-files.vertical.menu.align-left
+          - for attachment in @attachments
+              == JST["templates/attachments/attachment"](attachment)
+    - else
+        .grid-x
+          .cell
+            .text-left = "No files"
