@@ -63,7 +63,7 @@ class QuestionsController < ApplicationController
     def publish_question
       return if @question.errors.any?
 
-      ActionCable.server.broadcast 'questions', question: @question
+      ActionCable.server.broadcast 'questions_channel', question: @question
     end
 
     def gon_user

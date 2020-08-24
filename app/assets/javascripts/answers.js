@@ -11,21 +11,21 @@ $(document).on('turbolinks:load', function(){
     $('.answer-errors').append(JST['templates/shared/errors'](errors));
   })
 
-  App.cable.subscriptions.create('AnswersChannel', {
-    connected() {
-      this.perform('follow');
-    },
-    received(data) {
-      var item = JST["templates/answer"](data);
-      var rowAnswers = $("div[class^=row-answer-]");
-      
-      if ($.inArray(item, rowAnswers) == -1)
+  const questionId = $('.question-answers').attr('data-question-id');
+  
+  App.cable.subscriptions.create( { channel: 'AnswersChannel', 
+    question_id: questionId}, {
+      connected() {
+        this.perform('follow');
+      },
+      received(data) {
+        var item = JST["templates/answer"](data);
         $(item).insertBefore($('.answer-errors')); 
       
-      $(document).foundation();
+        $(document).foundation();
       
-      $('.new_answer #answer_body').val('');
-    }
-  })
+        $('.new_answer #answer_body').val('');
+      }
+    })
 });
 

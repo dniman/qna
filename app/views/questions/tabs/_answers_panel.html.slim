@@ -1,5 +1,5 @@
 .tabs-panel.is-active#panel1 aria-labelledby='panel1'
-  .question-answers
+  div class='question-answers' data-question-id="#{ @question.id }"
     = render @question.answers.with_attached_files
     .grid-x.answer-errors
       .cell

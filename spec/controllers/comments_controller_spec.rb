@@ -5,7 +5,6 @@ RSpec.describe CommentsController, type: :controller do
     let(:user) { create(:user) }
     let(:question) { create(:question) }
     let(:answer) { create(:answer) }
-    let(:comment) { build(:comment, commentable: question, user: user) }
 
     let(:question_params) do
       ActiveSupport::HashWithIndifferentAccess.new( 
@@ -24,6 +23,7 @@ RSpec.describe CommentsController, type: :controller do
     end
 
     context 'question comment' do
+      let(:comment) { build(:comment, commentable: question, user: user) }
       subject { post :create, params: question_params, format: :json }
       let(:body) { JSON.parse(response.body) }
 
@@ -42,7 +42,7 @@ RSpec.describe CommentsController, type: :controller do
           end
           
           it "transmits comment" do
-            expect { subject }.to have_broadcasted_to("comments").with { |data|
+            expect { subject }.to have_broadcasted_to("comments_channel_question_#{ comment.commentable_id }").with { |data|
               expect(data[:body]).to eq(comment.body)
             }
           end
@@ -77,7 +77,8 @@ RSpec.describe CommentsController, type: :controller do
     end
 
     context 'answer comment' do
-      subject { post :create, params: question_params, format: :json }
+      let(:comment) { build(:comment, commentable: answer, user: user) }
+      subject { post :create, params: answer_params, format: :json }
       let(:body) { JSON.parse(response.body) }
 
       context 'and user authenticated' do
@@ -95,7 +96,7 @@ RSpec.describe CommentsController, type: :controller do
           end
 
           it "transmits comment" do
-            expect { subject }.to have_broadcasted_to("comments").with { |data|
+            expect { subject }.to have_broadcasted_to("comments_channel_answer_#{ comment.commentable_id }").with { |data|
               expect(data[:body]).to eq(comment.body)
             }
           end

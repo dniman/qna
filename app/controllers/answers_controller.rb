@@ -67,16 +67,43 @@ class AnswersController < ApplicationController
     def publish_answer
       return if @answer.errors.any?
 
-      ActionCable.server.broadcast 'answers', { 
-        answer: @answer, 
-        question: @answer.question,
-        attachments: @answer.files.attachments.inject([]) { |arr, a| arr << { id: a.id, url: rails_blob_url(a), filename: a.blob.filename, user_id: a.record.user_id } },
-        links: @answer.links.inject([]) { |arr, l| arr << { id: l.id, name: l.name, url: l.url, linkable_type: l.linkable_type, linkable_id: l.linkable_id, user_id: @answer.user_id} },
-        comment: @answer.comments.new
-      }
+      ActionCable.server.broadcast(  
+        "answers_channel_#{ @answer.question_id }", 
+        { 
+          answer: @answer, 
+          question: @answer.question,
+          attachments: formatted_attachments(@answer),
+          links: formatted_links(@answer),
+          comment: @answer.comments.new
+        }
+      ) 
     end
 
     def gon_user
       gon.user_id = current_user&.id 
+    end
+
+    def formatted_attachments(answer)
+       answer.files.attachments.inject([]) { |arr, a| 
+         arr << { 
+           id: a.id, 
+           url: rails_blob_url(a), 
+           filename: a.blob.filename, 
+           user_id: a.record.user_id 
+         } 
+       }
+    end
+
+    def formatted_links(answer)
+      @answer.links.inject([]) { |arr, l| 
+        arr << { 
+          id: l.id, 
+          name: l.name, 
+          url: l.url, 
+          linkable_type: l.linkable_type, 
+          linkable_id: l.linkable_id, 
+          user_id: answer.user_id
+        } 
+      }
     end
 end

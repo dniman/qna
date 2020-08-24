@@ -24,7 +24,7 @@ RSpec.describe AnswersController, type: :controller do
         end
         
         it "transmits question" do
-          expect { subject }.to have_broadcasted_to("answers").with { |data|
+          expect { subject }.to have_broadcasted_to("answers_channel_#{ answer.question.id }").with { |data|
             expect(data[:answer][:body]).to eq(answer.body)
           }
         end

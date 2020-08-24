@@ -25,7 +25,12 @@ class CommentsController < ApplicationController
     def publish_comment
       return if @comment.errors.any?
       
-      ActionCable.server.broadcast 'comments', @comment.attributes.merge({ user_email: @comment.user.email, time_in_words: distance_of_time_in_words(Time.now, @comment.created_at) })
+      ActionCable.server.broadcast("comments_channel_#{ channel_id }", 
+        @comment.attributes.merge({ 
+          user_email: @comment.user.email, 
+          time_in_words: distance_of_time_in_words(Time.now, @comment.created_at) 
+        })
+      )
     end
 
     def gon_user
@@ -38,5 +43,9 @@ class CommentsController < ApplicationController
 
     def commentable_id
       params.fetch("#{params[:commentable_type].foreign_key}") 
+    end
+
+    def channel_id
+      "#{ commentable_type.name.downcase }_#{ commentable_id }"
     end
 end

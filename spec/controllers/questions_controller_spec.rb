@@ -123,7 +123,7 @@ RSpec.describe QuestionsController, type: :controller do
         end
 
         it "transmits question" do
-          expect { subject }.to have_broadcasted_to("questions").with { |data|
+          expect { subject }.to have_broadcasted_to("questions_channel").with { |data|
             expect(data[:question][:title]).to eq(question.title)
             expect(data[:question][:body]).to eq(question.body)
           }
