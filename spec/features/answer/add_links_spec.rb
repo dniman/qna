@@ -36,7 +36,7 @@ feature 'User can add links to answer', %q{
 
         click_on 'Post your answer'
         
-        within '[class^=row-answer]' do
+        within ".row-answer-#{ question.answers.last.id }" do
           expect(page).to have_selector(:css, "script[src='#{gists.first.url}.js']", visible: false)
           expect(page).to have_selector(:css, "script[src='#{gists.last.url}.js']", visible: false)
         end
@@ -55,9 +55,9 @@ feature 'User can add links to answer', %q{
         
         click_on 'Post your answer'
 
-        within '[class^=row-answer]' do
-          expect(page).to have_link links.first.name, href: links.first.url
-          expect(page).to have_link links.last.name, href: links.last.url
+        within ".row-answer-#{ question.answers.last.id }" do
+          expect(page).to have_link(links.first.name, href: links.first.url, visible: false)
+          expect(page).to have_link(links.last.name, href: links.last.url, visible: false)
         end
       end
     end

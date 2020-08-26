@@ -1,0 +1,60 @@
+ul class="menu vertical align-center vote-actions-#{ @votable.id }"
+  - if gon.user_id == null || gon.user_id == @votable.user_id
+      li
+        div class="button button-unset button-disabled" style="margin:0;padding:0;" 
+          svg aria-hidden="true" class="svg-icon m0 iconArrowUpLg" width="20" height="20" viewBox="0 0 36 36"
+            path d="M2 26h32L18 10 2 26z"
+      li
+        .vote-rating data-votable-id=@votable.id = @rating 
+      li
+        div class="button button-unset button-disabled" style="margin:0;padding:0;"
+          svg aria-hidden="true" class="svg-icon m0 iconArrowDownLg" width="20" height="20" viewBox="0 0 36 36"
+            path d="M2 10h32L18 26 2 10z"
+  - else
+    - if @vote
+        - if (@vote.user_id == gon.user_id && @vote.yes > 0)
+            li
+              form class="button_to" method="post" action="/#{ @votable_root_path }/#{ @votable.id }/cancel_vote" data-remote="true"
+                input type="hidden" name="_method" value="patch"
+                button class="button button-set" data-votable-id="#{ @votable.id }" style="margin:0;padding:0;" type="submit"
+                  svg aria-hidden="true" class="svg-icon m0 iconArrowUpLg" height="20" viewBox="0 0 36 36" width="20"
+                    path d="M2 26h32L18 10 2 26z"
+                input type="hidden" name="authenticity_token" value="#{ Rails.csrfToken() }"
+            li
+              .vote-rating data-votable-id=@votable.id = @rating
+            li
+              div class="button button-unset button-disabled" style="margin:0;padding:0;"
+                svg aria-hidden="true" class="svg-icon m0 iconArrowDownLg" width="20" height="20" viewBox="0 0 36 36"
+                  path d="M2 10h32L18 26 2 10z"
+        - else
+            li
+              div class="button button-unset button-disabled" style="margin:0;padding:0;" 
+                svg aria-hidden="true" class="svg-icon m0 iconArrowUpLg" width="20" height="20" viewBox="0 0 36 36"
+                  path d="M2 26h32L18 10 2 26z"
+            li
+              .vote-rating data-votable-id=@votable.id = @rating
+            li
+              form class="button_to" method="post" action="/#{ @votable_root_path }/#{ @votable.id }/cancel_vote" data-remote="true"
+                input type="hidden" name="_method" value="patch"
+                button class="button button-set" data-votable-id="#{ @votable.id }" style="margin:0;padding:0;" type="submit"
+                  svg aria-hidden="true" class="svg-icon m0 iconArrowDownLg" height="20" viewBox="0 0 36 36" width="20"
+                    path d="M2 10h32L18 26 2 10z"
+                input type="hidden" name="authenticity_token" value="#{ Rails.csrfToken() }"
+    - else
+        li
+          form class="button_to" method="post" action="/#{ @votable_root_path }/#{ @votable.id }/vote_yes" data-remote="true"
+            input type="hidden" name="_method" value="patch"
+            button class="button button-unset" data-votable-id="#{ @votable.id }" style="margin:0;padding:0;" type="submit"
+              svg aria-hidden="true" class="svg-icon m0 iconArrowUpLg" height="20" viewBox="0 0 36 36" width="20"
+                path d="M2 26h32L18 10 2 26z"
+            input type="hidden" name="authenticity_token" value="#{ Rails.csrfToken() }"
+        li
+          .vote-rating data-votable-id=@votable.id = @rating
+        li
+          form class="button_to" method="post" action="/#{ @votable_root_path }/#{ @votable.id }/vote_no" data-remote="true"
+            input type="hidden" name="_method" value="patch"
+            button class="button button-unset" data-votable-id="#{ @votable.id }" style="margin:0;padding:0;" type="submit"
+              svg aria-hidden="true" class="svg-icon m0 iconArrowDownLg" height="20" viewBox="0 0 36 36" width="20"
+                path d="M2 10h32L18 26 2 10z"
+            input type="hidden" name="authenticity_token" value="#{ Rails.csrfToken() }"
+

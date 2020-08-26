@@ -14,8 +14,9 @@ feature 'User can delete question files', %q{
       sign_in(question.user)
       
       visit question_path(question)
+      click_on 'Files'
       
-      within ".files" do
+      within ".question-files" do
         expect(page).to have_link('rails_helper.rb') 
         expect(page).to have_link('spec_helper.rb')
       end
@@ -32,7 +33,7 @@ feature 'User can delete question files', %q{
         end
       end
 
-      within ".files" do
+      within ".question-files" do
         expect(page).not_to have_link('rails_helper.rb') 
         expect(page).not_to have_link('spec_helper.rb')
       end
@@ -41,7 +42,7 @@ feature 'User can delete question files', %q{
     scenario 'as not an author can\'t delete attached files' do
       visit question_path(question)
       
-      within ".files" do
+      within ".question-files" do
         expect(page).not_to have_link('Delete').twice
       end
     end
@@ -51,7 +52,7 @@ feature 'User can delete question files', %q{
     scenario 'can\'t delete attached files' do
       visit question_path(question)
 
-      within ".files" do
+      within ".question-files" do
         expect(page).not_to have_link('Delete').twice
       end
     end

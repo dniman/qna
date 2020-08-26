@@ -1,0 +1,21 @@
+div class="grid-x row-answer-#{ @answer.id } #{ @answer.best_answer? ? 'best-answer' : '' }"
+  .cell.answer-cell
+    .grid-x.grid-margin-x
+      .cell.small-1.shrink style="border-right: 1px solid #e6e6e6;"
+        == JST["templates/answer/actions"]({ answer: @answer, question: @question })
+      .cell.auto
+        .grid-y
+          .cell
+            == JST["templates/answer/tab_menu"]({ answer: @answer })
+        .grid-y
+          .cell
+            .grid-x
+              .cell
+                p
+                  = @answer.body
+                == JST["templates/answer/edit_form"]({ answer: @answer })
+          .cell
+            .grid-x.grid-margin-x
+              .cell
+                == JST["templates/answer/tabs"]({ answer: @answer, attachments: @attachments, links: @links, comment: @comment })
+    hr

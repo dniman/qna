@@ -13,7 +13,12 @@ feature 'User can mark the best answer', %q{
   scenario 'Unauthenticated user can\'t mark the best answer' do
     visit question_path(question)
 
-    expect(page).not_to have_link 'Mark as the best answer'
+    within ".question-answers" do
+      within ".best-answer-action-#{answer.id}" do
+        expect(page).to have_css('.button-disabled')
+        expect(page).to have_no_css("form[action='/answers/#{answer.id}/mark_as_the_best']")
+      end
+    end
   end
 
   describe 'Authenticated user' do
@@ -21,33 +26,45 @@ feature 'User can mark the best answer', %q{
       sign_in(question.user)
       visit question_path(question)
 
-      within '.answers' do
-        click_on 'Mark as the best answer'
+      within '.question-answers' do
+        within ".best-answer-action-#{answer.id}" do
+          within "form[action='/answers/#{answer.id}/mark_as_the_best']" do
+            expect(page).to have_css('.button.button-unset')
+            find('.button.button-unset').click
+          end
+        end
 
-        expect(page).to have_selector('.best-answer')
-        expect(page).to have_content('Best answer')  
+        within ".best-answer-action-#{answer.id}" do
+          expect(page).to have_css('.button-set.button-disabled')
+          expect(page).to have_no_css("form[action='/answers/#{answer.id}/mark_as_the_best']")
+        end
       end
     end
 
     scenario 'can change the best answer to his question', js: true do
       new_answer = create(:answer, question: question) 
-
       sign_in(question.user)
-
       visit question_path(question)
       
-      within '.answers' do
-        within ".row-answer-#{answer.id}" do
-          click_on 'Mark as the best answer'
-        end 
-
-        within ".row-answer-#{new_answer.id}" do
-          click_on 'Mark as the best answer'
-          expect(page).to have_content('Best answer')
+      within '.question-answers' do
+        within ".best-answer-action-#{answer.id}" do
+          within "form[action='/answers/#{answer.id}/mark_as_the_best']" do
+            find('.button.button-unset').click
+          end
         end
 
-        within ".row-answer-#{answer.id}" do
-          expect(page).to have_link('Mark as the best answer')
+        within ".best-answer-action-#{new_answer.id}" do
+          within "form[action='/answers/#{new_answer.id}/mark_as_the_best']" do
+            find('.button.button-unset').click
+          end
+        end
+        
+        within ".best-answer-action-#{answer.id}" do
+          expect(page).to have_css("form[action='/answers/#{answer.id}/mark_as_the_best']")
+        end
+        
+        within ".best-answer-action-#{new_answer.id}" do
+          expect(page).to have_css('.button-set.button-disabled')
         end
       end
     end
@@ -57,10 +74,11 @@ feature 'User can mark the best answer', %q{
       sign_in(user)
       visit question_path(question)
 
-      within '.answers' do
-        within ".row-answer-#{new_answer.id}" do
-          expect(page).not_to have_link('Mark as the best answer')
-        end 
+      within ".question-answers" do
+        within ".best-answer-action-#{new_answer.id}" do
+          expect(page).to have_css('.button-disabled')
+          expect(page).to have_no_css("form[action='/answers/#{new_answer.id}/mark_as_the_best']")
+        end
       end
     end
   end

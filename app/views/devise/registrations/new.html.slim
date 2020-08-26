@@ -1,0 +1,22 @@
+.grid-container
+  .grid-x.grid-padding-x.align-center
+    .large-4.medium-6.small-12.cell.callout.form-section
+      .grid-x.grid-padding-x
+        .large-12.medium-12.small-12.text-center.header
+          h1 Sign up 
+        .large-12.columns.cell
+          = form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| 
+            = render "devise/shared/error_messages", resource: resource
+            .grid-x.grid-padding-x
+              .large-12.medium-12.cell 
+                = f.email_field :email, autofocus: true, autcomplete: "email", placeholder: "Enter email"
+              .large-12.medium-12.cell 
+                - if @minimum_password_length
+                  em
+                    ="#{ @minimum_password_length } characters minimum"
+                  = f.password_field :password, autocomplete: "new-password", placeholder: "Enter password"
+              .large-12.medium-12.cell 
+                = f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Enter password confirmation"
+              .large-12.medium-12.cell
+                = f.submit "Sign up", class: "button primary login-btn"
+      = render "devise/shared/links"

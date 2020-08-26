@@ -1,14 +1,11 @@
-h1= @question.title
-p= @question.body
-
-= render 'files'
-= render 'links'
-= render 'bounty'
-
-h2 Answers
-table.answers
-  = render 'answers/table_header'
-  
-  = render @question.answers.with_attached_files
-
-= render 'answers/form' 
+.grid-container
+  .grid-x
+    .cell
+      h4 = @question.title
+  .grid-x
+    .cell
+      p = @question.body
+  = render 'bounty'
+  hr
+  .question-tabs 
+    = render 'tabs', question: @question, current_user: current_user

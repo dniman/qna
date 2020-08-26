@@ -1,0 +1,4 @@
+.tabs-content data-tabs-content="answer-#{ @answer.id }-tabs"
+  == JST["templates/answer/tabs/files_panel"]({ answer: @answer, attachments: @attachments })
+  == JST["templates/answer/tabs/links_panel"]({ answer: @answer, links: @links })
+  == JST["templates/answer/tabs/comments_panel"]({ answer: @answer, comment: @comment })

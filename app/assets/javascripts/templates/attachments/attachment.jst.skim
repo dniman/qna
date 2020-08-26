@@ -1,0 +1,8 @@
+li class="row-file-#{ @id }"
+  .grid-x
+    .cell.small-3.text-left
+      a href="#{ @url }" = @filename
+    - if gon.user_id == @user_id
+        .cell.auto.text-center
+          a href="/files/#{ @id }" data-method='delete' remote='true' data-confirm='Are you sure?' rel='nofollow' Delete
+  

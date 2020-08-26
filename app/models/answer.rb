@@ -1,6 +1,7 @@
 class Answer < ApplicationRecord
   include Linkable
   include Votable
+  include Commentable
   
   belongs_to :question
   belongs_to :user
@@ -15,7 +16,8 @@ class Answer < ApplicationRecord
   def mark_as_the_best_answer!
     transaction do
       self.question.answers.update_all(best_answer: false)
-      self.question.bounty&.update!(user: self.user)
+      self.question.bounty&.update(user: self.user)
+      self.reload
       self.update!(best_answer: true)
     end
   end

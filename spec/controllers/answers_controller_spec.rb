@@ -6,41 +6,54 @@ RSpec.describe AnswersController, type: :controller do
   let!(:answer) { create(:answer, question: question) } 
 
   describe 'POST #create' do
+    let!(:answer) { build(:answer, question: question) } 
+    subject { post :create, params: { question_id: question, answer: answer.attributes }, format: :json }
+    let(:body) { JSON.parse(response.body) }
 
     context 'when user is authenticated' do
       before { login(user) }
 
       context 'with valid attributes' do
         it 'saves a new answer to the database' do
-          expect { post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js } }.to change(question.answers, :count).by(1)
+          expect { subject }.to change(question.answers, :count).by(1)
         end
 
-        it 'renders create view' do
-          post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js } 
-          expect(response).to render_template :create
+        it 'renders json' do
+          subject
+          expect(body["body"]).to eq(answer.body) 
+        end
+        
+        it "transmits question" do
+          expect { subject }.to have_broadcasted_to("answers_channel_#{ answer.question.id }").with { |data|
+            expect(data[:answer][:body]).to eq(answer.body)
+          }
         end
       end
     
       context 'with invalid attributes' do
+        let(:answer) { build(:answer, :invalid, question: question) } 
+        subject { post :create, params: { question_id: question, answer: answer.attributes }, format: :json }
+        
         it 'does not save the answer' do
-          expect { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid), format: :js } }.to_not change(question.answers, :count)
+          expect { subject }.to_not change(question.answers, :count)
         end
 
-        it 'renders create view' do
-          post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid), format: :js }
-          expect(response).to render_template :create
+        it 'renders json' do
+          subject
+          
+          expect(body["errors"]).to eq(["Body can't be blank"])
         end
       end
     end
 
     context 'when user is not authenticated' do
       it '401' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js } 
+        subject
         expect(response).to have_http_status(401)
       end
     
       it 'does not save the answer' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js } }.to_not change(question.answers, :count)
+        expect { subject }.to_not change(question.answers, :count)
       end
     end
   end

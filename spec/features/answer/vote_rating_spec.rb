@@ -21,7 +21,7 @@ feature 'User can view a vote rating of the answer', %q{
         sign_in(answers.first.user)
         visit question_path(answers.first.question)
         
-        within ".answers" do
+        within ".question-answers" do
           within ".row-answer-#{answers.first.id}" do
             within ".vote-rating" do
               expect(page).to have_content(2)
@@ -34,7 +34,7 @@ feature 'User can view a vote rating of the answer', %q{
         sign_in(answers.last.user)
         visit question_path(answers.last.question)
         
-        within ".answers" do
+        within ".question-answers" do
           within ".row-answer-#{answers.last.id}" do
             within ".vote-rating" do
               expect(page).to have_content(-2)
@@ -49,7 +49,7 @@ feature 'User can view a vote rating of the answer', %q{
         sign_in(users.first)
         visit question_path(answers.first.question)
         
-        within ".answers" do
+        within ".question-answers" do
           within ".row-answer-#{answers.first.id}" do
             within ".vote-rating" do
               expect(page).to have_content(2)
@@ -62,7 +62,7 @@ feature 'User can view a vote rating of the answer', %q{
         sign_in(users.first)
         visit question_path(answers.last.question)
         
-        within ".answers" do
+        within ".question-answers" do
           within ".row-answer-#{answers.last.id}" do
             within ".vote-rating" do
               expect(page).to have_content(-2)
@@ -77,7 +77,7 @@ feature 'User can view a vote rating of the answer', %q{
     scenario 'can view the vote rating of the answer to eq 2' do
       visit question_path(answers.first.question)
 
-      within ".answers" do
+      within ".question-answers" do
         within ".row-answer-#{answers.first.id}" do
           within ".vote-rating" do
             expect(page).to have_content(2)
@@ -89,7 +89,7 @@ feature 'User can view a vote rating of the answer', %q{
     scenario 'can view the vote rating of the answer to eq -2' do
       visit question_path(answers.last.question)
 
-      within ".answers" do
+      within ".question-answers" do
         within ".row-answer-#{answers.last.id}" do
           within ".vote-rating" do
             expect(page).to have_content(-2)

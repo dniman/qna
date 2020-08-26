@@ -17,14 +17,12 @@ feature 'User can delete his answer', %q{
       within ".row-answer-#{answer.id}" do
         expect(page).to have_content answer.body
      
-        within "td:nth-of-type(4)" do
-          page.accept_confirm do
-            click_link 'Delete'
-          end
+        page.accept_confirm do
+          click_link 'Delete'
         end
       end
       
-      within '.answers' do
+      within '.question-answers' do
         expect(page).not_to have_content answer.body
       end
     end
@@ -33,7 +31,7 @@ feature 'User can delete his answer', %q{
       sign_in(user) 
       visit question_path(question)
 
-      within '.answers' do
+      within '.question-answers' do
         expect(page).not_to have_link 'Delete'
       end
     end
@@ -42,7 +40,7 @@ feature 'User can delete his answer', %q{
   scenario 'Unauthenticated user can\'t delete an answer' do
     visit question_path(question)
 
-    within '.answers' do
+    within '.question-answers' do
       expect(page).not_to have_link 'Delete'
     end
   end

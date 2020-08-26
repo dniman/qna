@@ -1,0 +1,7 @@
+== JST["templates/shared/votes"]({ votable: @question, votable_root_path: 'questions' })
+ul.menu.vertical.align-center
+  - if gon.user_id == @question.user_id
+      li
+        a href="#" class='edit-question-link' data-question-id="#{ @question.id }" Edit
+      li
+        a href="/questions/#{@question.id}" rel='nofollow' data-method='delete' data-remote='true' data-confirm='Are you sure?' Delete

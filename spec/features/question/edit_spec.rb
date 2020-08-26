@@ -22,7 +22,7 @@ feature 'User can edit his question', %q{
 
       click_on 'Edit'
 
-      within ".row-question-#{question.id}" do
+      within ".question-row-#{question.id}" do
         expect(page).to have_selector("input[value='#{question.title}']")
         expect(page).to have_selector('textarea', id: 'question_body', exact_text: question.body)
 
@@ -40,7 +40,7 @@ feature 'User can edit his question', %q{
       sign_in(user)
       visit questions_path
 
-      within ".row-question-#{question.id}" do
+      within ".question-row-#{question.id}" do
         expect(page).not_to have_link 'Edit'
       end
     end
@@ -52,24 +52,26 @@ feature 'User can edit his question', %q{
       end
 
       scenario 'can attach one or many files', js: true do
-        within ".row-question-#{question.id}" do
+        within ".question-row-#{question.id}" do
           click_on 'Edit'
           attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
           click_on 'Save your question'
+        end
 
+        within '.questions' do
           click_on question.title 
         end
         
-        within ".files" do
-          expect(page).to have_link 'rails_helper.rb'
-          expect(page).to have_link 'spec_helper.rb'
+        within ".question-files", visible: false do
+          expect(page).to have_link 'rails_helper.rb', visible: false
+          expect(page).to have_link 'spec_helper.rb', visible: false
         end
       end
       
       scenario 'can add one or many links', js: true do
         links = build_list(:link, 2, linkable: question)
         
-        within ".row-question-#{question.id}" do
+        within ".question-row-#{question.id}" do
           click_on 'Edit'
           click_on 'add link' 
           click_on 'add link'
@@ -83,13 +85,15 @@ feature 'User can edit his question', %q{
           end
 
           click_on 'Save your question'
+        end
 
+        within '.questions' do
           click_on question.title 
         end
 
-        within '.question-links' do
-          expect(page).to have_link links.first.name, href: links.first.url
-          expect(page).to have_link links.last.name, href: links.last.url
+        within '.question-links', visible: false do
+          expect(page).to have_link links.first.name, href: links.first.url, visible: false
+          expect(page).to have_link links.last.name, href: links.last.url, visible: false
         end
       end
     end

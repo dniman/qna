@@ -1,0 +1,24 @@
+.grid-y
+  .cell.hidden id="edit-question-#{ @question.id }"
+    form enctype="multipart/form-data" action="/questions/#{ @question.id }" data-remote="true" accepts-charset="UTF-8" method="post"
+      input name="utf8" type="hidden" value="✓"
+      input type="hidden" name="_method" value="patch"
+      .grid-x
+        .cell 
+          label for="question_title" Title
+          input id="question_title" type="text" value="#{ @question.title }" name="question[title]"
+      .grid-x
+        .cell
+          label for="question_body" Body
+          textarea id="question_body" name="question[body]" #{ @question.body }
+      .grid-x
+        .cell 
+          lable for="question_files" Files
+          input id="question_files" multiple="multiple" data-direct-upload-url="/rails/active_storage/direct_uploads" type="file" name="question[files][]" 
+      .grid-x
+        .cell.question-links
+          .links
+            a class="add_fields" data-association="link" data-associations="links" data-association-insertion-template="<div class='nested-fields'><p><label for='question_links_attributes_new_links_name'>Link name</label><input type='text' name='question[links_attributes][new_links][name]' id='question_links_attributes_new_links_name' /></p><p><label for='question_links_attributes_new_links_url'>Url</label><input type='text' name='question[links_attributes][new_links][url]' id='question_links_attributes_new_links_url' /></p><input value='false' type='hidden' name='question[links_attributes][new_links][_destroy]' id='question_links_attributes_new_links__destroy' /><a class='remove_fields dynamic' href='#'>delete link</a></div>" href="#" add link
+
+        .cell 
+          input type="submit" name="commit" value="Save your question" data-disable-with="Save your question" class='button primary'

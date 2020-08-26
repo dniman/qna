@@ -1,0 +1,23 @@
+.grid-container
+  .grid-x.grid-padding-x.align-center
+    .large-4.medium-6.small-12.cell.callout.form-section
+      .grid-x.grid-padding-x
+        .large-12.medium-12.small-12.text-center.header
+          h1 Sign in 
+        .large-12.columns.cell
+          = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| 
+            .grid-x.grid-padding-x
+              .large-12.medium-12.cell 
+                = f.email_field :email, autofocus: true, autcomplete: "email", placeholder: "Enter email"
+              .large-12.medium-12.cell 
+                = f.password_field :password, autocomplete: "current-password", placeholder: "Enter password"
+              .large-12.medium-12.cell
+                = f.submit "Log in", class: "button primary login-btn"
+              - if devise_mapping.rememberable?
+                  .grid-x.grid-padding-x.cell.columns.forget-section
+                    .large-6.medium-6.small-12.cell.text-center
+                      = f.check_box :remember_me
+                      = f.label :remember_me
+                    - if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations'
+                      = link_to "Forgot your password?", new_password_path(resource_name), class: "large-6 medium-6 text-center small-12 text-right"
+      = render "devise/shared/links"

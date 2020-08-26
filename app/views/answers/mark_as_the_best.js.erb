@@ -1,6 +1,8 @@
 <% if @answer.errors.blank? %>
-  $('.answers').html('<%= j render 'answers/table_header' %><%= j render @question.answers.with_attached_files %>');
+  $("div[class*=row-answer-]").remove();
+  $('<%= j render @question.answers.with_attached_files %>').insertBefore($('.answer-errors')); 
 <% else %>
-    $('.answer-<%= @answer.id %>-errors').html("<%= render 'shared/errors', resource: @answer %>");
+  $('.row-answer-<%= @answer.id %>-errors').html("<%= render 'shared/errors', resource: @answer %>");
 <% end %>
+$(document).foundation();
 

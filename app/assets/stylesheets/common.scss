@@ -1,1 +1,90 @@
+.project, .project:hover {
+  color: white;
+}
+
 .hidden { display: none }
+
+.button-unset, .button-unset:hover, 
+.button-set, .button-set:hover, 
+.button-unset[disabled]:hover, .button-set[disabled]:hover,
+.button-unset[disabled], .button-set[disabled] {
+  background-color: #fefefe;
+  opacity: 1;
+}
+
+.button-unset:focus, .button-set:focus {
+  outline: 0;
+}
+
+.button-unset > svg {
+  fill: grey;
+}
+
+.button-disabled > svg {
+  fill: #e6e6e6;
+}
+
+.button-unset[disabled="disabled"] > svg {
+  fill: #e6e6e6;
+}
+
+.button-set > svg {
+  fill: #afaf69;
+}
+
+.comment-author {
+  color: rgb(51, 153, 204) !important;
+  font-size: 13px;
+  padding-left: 0;
+}
+
+.comment-content {
+  line-height: 21px;
+  padding-left: 0;
+}
+
+.time-ago-bullet {
+  color: #c2c6cc;
+  line-height: 1.4;
+}
+
+.time-ago {
+  font-weight: 500;
+  font-size: 12px;
+  color: #687a86;
+}
+
+.bounty,.bounty-icon {
+  padding: 0;
+  margin: 0;
+}
+
+.bounty-icon img{
+  border: 1px solid #ddd;
+  border-radius: 50%;
+}
+
+.bounty-legend {
+  color: gray;
+  font-size: 13px;
+}
+
+ul[id^='answer-'] {
+  border: none;
+}
+
+ul[id^='answer-'] > .tabs-title > a {
+  padding: 0.5rem 0.75rem;
+}
+
+ul[id^='answer-'] > .tabs-title > a[aria-selected='true'],
+ul[id^='answer-'] > .tabs-title > a:focus {
+   background: #fefefe;
+   border: 1px solid #1779ba;
+}
+
+div[data-tabs-content^='answer-'] {
+  border: none;
+  border-top: 1px solid #e6e6e6;
+}
+

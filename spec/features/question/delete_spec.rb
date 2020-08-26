@@ -13,7 +13,7 @@ feature 'User can delete his question', %q{
       sign_in(question.user)
       visit questions_path
 
-      within ".row-question-#{question.id}" do
+      within ".question-row-#{question.id}" do
         expect(page).to have_content question.title
         
         page.accept_confirm do

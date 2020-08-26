@@ -1,8 +1,9 @@
-h2 Questions
-table.questions
-  tr
-    th Title
-    th Actions
-    th Vote rating
-  = render @questions
-= render 'questions/form' 
+.grid-container
+  .questions
+    .grid-x
+      .cell
+        h4 Questions 
+
+    = render @questions
+    = render 'questions/new_form' 
+

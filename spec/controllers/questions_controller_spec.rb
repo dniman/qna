@@ -48,7 +48,6 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
-      
   describe 'GET #show' do
     let(:user) { create(:user) }
     let(:question) { create(:question) }
@@ -64,6 +63,10 @@ RSpec.describe QuestionsController, type: :controller do
 
         it 'assigns new answer to @answer' do
           expect(assigns(:answer)).to be_a_new(Answer)
+        end
+
+        it 'assigns new comment to @comment' do
+          expect(assigns(:comment)).to be_a_new(Comment)
         end
 
         it 'renders show view' do
@@ -100,42 +103,55 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'POST #create' do
     let(:user) { create(:user) }
-    let(:question) { build(:question) }
+    let(:question) { build(:question, user: user) }
+    subject { post :create, params: { question: question.attributes }, format: :json }
+    let(:body) { JSON.parse(response.body) }
 
     context 'when user authenticated' do
       before { sign_in(user) }
 
       context 'with valid attributes' do
         it 'saves a new question to the database' do
-          expect { post :create, params: { question: attributes_for(:question) }, format: :js }.to change(Question, :count).by(1)
+          expect { subject }.to change(Question, :count).by(1)
         end
 
-        it 'renders create view' do
-          post :create, params: { question: attributes_for(:question) }, format: :js
-          expect(response).to render_template(:create) 
+        it 'renders json' do
+          subject
+          
+          expect(body["title"]).to eq(question.title)
+          expect(body["body"]).to eq(question.body)
+        end
+
+        it "transmits question" do
+          expect { subject }.to have_broadcasted_to("questions_channel").with { |data|
+            expect(data[:question][:title]).to eq(question.title)
+            expect(data[:question][:body]).to eq(question.body)
+          }
         end
       end
 
       context 'with invalid attributes' do
+        let(:question) { build(:question, :invalid, user: user) }
+
         it 'does not save the question' do
-          expect { post :create, params: { question: attributes_for(:question, :invalid) }, format: :js }.to_not change(Question, :count)
+          expect { subject }.to_not change(Question, :count)
         end
 
-        it 'renders create view' do
-          post :create, params: { question: attributes_for(:question, :invalid) }, format: :js 
-          expect(response).to render_template(:create) 
+        it 'renders json' do
+          subject
+          expect(body["errors"]).to eq(["Title can't be blank"])
         end
       end
     end
 
     context 'when user not authenticated' do
       it '401' do
-        patch :create, params: { question: attributes_for(:question) }, format: :js  
+        subject
         expect(response).to have_http_status(401)
       end
         
       it 'does not save the question' do
-        expect { post :create, params: { question: attributes_for(:question) }, format: :js }.to_not change(Question, :count)
+        expect { subject }.to_not change(Question, :count)
       end
     end
   end

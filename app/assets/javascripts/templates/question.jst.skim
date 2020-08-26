@@ -1,0 +1,14 @@
+div class="question-row-#{ @question.id } grid-x grid-margin-x large-up-2 medium-up-2 small-up-2"
+  .cell.shrink
+    == JST["templates/question/actions"]({ question: @question })
+  .cell.auto
+    .grid-y
+      .cell
+        a href="/questions/#{ @question.id }" = @question.title
+      .cell
+        .grid-y
+          .cell
+            p
+              = @question.body
+            == JST["templates/question/edit_form"]({ question: @question })
+hr

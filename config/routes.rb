@@ -16,14 +16,20 @@ Rails.application.routes.draw do
 
   resources :questions, except: [:new, :edit], concerns: [:votable] do
     resources :answers, except: [:new, :edit], shallow: true, concerns: [:votable] do
+      resources :comments, only: [:create], defaults: { commentable_type: 'answer' }
+
       member do
         patch :mark_as_the_best
       end
     end
+
+    resources :comments, only: [:create], defaults: { commentable_type: 'question' }
   end
 
   resources :files, only: [:destroy]
   resources :links, only: [:destroy]
 
   root to: "questions#index"
+
+  mount ActionCable.server => '/cable'
 end

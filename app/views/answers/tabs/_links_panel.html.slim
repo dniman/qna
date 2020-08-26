@@ -1,0 +1,10 @@
+.tabs-panel id="answer-#{ answer.id }-panel2" aria-labelledby="answer-#{ answer.id }-panel2-label"
+  .links
+    - if answer.links.exists?
+        ul.answer-links.vertical.menu.align-left
+          = render answer.links
+    - else
+        .grid-x
+          .cell
+            .text-left = "No links"
+              

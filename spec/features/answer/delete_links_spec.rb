@@ -36,19 +36,23 @@ feature 'User can delete links added to question', %q{
 
         sign_in(answer.user)
         visit question_path(question)
+        
+        within ".row-answer-#{answer.id}" do
+          click_link 'Links'
       
-        within '.answer-links' do
-          link = answer.links.first
-          
-          expect(page).to have_link link.name, href: "#{link.url}"
+          within '.answer-links' do
+            link = answer.links.first
+            
+            expect(page).to have_link link.name, href: "#{link.url}"
 
-          within ".row-link-#{link.id}" do
-            page.accept_confirm do
-              click_link 'Delete'
+            within ".link-#{link.id}" do
+              page.accept_confirm do
+                click_link 'Delete'
+              end
             end
+            
+            expect(page).not_to have_link link.name
           end
-          
-          expect(page).not_to have_link link.name
         end
       end
 
@@ -58,18 +62,22 @@ feature 'User can delete links added to question', %q{
         sign_in(answer.user)
         visit question_path(question)
         
-        within '.answer-links' do
-          gist = answer.links.first
-          
-          expect(page).to have_selector(:css, "script[src='#{gist.url}.js']", visible: false)
+        within ".row-answer-#{answer.id}" do
+          click_link 'Links'
+        
+          within '.answer-links' do
+            gist = answer.links.first
+            
+            expect(page).to have_selector(:css, "script[src='#{gist.url}.js']", visible: false)
 
-          within ".row-link-#{gist.id}" do
-            page.accept_confirm do
-              click_link 'Delete'
+            within ".link-#{gist.id}" do
+              page.accept_confirm do
+                click_link 'Delete'
+              end
             end
-          end
 
-          expect(page).not_to have_selector(:css, "script[src='#{gist.url}.js']")
+            expect(page).not_to have_selector(:css, "script[src='#{gist.url}.js']")
+          end
         end
       end
     end
@@ -80,14 +88,18 @@ feature 'User can delete links added to question', %q{
 
         sign_in(user)
         visit question_path(question)
-        
-        within '.answer-links' do
-          link = answer.links.first
-          
-          expect(page).to have_link link.name, href: "#{link.url}"
 
-          within ".row-link-#{link.id}" do
-            expect(page).not_to have_link 'Delete' 
+        within ".row-answer-#{answer.id}" do
+          click_link 'Links'
+        
+          within '.answer-links' do
+            link = answer.links.first
+            
+            expect(page).to have_link link.name, href: "#{link.url}"
+
+            within ".link-#{link.id}" do
+              expect(page).not_to have_link 'Delete' 
+            end
           end
         end
       end

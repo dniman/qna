@@ -1,0 +1,33 @@
+.grid-x.question-errors
+  .cell
+    = render 'shared/errors', resource: @question
+- if user_signed_in?
+    .grid-x.align-left
+      .cell.small-12.callout
+        .grid-y
+          .cell id="new-question"
+            = form_for @question, remote: true do |f|
+              .grid-x
+                .cell 
+                  = f.label :title
+                  = f.text_field :title
+              .grid-x
+                .cell
+                  = f.label :body
+                  = f.text_area :body
+              .grid-x
+                .cell 
+                  = f.label :files 
+                  = f.file_field :files, multiple: true, direct_upload: true
+              .grid-x
+                .cell.question-links
+                  .links
+                    = link_to_add_association 'add link', f, :links, partial: 'links/link_fields'
+              .grid-x
+                .cell
+                  .bounty
+                    = link_to_add_association 'create bounty', f, :bounty
+              .grid-x
+                .cell 
+                  = f.submit 'Save your question', class: 'button primary'
+

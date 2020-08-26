@@ -27,7 +27,7 @@ RSpec.shared_examples 'voted' do
 
         it 'renders json' do
           patch :vote_yes, params: { id: subject }, format: :json
-          expect(response.body).to eq({ "rating": subject.rating }.to_json)
+          expect(response.body).to eq({ "votable": subject, "rating": subject.rating.to_s, vote: subject.votes.where(user: user).size > 0? subject.votes.where(user: user) : nil}.to_json)
         end
 
       end
@@ -72,7 +72,7 @@ RSpec.shared_examples 'voted' do
 
         it 'renders json' do
           patch :vote_no, params: { id: subject }, format: :json
-          expect(response.body).to eq({"rating": subject.rating}.to_json)
+          expect(response.body).to eq({ "votable": subject, "rating": subject.rating.to_s, vote: subject.votes.where(user: user).size > 0? subject.votes.where(user: user) : nil}.to_json)
         end
 
       end
@@ -118,7 +118,7 @@ RSpec.shared_examples 'voted' do
 
         it 'renders json' do
           patch :cancel_vote, params: { id: subject }, format: :json
-          expect(response.body).to eq({"rating": subject.rating}.to_json)
+          expect(response.body).to eq({ "votable": subject, "rating": subject.rating.to_s, "vote": nil}.to_json)
         end
 
       end

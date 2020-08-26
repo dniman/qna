@@ -1,0 +1,22 @@
+.grid-y
+  .cell.hidden id="edit-question-#{ question.id }"
+    = form_for question, remote: true do |f|
+      .grid-x
+        .cell 
+          = f.label :title
+          = f.text_field :title
+      .grid-x
+        .cell
+          = f.label :body
+          = f.text_area :body
+      .grid-x
+        .cell 
+          = f.label :files 
+          = f.file_field :files, multiple: true, direct_upload: true
+      .grid-x
+        .cell.question-links
+          .links
+            = link_to_add_association 'add link', f, :links, partial: 'links/link_fields'
+      .grid-x
+        .cell 
+          = f.submit 'Save your question', class: 'button primary'

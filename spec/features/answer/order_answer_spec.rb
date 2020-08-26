@@ -7,23 +7,27 @@ feature 'Display the best answer first in the list of answers', %q{
 
   given!(:user) { create(:user) }
   given!(:question) { create(:question, user: user) }
-  given!(:answer) { create_list(:answer, 2, question: question, user: user) }
+  given!(:answers) { create_list(:answer, 2, question: question, user: user) }
 
-  before { answer[1].update(best_answer: true) }
+  before { answers.last.update(best_answer: true) }
 
   scenario 'Unauthenticated user can see the best answer first' do
     visit question_path(question)
-    item = find('.answers tr:nth-of-type(2) td:nth-of-type(5)').text
+          
+    item = find('.question-answers > div:nth-of-type(2)')
       
-    expect(item).to eq('Best answer')
+    expect(item[:class]).to include('best-answer')
+    expect(item[:class]).to include("row-answer-#{ answers.last.id }")
   end
 
   scenario 'Authenticated user can see the best answer first' do
     sign_in(user)
     visit question_path(question)
-    item = find('.answers tr:nth-of-type(2) td:nth-of-type(5)').text
+
+    item = find('.question-answers > div:nth-of-type(2)')
       
-    expect(item).to eq('Best answer')
+    expect(item[:class]).to include('best-answer')
+    expect(item[:class]).to include("row-answer-#{ answers.last.id }")
   end
 end
 

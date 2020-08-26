@@ -43,7 +43,9 @@ feature 'User can edit his answer', %q{
         
         fill_in 'Body', with: ''
         click_on 'Save your answer'
+      end
         
+      within ".row-answer-#{answer.id}-errors" do
         expect(page).to have_content 'Body can\'t be blank'
       end
     end
@@ -95,10 +97,12 @@ feature 'User can edit his answer', %q{
           end
 
           click_on 'Save your answer'
-
-          within '.answer-links' do
-            expect(page).to have_link links.first.name, href: links.first.url
-            expect(page).to have_link links.last.name, href: links.last.url
+        end
+        
+        within ".row-answer-#{answer.id}" do
+          within '.answer-links', visible: false do
+            expect(page).to have_link(links.first.name, href: links.first.url, visible: false)
+            expect(page).to have_link(links.last.name, href: links.last.url, visible: false)
           end
         end
       end

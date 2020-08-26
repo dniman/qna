@@ -1,0 +1,5 @@
+- if @errors.length > 0
+  b "#{@errors.length} error(s) detected: "
+  ul
+    - for error in @errors
+      li= error

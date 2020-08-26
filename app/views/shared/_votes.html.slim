@@ -1,0 +1,65 @@
+ul class="menu vertical align-center vote-actions-#{ votable.id }"
+  - if current_user == nil || current_user&.author_of?(votable)
+      li
+        div class="button button-unset button-disabled" style="margin:0;padding:0;" 
+          svg aria-hidden="true" class="svg-icon m0 iconArrowUpLg" width="20" height="20" viewBox="0 0 36 36"
+            path d="M2 26h32L18 10 2 26z"
+      li
+        .vote-rating data-votable-id=votable.id = votable.rating
+      li
+        div class="button button-unset button-disabled" style="margin:0;padding:0;"
+          svg aria-hidden="true" class="svg-icon m0 iconArrowDownLg" width="20" height="20" viewBox="0 0 36 36"
+            path d="M2 10h32L18 26 2 10z"
+  - else
+    - if current_user&.voted_for?(votable)
+        - if current_user.voted_for_up?(votable)
+            li = button_to polymorphic_path(votable, action: :cancel_vote), 
+                    class: "button button-set", 
+                    method: :patch, 
+                    remote: true, 
+                    data: { votable_id: votable.id },
+                    style: "margin:0;padding:0;"
+              svg aria-hidden="true" class="svg-icon m0 iconArrowUpLg" width="20" height="20" viewBox="0 0 36 36"
+                path d="M2 26h32L18 10 2 26z"
+            li
+              .vote-rating data-votable-id=votable.id = votable.rating
+            li
+              div class="button button-unset button-disabled" style="margin:0;padding:0;"
+                svg aria-hidden="true" class="svg-icon m0 iconArrowDownLg" width="20" height="20" viewBox="0 0 36 36"
+                  path d="M2 10h32L18 26 2 10z"
+        - else
+            li
+              div class="button button-unset button-disabled" style="margin:0;padding:0;" 
+                svg aria-hidden="true" class="svg-icon m0 iconArrowUpLg" width="20" height="20" viewBox="0 0 36 36"
+                  path d="M2 26h32L18 10 2 26z"
+            li
+              .vote-rating data-votable-id=votable.id = votable.rating
+            li = button_to polymorphic_path(votable, action: :cancel_vote), 
+                    class: "button button-set", 
+                    method: :patch, 
+                    remote: true, 
+                    data: { votable_id: votable.id },
+                    style: "margin:0;padding:0;"
+              svg aria-hidden="true" class="svg-icon m0 iconArrowDownLg" width="20" height="20" viewBox="0 0 36 36"
+                path d="M2 10h32L18 26 2 10z"
+
+    - else
+        li = button_to polymorphic_path(votable, action: :vote_yes), 
+                  class: "button button-unset", 
+                  method: :patch, 
+                  remote: true, 
+                  data: { votable_id: votable.id },
+                  style: "margin:0;padding:0;"
+          svg aria-hidden="true" class="svg-icon m0 iconArrowUpLg" width="20" height="20" viewBox="0 0 36 36"
+            path d="M2 26h32L18 10 2 26z"
+        li
+          .vote-rating data-votable-id=votable.id = votable.rating
+        li = button_to polymorphic_path(votable, action: :vote_no), 
+                class: "button button-unset", 
+                method: :patch, 
+                remote: true, 
+                data: { votable_id: votable.id },
+                style: "margin:0;padding:0;"
+          svg aria-hidden="true" class="svg-icon m0 iconArrowDownLg" width="20" height="20" viewBox="0 0 36 36"
+            path d="M2 10h32L18 26 2 10z"
+          

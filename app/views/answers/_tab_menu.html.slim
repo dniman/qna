@@ -1,0 +1,7 @@
+ul.menu.align-right.tabs(id="answer-#{ answer.id }-tabs" data-tabs) 
+  li.tabs-title.is-active
+    = link_to 'Files', "#answer-#{ answer.id }-panel1", 'id': "answer-#{ answer.id }-panel1-label", 'data-tabs-target': "answer-#{ answer.id }-panel1"
+  li.tabs-title 
+    = link_to 'Links', "#answer-#{ answer.id }-panel2", 'id': "answer-#{ answer.id }-panel2-label", 'data-tabs-target': "answer-#{ answer.id }-panel2"
+  li.tabs-title 
+    = link_to 'Comments', "#answer-#{ answer.id }-panel3", 'id': "answer-#{ answer.id }-panel3-label", 'data-tabs-target': "answer-#{ answer.id }-panel3"

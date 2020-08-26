@@ -1,6 +1,13 @@
 - if @question.bounty
-    table.bounty
-      thead
-        tr
-          th style='text-align: left' Bounty
-        = render @question.bounty
+    .grid-x
+      .cell
+        .media-object.bounty
+          .media-object-section.bounty-icon
+            - if @question.bounty.image.attached?
+                = image_tag url_for(@question.bounty.image), height: '32px', width: '32px'
+          .media-object-section.bounty-name.align-self-bottom
+            = render @question.bounty
+    .grid-x
+      .cell         
+        span.bounty-legend
+          'Bounty for the best answer
