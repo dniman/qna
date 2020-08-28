@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_16_114610) do
+ActiveRecord::Schema.define(version: 2020_08_27_134230) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,6 +78,16 @@ ActiveRecord::Schema.define(version: 2020_04_16_114610) do
     t.index ["linkable_type", "linkable_id"], name: "index_links_on_linkable_type_and_linkable_id"
   end
 
+  create_table "oauth_providers", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "provider"
+    t.string "uid"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["provider", "uid"], name: "index_oauth_providers_on_provider_and_uid"
+    t.index ["user_id"], name: "index_oauth_providers_on_user_id"
+  end
+
   create_table "questions", force: :cascade do |t|
     t.string "title"
     t.text "body"
@@ -115,5 +125,6 @@ ActiveRecord::Schema.define(version: 2020_04_16_114610) do
   add_foreign_key "bounties", "questions"
   add_foreign_key "bounties", "users"
   add_foreign_key "comments", "users"
+  add_foreign_key "oauth_providers", "users"
   add_foreign_key "votes", "users"
 end

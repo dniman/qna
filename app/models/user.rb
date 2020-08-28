@@ -11,6 +11,7 @@ class User < ApplicationRecord
   has_many :bounties
   has_many :votes, dependent: :destroy
   has_many :comments, dependent: :destroy
+  has_many :oauth_providers, dependent: :destroy
 
   def author_of?(resource)
     resource.user_id == self.id
@@ -39,5 +40,9 @@ class User < ApplicationRecord
   def cancel_vote!(resource)
     vote = self.votes.where(votable: resource)
     self.votes.delete(vote)
+  end
+
+  def self.find_for_oauth(auth)
+    Services::FindForOauth.new(auth).call
   end
 end
