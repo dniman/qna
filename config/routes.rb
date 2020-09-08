@@ -5,7 +5,13 @@ Rails.application.routes.draw do
       resources :bounties, only: [:index, :show]
     end
   end
-  
+
+  scope :auth do
+    resource :users, except: :all do
+      post :enter_email
+    end
+  end
+
   concern :votable do
     member do
       patch :vote_yes

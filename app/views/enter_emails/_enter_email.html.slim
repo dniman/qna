@@ -1,0 +1,13 @@
+.grid-container
+  .grid-x.grid-padding-x.align-center
+    .large-4.medium-6.small-12.cell.callout.form-section
+      .grid-x.grid-padding-x
+        .large-12.medium-12.small-12.text-center.header
+          h1 Enter email
+        .large-12.columns.cell
+          = form_for(@enter_email, url: enter_email_users_path) do |f| 
+            = render "shared/errors", resource: @enter_email
+            .grid-x.grid-padding-x
+              .large-12.medium-12.cell 
+                = f.email_field :email, autofocus: true, autcomplete: "email", placeholder: "Enter email"
+                = f.submit "Enter email", class: "button primary login-btn"

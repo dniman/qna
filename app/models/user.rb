@@ -3,8 +3,8 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
+         :confirmable,
          :omniauthable, omniauth_providers: [:github, :vkontakte]
-  
 
   has_many :questions, dependent: :destroy
   has_many :answers, dependent: :destroy
@@ -42,7 +42,7 @@ class User < ApplicationRecord
     self.votes.delete(vote)
   end
 
-  def self.find_for_oauth(auth)
-    Services::FindForOauth.new(auth).call
+  def self.find_for_oauth(auth, email = nil)
+    Services::FindForOauth.new(auth, email).call
   end
 end
