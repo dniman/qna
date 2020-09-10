@@ -2,13 +2,16 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable,
+         :confirmable,
+         :omniauthable, omniauth_providers: [:github, :vkontakte]
 
   has_many :questions, dependent: :destroy
   has_many :answers, dependent: :destroy
   has_many :bounties
   has_many :votes, dependent: :destroy
   has_many :comments, dependent: :destroy
+  has_many :oauth_providers, dependent: :destroy
 
   def author_of?(resource)
     resource.user_id == self.id
@@ -37,5 +40,9 @@ class User < ApplicationRecord
   def cancel_vote!(resource)
     vote = self.votes.where(votable: resource)
     self.votes.delete(vote)
+  end
+
+  def self.find_for_oauth(auth, email = nil)
+    Services::FindForOauth.new(auth, email).call
   end
 end

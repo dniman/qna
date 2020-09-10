@@ -1,0 +1,15 @@
+.grid-container
+  .grid-x.grid-padding-x.align-center
+    .large-4.medium-6.small-12.cell.callout.form-section
+      .grid-x.grid-padding-x
+        .large-12.medium-12.small-12.text-center.header
+          h4 Send confirmation instuctions 
+        .large-12.columns.cell
+          = form_for(resource, as: resource_name, url: confirmation_path(resource_name)) do |f| 
+            = render "devise/shared/error_messages", resource: resource
+            .grid-x.grid-padding-x
+              .large-12.medium-12.cell 
+                = f.email_field :email, autofocus: true, autcomplete: "email", placeholder: "Enter email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) 
+              .large-12.medium-12.cell
+                = f.submit "Send confirmation instructions", class: "button primary login-btn"
+      = render "devise/shared/links"

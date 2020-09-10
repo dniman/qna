@@ -21,11 +21,15 @@ gem 'skim'
 gem 'gon'
 gem 'foundation-rails'
 gem 'autoprefixer-rails'
+gem 'omniauth'
+gem 'omniauth-github'
+gem 'omniauth-vkontakte'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'rspec-rails', '~> 3.8'
   gem 'factory_bot_rails'
+  gem 'letter_opener'
 end
 
 group :development do
@@ -45,6 +49,7 @@ group :test do
   gem 'launchy'
   gem 'rspec-instafail', require: false
   gem 'action-cable-testing'
+  gem 'capybara-email'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
