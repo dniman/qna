@@ -13,8 +13,13 @@ feature 'User can sign up', %q{
       fill_in 'user_password', with: '12345678'
       fill_in 'user_password_confirmation', with: '12345678'
       click_on 'Sign up'
+      
+      expect(page).to have_content('A message with a confirmation link has been sent to your email address. Please follow the link to activate your account.')
 
-      expect(page).to have_content 'Welcome! You have signed up successfully.'
+      open_email('user@test.com')
+      current_email.click_link 'Confirm my account'
+
+      expect(page).to have_content('Your email address has been successfully confirmed.')
     end
 
     scenario 'with 1 error' do
