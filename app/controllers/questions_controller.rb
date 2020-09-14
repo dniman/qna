@@ -6,6 +6,8 @@ class QuestionsController < ApplicationController
   before_action :gon_user
   after_action :publish_question, only: %w[create]
 
+  authorize_resource
+
   def index
     @questions = Question.all
 

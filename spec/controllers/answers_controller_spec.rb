@@ -112,9 +112,15 @@ RSpec.describe AnswersController, type: :controller do
             expect(answer.body).to eq('MyText')
           end
 
-          it 'not renders update view' do
+          it 'does not render update view' do
             patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
-            expect(response).to render_template :update 
+            expect(response).to_not render_template :update 
+          end
+
+          it 'redirects to root path' do
+            patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
+            expect(response).to redirect_to(root_path) 
+            expect(flash[:alert]).to match(/You are not authorized to access this page./)
           end
         end
       end
@@ -157,9 +163,15 @@ RSpec.describe AnswersController, type: :controller do
           expect { delete :destroy, params: { id: answer }, format: :js }.not_to change(Answer, :count)
         end
 
-        it 'renders destroy view' do
+        it 'does not render destroy view' do
           delete :destroy, params: { id: answer }, format: :js 
-          expect(response).to render_template(:destroy) 
+          expect(response).to_not render_template(:destroy) 
+        end
+
+        it 'redirects to root path' do
+          delete :destroy, params: { id: answer }, format: :js 
+          expect(response).to redirect_to(root_path) 
+          expect(flash[:alert]).to match(/You are not authorized to access this page./)
         end
       end
     end
@@ -208,13 +220,20 @@ RSpec.describe AnswersController, type: :controller do
           expect(answer).not_to be_best_answer
         end
 
-        it 'renders update view' do
+        it 'does not render update view' do
           patch :mark_as_the_best, params: { id: answer }, format: :js 
-          expect(response).to render_template(:mark_as_the_best)
+          expect(response).to_not render_template(:mark_as_the_best)
         end
 
         it 'not add bounty to user' do
           expect { patch :mark_as_the_best, params: { id: answer }, format: :js }.to_not change(answer.user.bounties, :count)
+        end
+        
+        it 'redirects to root path' do
+          patch :mark_as_the_best, params: { id: answer }, format: :js 
+          
+          expect(response).to redirect_to(root_path) 
+          expect(flash[:alert]).to match(/You are not authorized to access this page./)
         end
       end
     end

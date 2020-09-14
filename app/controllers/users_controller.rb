@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  skip_authorization_check only: :enter_email
+
   def enter_email
     @enter_email = EnterEmail.new(enter_email_params)
     
