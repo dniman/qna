@@ -61,5 +61,9 @@ describe Ability, type: :model do
     it { should be_able_to :destroy, answer.files.attach(io: File.open(Rails.root.join('spec', 'rails_helper.rb')), filename: 'rails_helper.rb', content_type: 'text/plain').first }
     it { should_not be_able_to :destroy, other_answer.files.attach(io: File.open(Rails.root.join('spec', 'rails_helper.rb')), filename: 'rails_helper.rb', content_type: 'text/plain').first }
 
+    it { should be_able_to :create, create(:bounty, :with_image, question: question) }
+    it { should_not be_able_to :create, create(:bounty, :with_image, question: other_question) }
+    
+    #it { should be_able_to :create, User }
   end
 end

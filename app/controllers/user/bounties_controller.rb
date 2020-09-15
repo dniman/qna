@@ -1,6 +1,7 @@
 class User::BountiesController < ApplicationController
   before_action :authenticate_user!
-  skip_authorization_check
+
+  authorize_resource
 
   def index
   end

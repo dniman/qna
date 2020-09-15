@@ -19,10 +19,6 @@ class Ability
     can :read, :all
   end
 
-  def admin_abilities
-    can :manage, :all
-  end
-
   def user_abilities
     guest_abilities
     can :create, [Question, Answer, Comment]
@@ -41,6 +37,10 @@ class Ability
     
     can :destroy, ActiveStorage::Attachment do |attachment|
       attachment.record.user_id == user.id
+    end
+
+    can :create, Bounty do |bounty|
+      bounty.question.user_id == user.id
     end
   end
 end
