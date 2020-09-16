@@ -2,6 +2,12 @@ require 'rails_helper'
 
 describe Ability, type: :model do
   subject(:ability) { Ability.new(user) }
+ 
+  describe 'for admin' do
+    let(:user) { create :user, admin: true }
+
+    it { should be_able_to :manage, :all }
+  end
 
   describe 'for guest' do
     let(:user) { nil }

@@ -9,7 +9,7 @@ class Ability
     @user = user
 
     if user
-      user_abilities
+      user.admin? ? admin_abilities : user_abilities
     else
       guest_abilities
     end
@@ -17,6 +17,10 @@ class Ability
 
   def guest_abilities
     can :read, :all
+  end
+
+  def admin_abilities
+    can :manage, :all
   end
 
   def user_abilities
