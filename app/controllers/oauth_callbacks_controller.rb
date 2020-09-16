@@ -27,7 +27,6 @@ class OauthCallbacksController < Devise::OmniauthCallbacksController
       @enter_email = EnterEmail.new
       render 'vkontakte'
     end
-
     
   end
 

@@ -222,10 +222,16 @@ RSpec.describe QuestionsController, type: :controller do
           expect(question.title).to eq(title)
           expect(question.body).to eq(body)
         end
+       
+        it 'not renders update view' do
+          patch :update, params: { id: question, question: attributes_for(:question) }, format: :js 
+          expect(response).to_not render_template(:update)
+        end
 
-        it 'renders update view' do
+        it 'redirects to root path' do
           patch :update, params: { id: question, question: attributes_for(:question), format: :js } 
-          expect(response).to render_template(:update)
+          expect(response).to redirect_to(root_path)
+          expect(flash[:alert]).to match(/You are not authorized to access this page./)
         end
       end
     end
@@ -274,10 +280,16 @@ RSpec.describe QuestionsController, type: :controller do
         it 'not deletes the question' do
           expect { delete :destroy, params: { id: question }, format: :js }.to_not change(Question, :count)
         end
-
-        it 'renders destroy view' do
+        
+        it 'does not render destroy view' do
           delete :destroy, params: { id: question }, format: :js
-          expect(response).to render_template(:destroy)
+          expect(response).to_not render_template(:destroy)
+        end
+
+        it 'redirects to root path' do
+          delete :destroy, params: { id: question }, format: :js
+          expect(response).to redirect_to(root_path)
+          expect(flash[:alert]).to match(/You are not authorized to access this page./)
         end
       end
     end

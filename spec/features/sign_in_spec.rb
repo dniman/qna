@@ -54,6 +54,11 @@ feature 'User can sign in', %q{
 
     scenario 'sign in with Github' do
       sign_in_with_github('unregistered_user@example.com')
+      
+      open_email('unregistered_user@example.com')
+      current_email.click_link 'Confirm my account'
+      
+      click_on 'Sign in with GitHub'
 
       expect(page).to have_content 'Successfully authenticated from Github account.'
       expect(page).to have_content 'Sign out'
@@ -71,7 +76,15 @@ feature 'User can sign in', %q{
       
       click_on 'Sign in with Vkontakte'
 
-      fill_in 'user_email', with: 'new_user@test.com'
+      within '.new_enter_email' do
+        fill_in 'enter_email_email', with: 'new_user@test.com'
+        click_on 'Enter email'
+      end
+      
+      open_email('new_user@test.com')
+      current_email.click_link 'Confirm my account'
+      
+      click_on 'Sign in with Vkontakte'
       
       expect(page).to have_content 'Successfully authenticated from Vkontakte account.'
       expect(page).to have_content 'Sign out'

@@ -2,6 +2,7 @@
 require 'spec_helper'
 require 'webdrivers'
 require 'capybara/email/rspec'
+require 'cancan/matchers'
 
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
@@ -44,6 +45,8 @@ RSpec.configure do |config|
   Webdrivers::Chromedriver.required_version = '78.0.3904.105'
   Capybara.current_driver = :selenium_headless
   Capybara.javascript_driver = :selenium_headless
+  Capybara.server_port = 3000
+  Capybara.app_host = 'http://localhost:3000'
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"

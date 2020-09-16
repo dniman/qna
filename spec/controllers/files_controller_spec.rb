@@ -42,9 +42,16 @@ RSpec.describe FilesController, type: :controller do
       context 'and user is not and author of @attachment record' do
         before { sign_in(user) }
         
-        it 'renders destroy vies' do
+        it 'does not render destroy viwes' do
           delete :destroy, params: { id: question.files.first.id }, format: :js 
-          expect(response).to render_template(:destroy)
+          expect(response).to_not render_template(:destroy)
+        end
+        
+        it 'redirects to root path' do
+          delete :destroy, params: { id: question.files.first.id }, format: :js 
+
+          expect(response).to redirect_to(root_path)
+          expect(flash[:alert]).to match(/You are not authorized to access this page./)
         end
 
         context 'when record is question' do
