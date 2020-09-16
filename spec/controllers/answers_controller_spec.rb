@@ -116,11 +116,10 @@ RSpec.describe AnswersController, type: :controller do
             patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
             expect(response).to_not render_template :update 
           end
-
-          it 'redirects to root path' do
-            patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
-            expect(response).to redirect_to(root_path) 
-            expect(flash[:alert]).to match(/You are not authorized to access this page./)
+            
+          it '403' do
+            patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js } 
+            expect(response).to have_http_status(403)
           end
         end
       end
@@ -168,10 +167,9 @@ RSpec.describe AnswersController, type: :controller do
           expect(response).to_not render_template(:destroy) 
         end
 
-        it 'redirects to root path' do
-          delete :destroy, params: { id: answer }, format: :js 
-          expect(response).to redirect_to(root_path) 
-          expect(flash[:alert]).to match(/You are not authorized to access this page./)
+        it '403' do
+          delete :destroy, params: { id: answer }, format: :js
+          expect(response).to have_http_status(403)
         end
       end
     end
@@ -229,11 +227,9 @@ RSpec.describe AnswersController, type: :controller do
           expect { patch :mark_as_the_best, params: { id: answer }, format: :js }.to_not change(answer.user.bounties, :count)
         end
         
-        it 'redirects to root path' do
+        it '403' do
           patch :mark_as_the_best, params: { id: answer }, format: :js 
-          
-          expect(response).to redirect_to(root_path) 
-          expect(flash[:alert]).to match(/You are not authorized to access this page./)
+          expect(response).to have_http_status(403)
         end
       end
     end

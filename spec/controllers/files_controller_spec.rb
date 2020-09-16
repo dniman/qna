@@ -47,13 +47,11 @@ RSpec.describe FilesController, type: :controller do
           expect(response).to_not render_template(:destroy)
         end
         
-        it 'redirects to root path' do
+        it '403' do
           delete :destroy, params: { id: question.files.first.id }, format: :js 
-
-          expect(response).to redirect_to(root_path)
-          expect(flash[:alert]).to match(/You are not authorized to access this page./)
+          expect(response).to have_http_status(403)
         end
-
+        
         context 'when record is question' do
           it 'not deletes the question attachment' do
             expect { delete :destroy, params: { id: question.files.first.id }, format: :js }.not_to change { question.files.count }
