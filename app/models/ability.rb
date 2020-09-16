@@ -24,7 +24,7 @@ class Ability
     can :create, [Question, Answer, Comment]
     can [:update, :destroy], [Question, Answer], user_id: user.id
     can :mark_as_the_best, Answer do |answer|
-      answer.question.user_id == user.id 
+      user.author_of?(answer.question) 
     end
 
     can [:vote_yes, :vote_no, :cancel_vote], [Question, Answer] do |resource|
