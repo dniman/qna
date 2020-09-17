@@ -32,19 +32,19 @@ class Ability
     end
 
     can [:vote_yes, :vote_no, :cancel_vote], [Question, Answer] do |resource|
-      resource.user_id != user.id
+      !user.author_of?(resource)
     end
 
     can :destroy, Link do |link|
-      link.linkable.user_id == user.id
+      user.author_of?(link.linkable)
     end
     
     can :destroy, ActiveStorage::Attachment do |attachment|
-      attachment.record.user_id == user.id
+      user.author_of?(attachment.record)
     end
 
     can :create, Bounty do |bounty|
-      bounty.question.user_id == user.id
+      user.author_of?(bounty.question)
     end
   end
 end
