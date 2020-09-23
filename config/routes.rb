@@ -1,6 +1,22 @@
 Rails.application.routes.draw do
   use_doorkeeper
+ 
+  namespace :api do
+    namespace :v1 do
+      resource :profiles, only: [] do
+        get :me, on: :collection
+        get :others, on: :collection
+      end
+
+      resources :questions, except: [:new, :edit] do
+        resources :answers, except: [:new, :edit], shallow: true
+      end
+    end
+  end
+  
+  
   devise_for :users, controllers: { omniauth_callbacks: 'oauth_callbacks' }
+  
   as :user do
     namespace :user do
       resources :bounties, only: [:index, :show]

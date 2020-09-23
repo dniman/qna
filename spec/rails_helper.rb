@@ -41,6 +41,7 @@ RSpec.configure do |config|
   config.include ControllerHelpers, type: :controller
   config.include FeatureHelpers, type: :feature
   config.include AcceptanceHelper, type: :feature
+  config.include ApiHelper, type: :request
 
   Webdrivers::Chromedriver.required_version = '78.0.3904.105'
   Capybara.current_driver = :selenium_headless

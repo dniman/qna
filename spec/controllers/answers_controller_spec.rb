@@ -20,7 +20,7 @@ RSpec.describe AnswersController, type: :controller do
 
         it 'renders json' do
           subject
-          expect(body["body"]).to eq(answer.body) 
+          expect(body["answer"]["body"]).to eq(answer.body) 
         end
         
         it "transmits question" do

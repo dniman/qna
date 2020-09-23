@@ -31,6 +31,8 @@ class Ability
       user.author_of?(answer.question) 
     end
 
+    can :destroy, 'api/v1/questions', user_id: user.id
+
     can [:vote_yes, :vote_no, :cancel_vote], [Question, Answer] do |resource|
       !user.author_of?(resource)
     end

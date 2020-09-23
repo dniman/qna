@@ -48,7 +48,7 @@ group :test do
   gem 'shoulda-matchers', '4.0.0.rc1'
   gem 'rails-controller-testing'
   gem 'launchy'
-  gem 'rspec-instafail', require: false
+  #gem 'rspec-instafail', require: false
   gem 'action-cable-testing'
   gem 'capybara-email'
 end
@@ -56,3 +56,7 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem "doorkeeper", "~> 5.4"
+
+gem "active_model_serializers", "~> 0.10.10"
+
+gem 'oj'
