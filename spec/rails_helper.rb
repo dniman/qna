@@ -3,6 +3,7 @@ require 'spec_helper'
 require 'webdrivers'
 require 'capybara/email/rspec'
 require 'cancan/matchers'
+require 'json_matchers/rspec'
 
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
@@ -25,7 +26,8 @@ require 'rspec/rails'
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
- Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }
+Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }
+JsonMatchers.schema_root = "spec/support/api/schemas"
 
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.

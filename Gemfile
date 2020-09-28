@@ -51,6 +51,8 @@ group :test do
   #gem 'rspec-instafail', require: false
   gem 'action-cable-testing'
   gem 'capybara-email'
+  gem 'json-schema'
+  gem 'json_matchers'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

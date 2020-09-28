@@ -1,0 +1,18 @@
+{
+  "id": "file:/profiles/others.json#",
+  "type": "object",
+  "definitions": {
+    "users": {
+      "type": "array",
+      "items": {
+        "$ref": "file:/user.json#"
+      }
+    }
+  },
+  "required": ["users"],
+  "properties": {
+    "users": {
+      "$ref": "#/definitions/users"
+    }
+  }
+}

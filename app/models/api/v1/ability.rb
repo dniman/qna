@@ -1,4 +1,4 @@
-class Api::V1::Ability
+class API::V1::Ability
   include CanCan::Ability
 
   attr_reader :user

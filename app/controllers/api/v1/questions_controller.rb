@@ -1,4 +1,4 @@
-class Api::V1::QuestionsController < Api::V1::BaseController
+class API::V1::QuestionsController < API::V1::BaseController
   before_action :set_question, only: %w[show update destroy]
 
   authorize_resource
@@ -20,12 +20,12 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
   
   def update
-    @question.update(question_params) if current_resource_owner.author_of?(@question)
+    @question.update(question_params)
     head :no_content
   end
   
   def destroy
-    @question.destroy if current_resource_owner.author_of?(@question)
+    @question.destroy
     head :no_content
   end
 

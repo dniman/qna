@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-describe Api::V1::Ability, type: :model do
-  subject(:ability) { Api::V1::Ability.new(user) }
+describe API::V1::Ability, type: :model do
+  subject(:ability) { described_class.new(user) }
  
   describe 'for admin' do
     let(:user) { create :user, admin: true }

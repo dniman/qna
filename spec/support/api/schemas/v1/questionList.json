@@ -1,0 +1,11 @@
+{
+  "id": "file:/questionList.json#",
+  "type": "object",
+  "question": {
+    "id": { "type": "integer" },
+    "title": { "type": "string" },
+    "body": { "type": "string" },
+    "created_at" : { "type": "string", "format": "date-time" },
+    "updated_at" : { "type": "string", "format": "date-time" }
+  }
+}

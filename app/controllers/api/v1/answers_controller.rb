@@ -1,5 +1,5 @@
-class Api::V1::AnswersController < Api::V1::BaseController
-  before_action :find_question, only: %w[index create]
+class API::V1::AnswersController < API::V1::BaseController
+  before_action :set_question, only: %w[index create]
   before_action :set_answer, only: %w[show update destroy]
   
   authorize_resource
@@ -22,17 +22,17 @@ class Api::V1::AnswersController < Api::V1::BaseController
   end
 
   def update
-    @answer.update(answer_params) if current_resource_owner.author_of?(@answer)
+    @answer.update(answer_params)
     head :no_content
   end
 
   def destroy
-    @answer.destroy if current_resource_owner.author_of?(@answer)
+    @answer.destroy
     head :no_content
   end
 
   private
-    def find_question
+    def set_question
       @question = Question.find(params[:question_id])
     end
 

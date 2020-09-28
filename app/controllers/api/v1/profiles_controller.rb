@@ -1,4 +1,4 @@
-class Api::V1::ProfilesController < Api::V1::BaseController
+class API::V1::ProfilesController < API::V1::BaseController
   authorize_resource class: User
   
   def me
