@@ -6,7 +6,7 @@ class API::V1::AnswersController < API::V1::BaseController
 
   def index
     @answers = Answer.where(question: @question)
-    json_response(@answers, :ok, serializer: AnswerListSerializer)
+    json_response(@answers, :ok, each_serializer: AnswerListSerializer)
   end
 
   def show
@@ -37,7 +37,7 @@ class API::V1::AnswersController < API::V1::BaseController
     end
 
     def set_answer
-      @answer = Answer.find(params[:id])
+      @answer = Answer.with_attached_files.find(params[:id])
     end
     
     def answer_params

@@ -8,9 +8,6 @@ class AnswerSerializer < ActiveModel::Serializer
   has_many :comments
 
   def files
-    object.files.inject([]) do |arr, file| 
-      arr << rails_blob_path(file, only_path: true)
-      arr
-    end
+    object.files.map { |file| rails_blob_path(file, only_path: true) }
   end
 end
