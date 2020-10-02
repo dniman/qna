@@ -1,4 +1,5 @@
-module Response
+module JSONResponse
+  
   def json_response(object, status = :ok, options={})
     if options.is_a?(Hash)
       if options.has_key?(:serializer) || options.has_key?(:each_serializer)
@@ -7,4 +8,5 @@ module Response
     end
     render json: object, status: status
   end
+
 end

@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  include Response
+  include JSONResponse
   include ExceptionHandler
   include CheckAuthorization
 end

@@ -1,4 +1,4 @@
-module ApiHelper
+module APIHelper
   HEADERS = { 
     headers: {
       #'CONTENT_TYPE' => 'application/json',
