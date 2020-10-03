@@ -1,5 +1,4 @@
 class AnswersController < ApplicationController
-  #include Rails.application.routes.url_helpers
   include Voted
 
   before_action :authenticate_user!

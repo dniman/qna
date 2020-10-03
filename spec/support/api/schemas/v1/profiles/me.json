@@ -1,0 +1,9 @@
+{  
+  "id": "file:/profiles/me.json#",
+  "type": "object",
+  "required": ["user"],
+  "properties": {
+    "user": { "$ref": "file:/user.json#" }
+  }
+}
+

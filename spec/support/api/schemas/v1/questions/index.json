@@ -1,0 +1,18 @@
+{
+  "id": "file:/questions/index.json#",
+  "type": "object",
+  "definitions": {
+    "questions": {
+      "type": "array",
+      "items": {
+        "$ref": "file:/questionList.json#"
+      }
+    }
+  },
+  "required": ["questions"],
+  "properties": {
+    "questions": {
+      "$ref": "#/definitions/questions"
+    }
+  }
+}

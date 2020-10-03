@@ -1,0 +1,11 @@
+{
+  "id": "file:/user.json#",
+  "type": "object",
+  "user": {
+    "id": { "type": "integer" },
+    "email": { "type": "string" },
+    "admin": { "type": "boolean" },
+    "created_at" : { "type": "string", "format": "date-time" },
+    "updated_at" : { "type": "string", "format": "date-time" }
+  }
+}
