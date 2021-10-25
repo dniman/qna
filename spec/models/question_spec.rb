@@ -4,6 +4,7 @@ RSpec.describe Question, type: :model do
   include_examples 'linkable'
   include_examples 'votable'
   include_examples 'commentable'
+  include_examples 'subscriptionable'
 
   it { should belong_to(:user) }
   it { should have_many(:answers).dependent(:destroy) }

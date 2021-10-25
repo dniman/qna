@@ -62,5 +62,14 @@ RSpec.describe Answer, type: :model do
         expect(question.answers).to eq([answers.last, answers.first, answers[1]])
       end
     end
+
+    describe "#notify_author_of_question" do
+      let(:answer) { build(:answer) }
+
+      it "calls NotifySubscribedUsersJob" do
+        expect(NotifySubscribedUsersJob).to receive(:perform_later).with(answer)
+        answer.save!
+      end
+    end
   end
 end

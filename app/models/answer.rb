@@ -13,6 +13,8 @@ class Answer < ApplicationRecord
   validates :body, presence: true
   validates :question_id, uniqueness: { scope: :best_answer }, if: :best_answer?
 
+  after_create :notify_subscribed_users
+
   def mark_as_the_best_answer!
     transaction do
       self.question.answers.update_all(best_answer: false)
@@ -21,4 +23,10 @@ class Answer < ApplicationRecord
       self.update!(best_answer: true)
     end
   end
+
+  private
+    
+    def notify_subscribed_users
+      NotifySubscribedUsersJob.perform_later(self)
+    end
 end

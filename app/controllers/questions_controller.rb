@@ -1,5 +1,6 @@
 class QuestionsController < ApplicationController
   include Voted
+  include Subscripted
 
   before_action :authenticate_user!, except: %w[index show]
   before_action :set_question, only: %w[show update destroy]
@@ -64,7 +65,6 @@ class QuestionsController < ApplicationController
 
     def publish_question
       return if @question.errors.any?
-
       ActionCable.server.broadcast 'questions_channel', question: @question
     end
 

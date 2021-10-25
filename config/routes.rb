@@ -1,4 +1,10 @@
+require "sidekiq/web"
+
 Rails.application.routes.draw do
+  authenticate :user, lambda{|u| u.admin?} do
+    mount Sidekiq::Web => "/sidekiq"
+  end
+
   use_doorkeeper
  
   namespace :api do
@@ -36,8 +42,15 @@ Rails.application.routes.draw do
       patch :cancel_vote
     end
   end
+  
+  concern :subscriptionable do
+    member do
+      patch :subscribe
+      patch :unsubscribe
+    end
+  end
 
-  resources :questions, except: [:new, :edit], concerns: [:votable] do
+  resources :questions, except: [:new, :edit], concerns: [:votable, :subscriptionable] do
     resources :answers, except: [:new, :edit], shallow: true, concerns: [:votable] do
       resources :comments, only: [:create], defaults: { commentable_type: 'answer' }
 

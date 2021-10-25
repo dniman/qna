@@ -6,3 +6,6 @@
       - if current_user&.author_of?(question)
           li = link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
           li = link_to 'Delete', question_path(question), method: :delete, remote: true, data: { confirm: 'Are you sure?' }
+  .cell
+    = render 'shared/subscriptions', subscriptionable: question, current_user: current_user
+
