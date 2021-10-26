@@ -37,7 +37,7 @@ class Ability
       !user.author_of?(resource)
     end
     
-    can [:subscribe, :unsubscribe], Question, user_id: user.id
+    can [:create, :destroy], Subscription, user_id: user.id
 
     can :destroy, Link do |link|
       user.author_of?(link.linkable)

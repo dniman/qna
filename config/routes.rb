@@ -43,14 +43,7 @@ Rails.application.routes.draw do
     end
   end
   
-  concern :subscriptionable do
-    member do
-      patch :subscribe
-      patch :unsubscribe
-    end
-  end
-
-  resources :questions, except: [:new, :edit], concerns: [:votable, :subscriptionable] do
+  resources :questions, except: [:new, :edit], concerns: [:votable] do
     resources :answers, except: [:new, :edit], shallow: true, concerns: [:votable] do
       resources :comments, only: [:create], defaults: { commentable_type: 'answer' }
 
@@ -60,6 +53,11 @@ Rails.application.routes.draw do
     end
 
     resources :comments, only: [:create], defaults: { commentable_type: 'question' }
+    
+    member do
+      post :subscribe, to: 'subscriptions#create', as: 'subscribe'
+      delete :unsubscribe, to: 'subscriptions#destroy', as: 'unsubscribe'
+    end
   end
 
   resources :files, only: [:destroy]

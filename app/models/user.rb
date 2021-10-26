@@ -14,9 +14,9 @@ class User < ApplicationRecord
   has_many :oauth_providers, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
 
-  scope :subscribed_users, ->(subscriptionable) do 
+  scope :subscribed_users, ->(question) do 
     joins(:subscriptions)
-      .where("subscriptions.subscriptionable_id = ? and subscriptions.subscriptionable_type = ?", subscriptionable, subscriptionable.class)
+      .where("subscriptions.question_id = ?", question)
   end
 
   def author_of?(resource)
@@ -52,16 +52,16 @@ class User < ApplicationRecord
     Services::FindForOauth.new(auth, email).call
   end
   
-  def subscribed_to?(resource)
-    self.subscriptions.exists?(subscriptionable: resource)
+  def subscribed_to?(question)
+    self.subscriptions.exists?(question: question)
   end
 
-  def subscribe!(resource)
-    self.subscriptions.create!(subscriptionable: resource)
+  def subscribe!(question)
+    self.subscriptions.create!(question: question)
   end
 
-  def unsubscribe!(resource)
-    subscription = self.subscriptions.where(subscriptionable: resource)
+  def unsubscribe!(question)
+    subscription = self.subscriptions.where(question: question)
     self.subscriptions.delete(subscription)
   end
 end

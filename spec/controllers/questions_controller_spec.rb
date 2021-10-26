@@ -304,5 +304,4 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   include_examples 'voted'
-  include_examples 'subscripted'
 end

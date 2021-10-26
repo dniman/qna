@@ -116,7 +116,7 @@ RSpec.describe User, type: :model do
     let(:question) { create(:question) }
   
     it 'should be true' do
-      user.subscriptions.create(subscriptionable: question)
+      user.subscriptions.create(question: question)
 
       expect(user).to be_subscribed_to(question)
     end
