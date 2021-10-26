@@ -5,3 +5,5 @@ ul.menu.vertical.align-center
         a href="#" class='edit-question-link' data-question-id="#{ @question.id }" Edit
       li
         a href="/questions/#{@question.id}" rel='nofollow' data-method='delete' data-remote='true' data-confirm='Are you sure?' Delete
+  - if gon.user_id
+      == JST["templates/shared/subscriptions"]({ subscriptionable: @question, subscriptionable_root_path: 'questions' })

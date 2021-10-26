@@ -7,6 +7,7 @@ RSpec.describe User, type: :model do
   it { should have_many(:votes).dependent(:destroy) }
   it { should have_many(:comments).dependent(:destroy) }
   it { should have_many(:oauth_providers).dependent(:destroy) }
+  it { should have_many(:subscriptions).dependent(:destroy) }
 
   it { should validate_presence_of :email }
   it { should validate_presence_of :password }
@@ -107,6 +108,44 @@ RSpec.describe User, type: :model do
         expect(service).to receive(:call)
         User.find_for_oauth(auth)
       end
+    end
+  end
+
+  describe '#subscribed_to?' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+  
+    it 'should be true' do
+      user.subscriptions.create(question: question)
+
+      expect(user).to be_subscribed_to(question)
+    end
+
+    it 'should be false' do
+      expect(user).not_to be_subscribed_to(question)
+    end
+  end
+
+  describe '#subscribe!' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+
+    it 'should add question to subscription list' do
+      question_subscription = user.subscribe!(question)
+
+      expect(user.subscriptions).to include(question_subscription)
+    end
+  end
+
+  describe '#unsubscribe!' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+
+    it 'should remove question from subscription list' do
+      question_subscription = user.subscribe!(question)
+      user.unsubscribe!(question)
+
+      expect(user.subscriptions).not_to include(question_subscription)
     end
   end
 end

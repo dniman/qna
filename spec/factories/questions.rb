@@ -40,5 +40,9 @@ FactoryBot.define do
         create(:link, linkable: question, url: "https://gist.github.com/#{SecureRandom.uuid.split('-').join('')}")
       end
     end
+
+    trait :last_24_hours do
+      created_at { DateTime.now - 1 }
+    end
   end
 end

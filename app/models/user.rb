@@ -12,6 +12,12 @@ class User < ApplicationRecord
   has_many :votes, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :oauth_providers, dependent: :destroy
+  has_many :subscriptions, dependent: :destroy
+
+  scope :subscribed_users, ->(question) do 
+    joins(:subscriptions)
+      .where("subscriptions.question_id = ?", question)
+  end
 
   def author_of?(resource)
     resource.user_id == self.id
@@ -44,5 +50,18 @@ class User < ApplicationRecord
 
   def self.find_for_oauth(auth, email = nil)
     Services::FindForOauth.new(auth, email).call
+  end
+  
+  def subscribed_to?(question)
+    self.subscriptions.exists?(question: question)
+  end
+
+  def subscribe!(question)
+    self.subscriptions.create!(question: question)
+  end
+
+  def unsubscribe!(question)
+    subscription = self.subscriptions.where(question: question)
+    self.subscriptions.delete(subscription)
   end
 end

@@ -63,7 +63,7 @@ RSpec.describe 'Questions api', type: :request do
       
       describe 'links' do
         let(:link) { links.last }
-        let(:link_response) { question_response['links'].first }
+        let(:link_response) { question_response['links'].last }
         
         it 'returns list of links' do
           expect(question_response['links'].size).to eq 4 

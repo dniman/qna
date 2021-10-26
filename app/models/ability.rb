@@ -36,6 +36,8 @@ class Ability
     can [:vote_yes, :vote_no, :cancel_vote], [Question, Answer] do |resource|
       !user.author_of?(resource)
     end
+    
+    can [:create, :destroy], Subscription, user_id: user.id
 
     can :destroy, Link do |link|
       user.author_of?(link.linkable)

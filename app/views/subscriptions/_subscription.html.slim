@@ -1,0 +1,21 @@
+ul class="menu vertical align-center subscription-actions-#{ question.id }"
+  - if current_user 
+    - if current_user.subscribed_to?(question)
+        li = button_to unsubscribe_question_path(question), 
+                class: "button button-set", 
+                method: :delete, 
+                remote: true, 
+                data: { question_id: question.id },
+                style: "margin:0;padding:0;"
+          svg aria-hidden="true" class="svg-icon m0 iconMail" width="20" height="20" viewBox="0 0 24 24"
+            path d="M 4 4 C 2.895 4 2 4.895 2 6 L 2 18 C 2 19.105 2.895 20 4 20 L 20 20 C 21.105 20 22 19.105 22 18 L 22 6 C 22 4.895 21.105 4 20 4 L 4 4 z M 4 6 L 20 6 L 20 7.0019531 L 12 12 L 4 7.0019531 L 4 6 z M 4 9.0019531 L 12 14 L 20 9.0019531 L 20 18 L 4 18 L 4 9.0019531 z"
+    - else
+        li = button_to subscribe_question_path(question), 
+                  class: "button button-unset", 
+                  method: :create, 
+                  remote: true, 
+                  data: { question_id: question.id },
+                  style: "margin:0;padding:0;"
+          svg aria-hidden="true" class="svg-icon m0 iconMail" width="20" height="20" viewBox="0 0 24 24"
+            path d="M 4 4 C 2.895 4 2 4.895 2 6 L 2 18 C 2 19.105 2.895 20 4 20 L 20 20 C 21.105 20 22 19.105 22 18 L 22 6 C 22 4.895 21.105 4 20 4 L 4 4 z M 4 6 L 20 6 L 20 7.0019531 L 12 12 L 4 7.0019531 L 4 6 z M 4 9.0019531 L 12 14 L 20 9.0019531 L 20 18 L 4 18 L 4 9.0019531 z"
+
