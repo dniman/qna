@@ -66,3 +66,7 @@ gem 'oj'
 gem "sidekiq", "~> 6.1"
 gem "sinatra", require: false
 gem "whenever", require: false
+gem "mysql2"
+gem "thinking-sphinx"
+#gem "database_cleaner"
+gem 'database_cleaner-active_record'

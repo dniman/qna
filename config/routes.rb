@@ -62,6 +62,8 @@ Rails.application.routes.draw do
 
   resources :files, only: [:destroy]
   resources :links, only: [:destroy]
+  
+  get 'search', to: 'search#index', as: 'search'
 
   root to: "questions#index"
 

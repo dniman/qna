@@ -1,0 +1,28 @@
+// Place all the styles related to the search controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.search-bar {
+  background-color: transparent;
+  padding:0;
+  margin: 0;
+}
+
+.search-field {
+}
+
+.search-button {
+  border: none;
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-top: 0;
+  text-align: center;
+  width: 100%;
+  height: 2.4375rem;
+}
+
+.search-results h6{
+  border-bottom: 1px solid;
+}
+
