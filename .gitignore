@@ -33,3 +33,7 @@
 
 # Ignore vim tags
 tags
+
+# Ignore sphinx
+/db/sphinx
+/config/*.sphinx.conf

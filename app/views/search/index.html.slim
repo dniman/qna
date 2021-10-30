@@ -1,0 +1,12 @@
+.grid-container
+  .search-results
+    .grid-x
+      .cell
+        h6 Search result: #{ @results.nil? ? 0 : @results.size }
+    - unless @results.nil?
+      .grid-x
+        .cell
+          - @results.each do |result|
+            .result
+              = render result.class.name.underscore, result: result
+

@@ -1,0 +1,9 @@
+= form_tag("/search", action: "index", method: "get") do
+  .grid-x
+    .cell.small-2
+      = select_tag :resource, options_for_select([ "All", "Questions", "Answers", "Comments", "Users" ], "Questions")
+    .cell.small-8
+      = text_field_tag :search, "", class: "search-field"
+    .cell.small-2
+      = submit_tag "Search", class: "button primary search-button"
+
