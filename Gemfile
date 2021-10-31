@@ -77,4 +77,4 @@ gem "mysql2"
 gem "thinking-sphinx"
 #gem "database_cleaner"
 gem 'database_cleaner-active_record'
-gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '01f92d86d15d85cfd0f20dabd025dcbd36a8a60f'
+gem 'mimemagic', '0.3.10'
