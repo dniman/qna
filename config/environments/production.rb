@@ -103,4 +103,7 @@ Rails.application.configure do
     authentication:       'plain',
     enable_starttls_auto: true 
   }
+
+  config.enable_dependency_loading = true
+  config.autoload_paths << Rails.root.join('app/services')
 end
