@@ -434,6 +434,7 @@ DEPENDENCIES
   launchy
   letter_opener
   listen (>= 3.0.5, < 3.2)
+  mail
   mimemagic (= 0.3.10)
   mini_racer
   mysql2

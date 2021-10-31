@@ -93,4 +93,14 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   config.action_cable.allowed_request_origins = ["http://ovz1.j47454681.pq4yn.vps.myjino.ru"]
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:              'smtp.gmail.com',
+    port:                 587,
+    domain:               'ovz1.j47454681.pq4yn.vps.myjino.ru',
+    user_name:            Rails.application.credentials.gmail[:user],
+    password:             Rails.application.credentials.gmail[:password],
+    authentication:       'plain',
+    enable_starttls_auto: true 
+  }
 end
