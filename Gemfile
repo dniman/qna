@@ -78,3 +78,4 @@ gem "thinking-sphinx"
 #gem "database_cleaner"
 gem 'database_cleaner-active_record'
 gem 'mimemagic', '0.3.10'
+gem 'mini_racer'
