@@ -105,5 +105,5 @@ Rails.application.configure do
   }
 
   config.enable_dependency_loading = true
-  config.autoload_paths << Rails.root.join('app/services')
+  config.autoload_paths += += %W{#{config.root}/app/services}
 end
