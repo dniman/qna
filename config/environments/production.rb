@@ -98,8 +98,8 @@ Rails.application.configure do
     address:              'smtp.gmail.com',
     port:                 587,
     domain:               'ovz1.j47454681.pq4yn.vps.myjino.ru',
-    user_name:            Rails.application.credentials.gmail[:user],
-    password:             Rails.application.credentials.gmail[:password],
+    user_name:            Rails.application.credentials.production[:gmail][:user],
+    password:             Rails.application.credentials.production[:gmail][:password],
     authentication:       'plain',
     enable_starttls_auto: true 
   }
