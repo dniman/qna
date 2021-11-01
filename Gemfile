@@ -25,6 +25,18 @@ gem 'omniauth'
 gem 'omniauth-github'
 gem 'omniauth-vkontakte'
 gem 'cancancan'
+gem "doorkeeper", "~> 5.4"
+gem "active_model_serializers", "~> 0.10.10"
+gem 'oj'
+gem "sidekiq", "~> 6.1"
+gem "sinatra", require: false
+gem "whenever", require: false
+gem "mysql2"
+gem "thinking-sphinx"
+gem 'database_cleaner-active_record'
+gem 'mimemagic', '0.3.10'
+gem 'mini_racer'
+gem 'unicorn'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -46,6 +58,7 @@ group :development do
   gem 'capistrano-rvm', require: false
   gem 'capistrano-passenger', require: false
   gem 'capistrano-sidekiq', require: false
+  gem 'capistrano3-unicorn', require: false
 end
 
 group :test do
@@ -65,18 +78,3 @@ end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
-gem "doorkeeper", "~> 5.4"
-
-gem "active_model_serializers", "~> 0.10.10"
-
-gem 'oj'
-
-gem "sidekiq", "~> 6.1"
-gem "sinatra", require: false
-gem "whenever", require: false
-gem "mysql2"
-gem "thinking-sphinx"
-#gem "database_cleaner"
-gem 'database_cleaner-active_record'
-gem 'mimemagic', '0.3.10'
-gem 'mini_racer'
