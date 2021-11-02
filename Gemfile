@@ -37,6 +37,7 @@ gem 'database_cleaner-active_record'
 gem 'mimemagic', '0.3.10'
 gem 'mini_racer'
 gem 'unicorn'
+gem 'redis-rails'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

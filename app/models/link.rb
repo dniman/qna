@@ -1,5 +1,5 @@
 class Link < ApplicationRecord
-  belongs_to :linkable, polymorphic: true, required: true
+  belongs_to :linkable, polymorphic: true, required: true, touch: true
 
   validates :name, :url, presence: true
   validates_format_of :url, with: URI.regexp(['http', 'https'])

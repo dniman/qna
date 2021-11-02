@@ -1,11 +1,12 @@
-.grid-container
-  .grid-x
-    .cell
-      h4 = @question.title
-  .grid-x
-    .cell
-      p = @question.body
-  = render 'bounty'
-  hr
-  .question-tabs 
-    = render 'tabs', question: @question, current_user: current_user
+- cache [@question, current_user] do
+  .grid-container
+    .grid-x
+      .cell
+        h4 = @question.title
+    .grid-x
+      .cell
+        p = @question.body
+    = render 'bounty'
+    hr
+    .question-tabs 
+      = render 'tabs', question: @question, current_user: current_user

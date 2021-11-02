@@ -1,22 +1,23 @@
 div class="grid-x row-answer-#{ answer.id }-errors"
-div class="grid-x row-answer-#{ answer.id } #{ answer.best_answer? ? 'best-answer' : '' }"
-  .cell.answer-cell
-    .grid-x.grid-padding-x.grid-margin-x
-      .cell.small-1.shrink style="border-right: 1px solid #e6e6e6;padding-left:0;"
-        = render 'answers/actions', answer: answer, current_user: current_user
-      .cell.auto style="padding:0;margin:0"
-        .grid-y
-          .cell style="padding-left:0;"
-            = render 'answers/tab_menu', answer: answer, current_user: current_user
-        .grid-y
-          .cell
-            .grid-x
-              .cell
-                p
-                  = answer.body
-                = render 'answers/edit_form', answer: answer
-          .cell
-            .grid-x.grid-margin-x
-              .cell
-                = render 'answers/tabs', answer: answer, current_user: current_user
-    hr 
+- cache [answer, current_user] do
+  div class="grid-x row-answer-#{ answer.id } #{ answer.best_answer? ? 'best-answer' : '' }"
+    .cell.answer-cell
+      .grid-x.grid-padding-x.grid-margin-x
+        .cell.small-1.shrink style="border-right: 1px solid #e6e6e6;padding-left:0;"
+          = render 'answers/actions', answer: answer, current_user: current_user
+        .cell.auto style="padding:0;margin:0"
+          .grid-y
+            .cell style="padding-left:0;"
+              = render 'answers/tab_menu', answer: answer, current_user: current_user
+          .grid-y
+            .cell
+              .grid-x
+                .cell
+                  p
+                    = answer.body
+                  = render 'answers/edit_form', answer: answer
+            .cell
+              .grid-x.grid-margin-x
+                .cell
+                  = render 'answers/tabs', answer: answer, current_user: current_user
+      hr 
