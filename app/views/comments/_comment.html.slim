@@ -1,10 +1,11 @@
-li class="comment-item-#{comment.id}"
-  .grid-y
-    ul.cell.menu.simple.small-2
-      li.comment-author = comment.user.email
-      li.time-ago-bullet
-        span aria-hidden="true" •
-      li.time-ago 
-        = distance_of_time_in_words(Time.now, comment.created_at)
-    .cell.comment-content.small-2
-      div = comment.body
+- cache [comment, current_user] do
+  li class="comment-item-#{comment.id}"
+    .grid-y
+      ul.cell.menu.simple.small-2
+        li.comment-author = comment.user.email
+        li.time-ago-bullet
+          span aria-hidden="true" •
+        li.time-ago 
+          = distance_of_time_in_words(Time.now, comment.created_at)
+      .cell.comment-content.small-2
+        div = comment.body
